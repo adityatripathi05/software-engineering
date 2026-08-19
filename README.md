@@ -42,7 +42,7 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | # | Folder | Covers |
 |---|--------|--------|
 | 01 | Basic | Programming concepts, Python intro, REPL, syntax, I/O, operators |
-| 02 | Datatypes | str, numbers, tuple, list, dict, set; mutability and copying |
+| 02 | Datatypes | str, numbers, tuple, list, dict, set; mutability, copying, unpacking |
 | 03 | Flow Control Statement | if/elif/else, `match`/`case`, loops, comprehensions |
 | 04 | Functions | Parameters, scope, closures, decorators, generators |
 | 05 | OOPs | Classes, inheritance, MRO, dunder methods, ABCs |

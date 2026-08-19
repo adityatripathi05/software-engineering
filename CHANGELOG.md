@@ -114,3 +114,89 @@ standard header (prerequisites / what you'll learn) and closing
 - All 80 code cells compile cleanly
 - All 67 non-interactive code cells **execute without error** on Python 3.14.4
   with `warnings.simplefilter("error")`
+
+---
+
+## 02 Datatypes
+
+8 notebooks -> 9 (one new). All retargeted to **3.12+**, outputs cleared, standard header
+and **Common Mistakes / Best Practices / Exercises** block added to each.
+
+### Errors fixed in existing content
+- 🔴 **2.1** — the immutable-types list included **`long`**, a Python 2 type that does not
+  exist in Python 3. `frozenset` and `bytes` were missing. Table corrected.
+- 🔴 **2.1** — "Other String Methods" linked to the **Python 2.4** documentation. Updated to
+  the Python 3 reference.
+- 🔴 **2.4** — the `array` typecode table listed **`'c'` (character, 1 byte)**, removed in
+  Python 3. Table replaced with the current codes.
+- 🔴 **2.5** — cell 48 contained `data3.setdefault('num,'CBSE')`: mismatched quotes, a
+  `SyntaxError`. The cell could never have run. Corrected.
+- 🔴 **2.5** — the opening line described dictionaries as **"unordered"**. Insertion order
+  has been a language guarantee since **Python 3.7**. Rewritten with a version note.
+- **2.2** — "Precision Handling" taught `%` formatting first; reordered around f-strings.
+
+### `2.1 Python Strings Datatype.ipynb` — 85 -> 99 cells
+**Added:** immutability demo with `id()`; guidance table on which of the four formatting
+styles to use; `casefold()` and `partition()`; **`removeprefix()`/`removesuffix()` (3.9+)**
+with the `strip()`-eats-too-much trap; **`join()` vs `+=` O(n²) benchmark**; expanded
+`str` vs `bytes` section with encode/decode, mojibake and `bytearray`.
+
+### `2.2 Python Numeric Datatype.ipynb` — 51 -> 64 cells
+**Added:** complex numbers and the numeric tower; float-representation reality
+(`0.1 + 0.2`, `math.isclose`); **banker's rounding**; **`decimal.Decimal`** for money and
+**`fractions.Fraction`** for exact ratios; `int` unlimited precision vs float overflow to
+`inf`; `nan` semantics; expanded `None` (sentinel, `is None`, `if not x` vs `is None`) and
+`bool` (truthiness table, `bool` subclasses `int`).
+**Fixed:** the empty cell under "Calculate Area and Perimeter of Rectangle" now contains
+the promised solution. Cross-reference added to 1.4 for the duplicated operator drills.
+
+### `2.3 Python Tuple Datatype.ipynb` — 36 -> 49 cells
+**Added:** the single-element `(5)` vs `(5,)` trap; full **unpacking** section (basic,
+starred, nested, `_`, in loops); "immutable means the bindings are fixed, not the contents"
+with a hashability demo; **`namedtuple` and `typing.NamedTuple`** for self-documenting
+records.
+
+### `2.4 Python List-Array Datatype.ipynb` — 85 -> 96 cells
+**Added:** slice assignment and deletion, `a[:] = [...]` vs `a = [...]`; shallow-copy
+warning with pointer to 2.7; **three classic traps** (mutating while iterating,
+`[[0]*3]*3` aliasing, `remove`/`del`/`pop`); **`sorted()` vs `.sort()`** with the
+`x = lst.sort()` bug, `key=`, `itemgetter`, multi-key sorting and sort stability.
+**Rewrote:** the `array` section now explains when to use `list` / `array` / NumPy.
+
+### `2.5 Python Dictionary Datatype.ipynb` — 56 -> 68 cells
+**Added:** `in` checks keys (with an O(1) vs O(n) benchmark); **dict views are live**, plus
+set operations on key views and the mutate-during-iteration `RuntimeError`; **`|` and `|=`
+merge operators (3.9+)** compared against `{**a, **b}` and `.update()`; `get()` vs
+`setdefault()`; **`defaultdict` and `Counter`**.
+**Note:** the three username/password programs were kept rather than merged — they form a
+deliberate progression. A warning was added that they store plain-text passwords, which is
+unacceptable outside a teaching example.
+
+### `2.6 Python Sets Datatype.ipynb` — 25 -> 35 cells *(largest rewrite in this folder)*
+Had only 5 markdown cells — essentially an unexplained method list.
+**Added:** proper conceptual opening (three defining properties, guest-list analogy, what
+sets are actually for); why membership is O(1), with a benchmark; set-operation tables
+mapped to Venn diagrams; **mutating vs non-mutating twins** for every operation, and the
+operator-vs-method difference; `add()` vs `update()` on a string; **`frozenset`**;
+**set comprehensions**; real-world deduplication with and without order preservation;
+set-difference for "what changed between two states".
+
+### `2.7 Mutability, Copying, Nesting and Unpacking.ipynb` — **NEW**, 24 cells
+Closes the "nested structures, slicing, unpacking / mutable vs immutable, copy vs
+deepcopy" gap in the curriculum checklist. Covers: names vs objects vs values; aliasing;
+rebinding vs mutating (incl. `a += b` vs `a = a + b`); mutable vs immutable; **shallow vs
+`copy.deepcopy()`**; the **mutable default argument** trap; **hashability** as the rule
+behind dict keys; building and safely navigating nested structures (`get_nested` helper);
+and unpacking in every form including `*`/`**` at call sites.
+
+### Structural changes
+- `Student Management System.ipynb` moved from `02 Datatypes/` to
+  `14 Project/Student Management System/` — it is an applied project, not datatype material.
+- `Practice/2. Python Strings.ipynb` given a header marking it as scratch space and
+  pointing at the taught content.
+
+### Verification
+- All 9 notebooks parse as valid `nbformat` 4
+- All **259 code cells compile** cleanly
+- All non-interactive cells **execute without error** on Python 3.14.4 with
+  `warnings.simplefilter("error")`
