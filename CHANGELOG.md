@@ -193,7 +193,8 @@ and unpacking in every form including `*`/`**` at call sites.
 - `Student Management System.ipynb` moved from `02 Datatypes/` to
   `14 Project/Student Management System/` — it is an applied project, not datatype material.
 - `Practice/2. Python Strings.ipynb` given a header marking it as scratch space and
-  pointing at the taught content.
+  pointing at the taught content. *(Superseded: the author subsequently deleted the
+  `Practice/` folder — see the housekeeping note under 03.)*
 
 ### Verification
 - All 9 notebooks parse as valid `nbformat` 4
@@ -284,3 +285,14 @@ results.
 - All **130 code cells compile** cleanly
 - All non-interactive cells execute without error on Python 3.14.4 with
   `warnings.simplefilter("error")`
+
+### Housekeeping (author's own cleanup)
+
+Committed alongside 03: the author removed a set of legacy support files that the notebooks
+no longer depend on — the per-folder `IDLE/` script directories, the `Practice/`/`Practise/`
+`.docx` assignment files, `Sample_Package/`, all `.ipynb_checkpoints/` and `__pycache__/`
+artefacts, and the duplicate `12 Multithreading/Multithreading-Copy1.ipynb`.
+
+These deletions are the author's and were intentional; they are recorded here only so the
+diff for this commit is not mistaken for part of the modernisation work. The taught content
+is unaffected — no notebook referenced any of the removed files.
