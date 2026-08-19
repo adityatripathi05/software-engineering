@@ -200,3 +200,87 @@ and unpacking in every form including `*`/`**` at call sites.
 - All **259 code cells compile** cleanly
 - All non-interactive cells **execute without error** on Python 3.14.4 with
   `warnings.simplefilter("error")`
+
+---
+
+## 03 Flow Control Statement
+
+6 notebooks -> 7 (one new). All retargeted to **3.12+**, outputs cleared, standard header
+and **Common Mistakes / Best Practices / Exercises** block added to each.
+
+### Errors fixed in existing content
+- 🔴 **3.1** cell 6 ended with `print("Thankyou"))` — an unmatched closing parenthesis.
+  A hard `SyntaxError`; the cell had never been runnable.
+- 🔴 **3.2.2** the anagram cell used `x` and `y` without ever assigning them (the two
+  `input()` lines were missing), so it raised `NameError`. Restored, plus a runnable
+  three-method version that needs no input.
+- 🔴 **3.3** cell 13 iterated `name` instead of `names` — `NameError`.
+- **3.2.2** the "semiprime" heading had an empty code cell; the solution is now written.
+- **3.2.4** the "Challenge for you!" had no solution; one is now provided.
+
+> **Audit correction:** the original audit reported a *Python 2 print statement* in 3.1.
+> That was a false positive — the real defect was the unmatched parenthesis above.
+
+### Checklist gaps closed
+`enumerate()`, `zip()`, the loop `else` clause, generator expressions, the walrus operator
+in loops and comprehensions, and `match`/`case` had **zero occurrences** across the whole
+folder before this pass.
+
+### `3.1 Python Decision Statement.ipynb` — 27 -> 38 cells
+**Added:** what counts as a condition (truthiness, the `not x` vs `x is None` bug, float
+comparison, chained comparisons); **conditional expressions** with a syntax breakdown and
+the precedence trap; **guard clauses** contrasted against a nested "pyramid of doom";
+dict-lookup and `in` as alternatives to long `elif` chains; forward-reference to 3.4.
+
+### `3.2.1 Python While Loop.ipynb` — 28 -> 38 cells
+**Added:** infinite loops and how to escape them in Jupyter/terminal; `while True` + `break`
+as the standard validation shape; **the walrus operator in a loop condition**; the
+**`while ... else`** clause explained as "nobreak", with the flag-variable version it replaces.
+
+### `3.2.2 Python For Loop.ipynb` — 47 -> 58 cells *(largest change)*
+**Added:** **`enumerate()`** with the `range(len(x))` anti-pattern it replaces and `start=`;
+**`zip()`** including unequal lengths, **`strict=True` (3.10+)**, `zip(*rows)` transpose and
+single-consumption; the **`for ... else`** clause; `reversed()`/`sorted()` in loop headers;
+loop-variable leakage; an **`itertools` signpost** table with runnable examples.
+**Rewrote:** the iterator-protocol opening now shows `__iter__`/`__next__` directly instead
+of dumping `dir()` output.
+
+### `3.2.3 Python Loop Control.ipynb` — 15 -> 22 cells
+**Added:** **`pass` vs `continue` vs `...`** comparison; `continue` as a guard clause;
+**why `break` only exits the innermost loop**, with all three standard workarounds (flag,
+function + `return`, `for/else` + `continue`).
+
+### `3.2.4 Python Loop Pattern.ipynb` — 20 -> 27 cells
+**Added:** how to reason about any pattern problem (rows / counts / spaces); three ways to
+write the same pattern — nested loops, string multiplication, f-string alignment; solution
+to the previously unanswered challenge.
+
+### `3.3 Python Comprehension.ipynb` — 50 -> 63 cells
+**Added:** full syntax breakdown, and the distinction between the **filter `if`** and the
+**conditional-expression `if/else`**; a dedicated Set Comprehension heading;
+**generator expressions** (laziness, `sys.getsizeof` comparison, single consumption, when
+to drop the redundant brackets); **`any()`/`all()` with generators** including
+short-circuiting and `all([]) == True`; **the walrus inside a comprehension**; and a
+"when *not* to use a comprehension" section.
+**Reframed:** the three "ways to implement a ternary" (tuple indexing, dict lookup, lambda
+pair) are now labelled as pre-2006 workarounds, with each one's actual flaw named.
+
+### `3.4 Structural Pattern Matching.ipynb` — **NEW**, 21 cells
+`match`/`case` (3.10+) appeared nowhere in the original notes. Covers: why it is **not** a
+switch statement; syntax breakdown; literal, capture and wildcard patterns; **the
+capture-vs-comparison trap**; sequence patterns with `*rest` and why `str` is excluded;
+mapping patterns (subset matching, `**rest`); class patterns and `__match_args__`; guards,
+`as` patterns and or-patterns; a worked command parser; and a decision table for when
+`match` beats `if`/`elif` — with a side-by-side comparison asserting both give identical
+results.
+
+> **Finding:** Python 3.10+ raises `SyntaxError: name capture makes remaining patterns
+> unreachable` when a bare-name capture is followed by other cases — but stays **silent**
+> when the capture is the *last* case. The notebook demonstrates both halves, since only
+> the silent one can actually reach production.
+
+### Verification
+- All 7 notebooks parse as valid `nbformat` 4
+- All **130 code cells compile** cleanly
+- All non-interactive cells execute without error on Python 3.14.4 with
+  `warnings.simplefilter("error")`

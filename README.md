@@ -43,7 +43,7 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 |---|--------|--------|
 | 01 | Basic | Programming concepts, Python intro, REPL, syntax, I/O, operators |
 | 02 | Datatypes | str, numbers, tuple, list, dict, set; mutability, copying, unpacking |
-| 03 | Flow Control Statement | if/elif/else, `match`/`case`, loops, comprehensions |
+| 03 | Flow Control Statement | if/elif/else, `match`/`case`, loops, comprehensions, generators |
 | 04 | Functions | Parameters, scope, closures, decorators, generators |
 | 05 | OOPs | Classes, inheritance, MRO, dunder methods, ABCs |
 | 06 | Exception Handling | try/except, custom exceptions, chaining, context managers |
