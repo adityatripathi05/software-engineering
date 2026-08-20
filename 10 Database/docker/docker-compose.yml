@@ -1,0 +1,112 @@
+# Practice databases for folder 10.
+#
+# These are THROWAWAY containers for learning. Everything about them is chosen
+# to keep them out of the way of real work:
+#
+#   * Non-default host ports, so nothing here can collide with a database you
+#     actually use. Postgres is on 55432, not 5432.
+#   * Named volumes, so no data is ever written into this repository.
+#   * Trivial passwords, because nothing of value is stored. Never reuse this
+#     pattern for anything real - 10.3 covers reading credentials from the
+#     environment instead.
+#
+# Start:   docker compose -f "10 Database/docker/docker-compose.yml" up -d
+# Stop:    docker compose -f "10 Database/docker/docker-compose.yml" down
+# Wipe:    docker compose -f "10 Database/docker/docker-compose.yml" down -v
+#
+# Every notebook in folder 10 runs WITHOUT these containers. If a server is not
+# reachable the notebook says so and falls back to a stdlib equivalent. Starting
+# the stack upgrades the examples from "here is the shape of the query" to real
+# output from a real server.
+
+name: python-notes-db
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: pynotes-postgres
+    ports:
+      - "55432:5432"
+    environment:
+      POSTGRES_USER: learner
+      POSTGRES_PASSWORD: learnpython
+      POSTGRES_DB: notes
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U learner -d notes"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  mysql:
+    image: mysql:8
+    container_name: pynotes-mysql
+    ports:
+      - "53306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: learnpython
+      MYSQL_DATABASE: notes
+      MYSQL_USER: learner
+      MYSQL_PASSWORD: learnpython
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - mysql-data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-plearnpython"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  mongo:
+    image: mongo:7
+    container_name: pynotes-mongo
+    ports:
+      - "57017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: learner
+      MONGO_INITDB_ROOT_PASSWORD: learnpython
+    volumes:
+      - mongo-data:/data/db
+    healthcheck:
+      test: ["CMD", "mongosh", "--quiet", "--eval", "db.adminCommand('ping')"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  neo4j:
+    image: neo4j:5-community
+    container_name: pynotes-neo4j
+    ports:
+      - "57474:7474"     # browser UI
+      - "57687:7687"     # bolt
+    environment:
+      NEO4J_AUTH: neo4j/learnpython
+      NEO4J_server_memory_heap_max__size: 512M
+    volumes:
+      - neo4j-data:/data
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://localhost:7474 || exit 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 30
+
+  redis:
+    image: redis:7-alpine
+    container_name: pynotes-redis
+    ports:
+      - "56379:6379"
+    volumes:
+      - redis-data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  pg-data:
+  mysql-data:
+  mongo-data:
+  neo4j-data:
+  redis-data:

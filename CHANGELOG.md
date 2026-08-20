@@ -888,6 +888,108 @@ deletions are recorded in this commit.
 - All **45 code cells compile** cleanly
 - All **45 cells execute without error** on Python 3.14.4, leaving no database files behind
 
+### Expansion: NoSQL, graph, and real servers (4 -> 6 notebooks)
+
+Folder 10 taught one paradigm across four notebooks: SQL, SQL at a CLI, SQL from Python, SQL
+through an ORM. Nothing told a learner that a non-relational store exists. Two notebooks were
+added, and the MySQL notebook was made executable.
+
+#### The practice stack — `10 Database/docker/docker-compose.yml` (**NEW**)
+Five throwaway containers on **deliberately non-standard ports** so they cannot collide with
+a database in real use, with named volumes so nothing is written into the notes.
+
+| Service | Host port | Service | Host port |
+|---|---|---|---|
+| `postgres:16-alpine` | 55432 | `mongo:7` | 57017 |
+| `mysql:8` | 53306 | `neo4j:5-community` | 57687 / 57474 |
+| `redis:7-alpine` | 56379 | | |
+
+#### 🔴 Dual-path, so no notebook ever requires a server
+Every live cell probes the port first and, if nothing answers, prints the SQL or the driver
+call it *would* have made and continues. Verified by running folders with every port
+redirected to a dead one: **0 unexpected problems, no tracebacks, no dead cells**. Starting
+the stack upgrades the same cells to real output.
+
+This was the design constraint that mattered. Requiring `docker compose up` would have
+reproduced exactly the defect this folder already had — a notebook that cannot run.
+
+### `10.2 MySQL and PostgreSQL from Python.ipynb` — 27 -> 47 cells
+*(renamed from `10.2 Mysql Command Line Client.ipynb`)*
+
+Was 26 markdown cells and **1** code cell, because there was no server to run against. The
+CLI transcript is kept as the first half; the second half now executes against **MySQL 8.4.11
+and PostgreSQL 16.14 side by side** — the PEP 249 shape is identical, and the dialect
+differences are the lesson. **PostgreSQL added** rather than given its own notebook, since a
+separate one would have largely repeated 10.3.
+
+Covers: `paramstyle` (`pyformat` for both drivers vs `qmark` for `sqlite3`);
+`AUTO_INCREMENT` vs `GENERATED ALWAYS AS IDENTITY`; PostgreSQL `RETURNING` vs MySQL
+`lastrowid`; 🔴 the **`utf8` vs `utf8mb4` trap**, demonstrated by round-tripping astral-plane
+characters; and transactions, with a worked rollback showing `COUNT(*)` at 0 after a failure
+and 2 after success.
+
+### `10.5 Beyond Relational - Key-Value and Document Stores.ipynb` — **NEW**, 34 cells
+The four families and what each is for. **Key-value in the standard library** — `dbm` (with
+the finding that `dbm.whichdb` reports **`dbm.sqlite3`**, the default since 3.13) and
+`shelve`, including 🔴 the **writeback trap**, demonstrated as silent data loss and then fixed
+two ways. Redis for TTLs, atomic counters and hashes.
+
+**Document stores**: schema-on-read vs schema-on-write; a working document store built on
+**SQLite JSON1**, with a generated column and an index, proved to be used via
+`EXPLAIN QUERY PLAN` (`SEARCH ... USING INDEX`, not `SCAN`); **PostgreSQL `JSONB`** with
+`->>`, `#>>`, `@>` and a GIN index; MongoDB; and **TinyDB** so the document-query idea runs
+with no server at all.
+
+🔴 **What you give up** is demonstrated rather than asserted: three documents with a
+misspelled key, a string where a number belongs, and a dangling reference are all accepted,
+and the query then returns 4 of the 5 documents a human would call queued. Closes with
+eventual consistency and CAP in plain English — including that neither applies to a
+single-node database — and DuckDB as the columnar contrast.
+
+### `10.6 Graph Data in Python.ipynb` — **NEW**, 27 cells
+One question — *everything `web` depends on, at any depth* — asked three ways over an 8-node
+service dependency graph.
+
+- **Relational**: one `JOIN` per hop, and the 3-hop query returns `userdb` **twice** because
+  two paths reach it — rows are paths, not nodes. Then `WITH RECURSIVE`, which answers it at
+  any depth.
+- 🔴 **Cycles**: a recursive CTE with no guard never returns. Both guards are shown — a depth
+  limit, and the cycle-safe **path-tracking idiom** with comma delimiters (so `api` does not
+  match inside `api-gateway`).
+- **`networkx`**: `descendants`, `ancestors` (the blast radius), `all_simple_paths`,
+  `topological_sort` for deploy order, and `find_cycle` as a CI check.
+- **Cypher/Neo4j**: `-[:DEPENDS_ON*]->` — one character where SQL needs a recursive CTE.
+
+All three agree on all seven services. A live detail the notebook now teaches: **networkx and
+Neo4j return *different* shortest paths**, both 3 hops and both correct, so tests should
+assert on path *length*, never identity.
+
+Ends with the honest case: for a graph this size all three work, and `WITH RECURSIVE` needs
+no new infrastructure — adopt a graph database for the **query pattern**, not because the
+data happens to be a graph.
+
+### 🔴 Retro-fix in `10.3` — it was still writing into the repository
+Cells 10 and 17 called `db.connect('Masterly.DB')` with a repo-relative path. The earlier
+modernisation rewrote everything from cell 22 onward to use `tempfile` but left these two
+original cells, so **running the notebook still created a database file inside the notes** —
+the source of the tracked 0-byte `Masterly.DB`.
+
+It evaded both existing checks: the file is created empty and stays empty, so it never
+appears as a stray *untracked* file nor as a *modified tracked* one. It surfaced only as a
+`ResourceWarning` about an unclosed database, because cell 17 also reassigned `conn` without
+closing the connection cell 10 opened. Both fixed; the warning is gone.
+
+**Note:** `10 Database/Masterly.DB` is now unreferenced, as are the nine unused fixtures in
+`08 File Handling/File2Save/`. All left in place pending a decision.
+
+### Verification
+- Folder 10 runs clean **twice**: once with all five servers up, once with every port
+  redirected — **0 unexpected problems** both ways
+- Folders 01-10: **0 unexpected problems**
+- **52 notebooks** valid `nbformat` 4, **1292 code cells**, 1 syntax failure (the intentional
+  6.1 demo)
+- `git status` clean of stray files; no leftover temp directories
+
 ---
 
 ## Tooling and environment
