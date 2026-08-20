@@ -296,3 +296,87 @@ artefacts, and the duplicate `12 Multithreading/Multithreading-Copy1.ipynb`.
 These deletions are the author's and were intentional; they are recorded here only so the
 diff for this commit is not mistaken for part of the modernisation work. The taught content
 is unaffected — no notebook referenced any of the removed files.
+
+---
+
+## 04 Functions
+
+6 notebooks -> 7 (one new, two moved out). All retargeted to **3.12+**, outputs cleared,
+standard header and **Common Mistakes / Best Practices / Exercises** block added to each.
+
+This was already the strongest folder — closures and decorators were covered better than in
+most tutorials. The gaps were modern additions rather than errors.
+
+### The one real defect
+- 🔴 **4.4** had a "Debugging Decorators" section that demonstrated the problem
+  **`functools.wraps`** solves and never mentioned `wraps`. Cell 63 showed
+  `decorated_function.__name__` returning the wrong value and stopped there. Every decorator
+  in the notebook silently destroyed its target's `__name__`, `__doc__`, annotations and
+  signature. Rewritten to show the fix, why it matters (Flask endpoint collisions, pytest
+  collection, `help()`, tracebacks), and a runnable before/after including a registry that
+  silently loses a handler without it.
+
+### Checklist gaps closed
+Positional-only (`/`) and keyword-only (`*`) parameters, type hints on signatures,
+`functools.wraps`, `lru_cache`/`cache`, `yield from`, the generator `send`/`close`/`throw`
+protocol, and `singledispatch` had **zero occurrences** across the folder before this pass.
+
+### `4.1 Functions User-defined.ipynb` — 90 -> 100 cells
+**Added:** **positional-only (`/`) and keyword-only (`*`) parameters** with a full syntax
+breakdown and the flag-readability argument; **type hints on signatures**, introduced where
+signatures are taught; **recursion depth limits** (`RecursionError`, no tail-call
+optimisation) and **`@cache` memoisation** with a measured speedup on the existing
+fibonacci.
+**Rewrote:** "Scope of a Variable" expanded into the full **LEGB** model with `global` and
+`nonlocal` demonstrated (including the `UnboundLocalError` that catches everyone).
+**Corrected:** the heading **"Pass by Reference"** — Python is neither pass-by-value nor
+pass-by-reference; it is *call by object reference*. The original body text was already
+nuanced and correct, so this is a framing fix cross-referenced to 2.7.
+
+### `4.2 Functions Builtins.ipynb` — 75 -> 85 cells
+**Added:** an honest **"when to use `map`/`filter`/`reduce` — and when not to"** section with
+timings showing a comprehension beats `map(lambda ...)` on both clarity and speed, and that
+`sum()`/`math.prod()` beat `reduce`; **`key=` functions** with `itemgetter`/`attrgetter`;
+`callable`, `getattr`/`setattr`/`hasattr`, `vars`, and the `isinstance(True, int)` trap.
+**Added a note** that the `classmethod`/`staticmethod`/`property` sections at the end are
+really OOP material, pointing at 05 and 4.4.
+
+### `4.3 Function Generators.ipynb` — 25 -> 35 cells *(largest proportional change)*
+**Added:** **`yield from`** for delegation and recursive traversal, with a table of what the
+manual re-yield loop loses; **the full generator protocol** — `send()`, `close()`,
+`throw()`, and `return` landing in `StopIteration.value`; **generator pipelines** over a log
+file; infinite generators with `itertools.islice`; and how generators relate to
+`async`/`await`.
+**Fixed:** the memory and timing comparison cells depended on `input()` and used a `%timeit`
+magic, so neither could run unattended. Rewritten to run standalone with `sys.getsizeof`
+and `timeit`, and to show that laziness trades the same total time for flat memory plus the
+ability to stop early.
+
+### `4.4 Function Decorator.ipynb` — 70 -> 82 cells
+**Added:** **`functools.wraps`** (above); **stacking order** made concrete — applied
+bottom-up, executed outside-in, demonstrated by swapping two decorators; **class-based
+decorators** with `update_wrapper`, and decorating methods; **the decorators you already
+use** (`@property`, `@cache`, `@dataclass`, a miniature `@app.route`);
+**`functools.singledispatch`** as the alternative to an `isinstance` chain.
+
+### `4.5 Type Hints for Functions.ipynb` — **NEW**, 20 cells
+The function-level slice of typing, sitting between 4.1's introduction and folder 17's full
+treatment. Covers: why annotate at all; **the fact that nothing is enforced at run time**,
+demonstrated; annotating parameters, defaults, returns, `*args`/`**kwargs`, and
+positional-/keyword-only params; container generics and why `list[int]` replaced
+`typing.List[int]`; **`X | None`** and the `None`-handling bug it exposes; `Callable` for
+decorators and `key=` parameters; `Any`, type aliases and the 3.12 `type` statement;
+**running `mypy`** — the notebook writes a deliberately buggy `mypy_demo.py` you can check;
+and an honest section on how much typing is worth it, including the costs.
+
+### Structural changes
+- `Student Registration System.ipynb` -> `14 Project/Student Registration System/`
+- `Advance Coding.ipynb` -> `15 Data Structure and Algorithm/` (HackerRank-style matrix and
+  array problems — nothing to do with functions)
+- `.gitignore`: added `mypy_demo.py`, generated by 4.5
+
+### Verification
+- All 5 notebooks parse as valid `nbformat` 4
+- All code cells compile cleanly
+- All non-interactive cells execute without error on Python 3.14.4 with
+  `warnings.simplefilter("error")`
