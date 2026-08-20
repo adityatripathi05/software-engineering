@@ -456,3 +456,73 @@ and the folder's four design principles.
 - All 4 notebooks parse as valid `nbformat` 4
 - All **142 code cells compile** cleanly
 - 5.3 and 5.4 execute end to end with `warnings.simplefilter("error")` on Python 3.14.4
+
+---
+
+## 06 Exception Handling
+
+1 notebook -> 3 (two new). Retargeted to **3.12+**, outputs cleared, standard header and
+**Common Mistakes / Best Practices / Exercises** block added to each.
+
+This was the thinnest folder relative to its importance — a single 33-cell notebook covering
+try/except/else/finally, built-in exceptions, `assert` and `raise`.
+
+### Errors fixed
+- 🔴 **`assert` was taught as an input-validation technique** (`assert age > 0`). Assertions
+  are **removed entirely** when Python runs with `-O`, so that validation silently vanishes
+  in an optimised deployment. Rewritten with a prominent warning, a table of what `assert`
+  is and is not for, and a runnable `subprocess` demo that proves the check disappears
+  under `-O`.
+
+> **Audit corrections:** custom exceptions were reported as missing — they are in fact
+> covered (cells 30-31), just basic and with a non-PEP-8 class name. An earlier `except*`
+> hit was a false positive matching a markdown bullet list.
+
+### Checklist gaps closed
+Context managers (`with`), `contextlib`, exception chaining (`raise ... from`),
+`ExceptionGroup`/`except*`, the bare-`except:` anti-pattern, `logging.exception`,
+`add_note()` and traceback reading had **zero occurrences** before this pass.
+
+### `6.1 Exception Handling.ipynb` — 33 -> 47 cells
+**Added:** the **exception hierarchy** (`BaseException` -> `Exception` -> families) and why
+`except LookupError` catches both `IndexError` and `KeyError`; **reading a traceback**
+bottom-up, with `traceback.extract_tb`; the **bare `except:` anti-pattern** demonstrated
+swallowing a `BaseException`; `contextlib.suppress` as the explicit alternative to
+`except: pass`; `else`/`finally` precisely, including why `else` prevents a handler from
+lying about the cause; **bare `raise`** for re-raising with the traceback intact; and
+**`logging.exception()`** compared against `print(exc)`.
+
+> **Version finding — PEP 765.** The `return`-in-`finally` anti-pattern demo would not
+> compile: **Python 3.14 makes `return`, `break` and `continue` inside `finally` a hard
+> `SyntaxError`** (it was a `SyntaxWarning` in 3.12-3.13, and silently allowed before).
+> The section now carries the full version table and detects the interpreter's behaviour at
+> run time via `compile()`, so it works on any 3.x.
+
+### `6.2 Custom Exceptions and Chaining.ipynb` — **NEW**, 13 cells
+Designing an exception hierarchy for a package, motivated by a payments client that would
+otherwise leak `requests` and `json` exceptions to its callers. Covers: one base exception
+per package; PEP 8 `...Error` naming; carrying **structured data** and behaviour
+(`is_retryable()`) on the exception; **`raise X from Y`** with a side-by-side traceback
+comparison of implicit `__context__` vs explicit `__cause__` vs `from None`;
+**`Exception.add_note()`** (3.11) accumulating context up the call stack without re-wrapping;
+and **`ExceptionGroup` / `except*`** (3.11) for form validation and concurrent shutdown,
+with a pointer to `asyncio.TaskGroup`.
+
+### `6.3 Context Managers.ipynb` — **NEW**, 15 cells
+What `with` desugars to, and why `try/finally` alone is insufficient. Covers: the
+`__enter__`/`__exit__` protocol and what `as` actually binds; **returning `True` from
+`__exit__` suppresses the exception** — including the *accidental* version where a truthy
+return value silently swallows every error; **`@contextlib.contextmanager`** with a
+commit/rollback transaction and a demonstration that omitting `try/finally` skips cleanup;
+`suppress`, `closing`, `nullcontext`, **`ExitStack`** for run-time-determined resources, and
+`redirect_stdout`; multiple managers and the parenthesised form (3.10+).
+
+> **Version finding:** re-entering an exhausted `@contextmanager` raises **`AttributeError`
+> on Python 3.14**, not the `RuntimeError` most references state. The notebook now says the
+> exception type varies by version and catches broadly.
+
+### Verification
+- All 3 notebooks parse as valid `nbformat` 4
+- All code cells compile except 6.1 cell 2, which is the notebook's **intentional**
+  syntax-error demonstration
+- All non-interactive cells execute without error on Python 3.14.4
