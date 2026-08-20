@@ -1220,7 +1220,8 @@ implementation), and `Advance Coding.ipynb` was 2 competition problems, one requ
 `input()`, plus an empty trailing cell.
 
 Being built out as a full DSA curriculum, beginner to advanced, with theory, runnable
-implementations and interview questions. **Batch 1 of 5 delivered: 66 cells.**
+implementations and interview questions. **Batches 1-2 of 5 delivered: 136 cells across
+6 notebooks.**
 
 ### `15.1 Complexity Analysis.ipynb` - **NEW**, 23 cells
 Why we count operations rather than seconds; Big-O with Ω and Θ; the growth classes with
@@ -1274,10 +1275,73 @@ longest-unique-substring window (the `last_seen[char] >= left` guard); all-negat
 returning **the largest element, not 0**; `k %= n` before rotating; and the honest point
 that `data[::-1]` is correct but is **not** O(1) space.
 
+### Batch 2: Linear structures - 70 cells
+
+### `15.4 Linked Lists.ipynb` - **NEW**, 23 cells
+Nodes and references; the full complexity contrast with arrays; insert, delete and traverse;
+the **dummy head** trick that removes the head special case; reversal both iteratively
+(O(1) space) and recursively (O(n) stack, and shown hitting `RecursionError` at 2,000 nodes);
+**Floyd's cycle detection** including where the cycle starts; find-the-middle and
+nth-from-end in one pass; merging two sorted lists by rewiring only.
+
+Opens by being honest that you will **almost never write one in Python** - and then showing
+where they genuinely live, with a working **LRU cache**: a `dict` for O(1) lookup plus a
+doubly linked list for O(1) reordering and eviction. Neither structure can do it alone.
+
+Closes with the palindrome check that combines three techniques and **restores the list
+afterwards** - mutating a caller's data and not putting it back is treated as a real defect.
+
+### `15.5 Stacks and Queues.ipynb` - **NEW**, 25 cells
+LIFO vs FIFO and how to recognise which a problem wants; bracket matching with all **three**
+failure modes (the unclosed-opener case being the one people forget); RPN evaluation, with
+`10 2 /` vs `2 10 /` as the test that catches a reversed operand pop; the call stack as a
+stack, and the same computation rewritten with an explicit stack to escape the recursion
+limit.
+
+**Monotonic stacks** get full treatment - next-greater-element, daily temperatures, and
+largest-rectangle-in-a-histogram with its sentinel. Measured on a strictly decreasing input
+of 2,000: **4,000 operations versus 2,001,000** for brute force, with the amortised argument
+(each index pushed once, popped at most once) stated explicitly because interviewers ask for
+it.
+
+Also **min stack** (O(1) minimum via a second stack of running minimums) and a **queue from
+two stacks**, whose amortised claim is *measured*: 10,000 enqueues and 10,000 dequeues
+produce exactly **1.0 element transfers per element**. Ends on `deque` vs `queue.Queue` and
+when thread safety is the point (**12.2**).
+
+### `15.6 Hashing.ipynb` - **NEW**, 22 cells
+How a key becomes a memory location; chaining vs open addressing; a **working `HashMap`
+built from scratch** with instrumentation, showing capacity doubling at load factor 0.75
+while the longest bucket stays at 2-3 entries.
+
+🔴 **O(1) degrading to O(n), demonstrated:** a legal-but-useless `__hash__` returning a
+constant makes 2,000 lookups **545x slower**. Ties into why CPython randomises string hashing
+per process - the hash-collision denial-of-service - and therefore why `hash()` values must
+never be persisted.
+
+The `__eq__`/`__hash__` contract with all three failure modes shown live, including an
+inconsistent pair where equal objects are **silently not found**. The four hashing patterns
+(frequency, seen-set, complement, grouping) and composite keys - including `casefold()` vs
+`lower()`, demonstrated with `"STRASSE"` and `"Straße"`, which `lower()` fails to match.
+
+Finishes with CPython internals (compact layout, insertion order as a *consequence* of it,
+dict measured smaller than the equivalent set) and two non-obvious interview answers:
+longest-consecutive-sequence in O(n), and O(1) insert/delete/get-random via the swap-with-last
+trick.
+
+### Housekeeping (author's deletions, recorded here)
+The two legacy stubs flagged in batch 1 were removed by the author, along with a PowerPoint
+file in folder 01:
+
+- `Introduction to Data Structure and Algorithm.ipynb` - 3 cells, its only code cell **empty**
+- `Advance Coding.ipynb` - 2 competition problems, one requiring `input()`
+- `01 Basic/00 First Step to Programming and Python.pptx`
+
+The GCD topic those stubs gestured at is still planned for **15.12** (recursion).
+
 ### Still to come
 | Batch | Notebooks |
 |---|---|
-| Linear | 15.4 Linked Lists · 15.5 Stacks & Queues · 15.6 Hashing |
 | Hierarchical | 15.7 Trees & BSTs · 15.8 Heaps · 15.9 Graphs |
 | Algorithms | 15.10 Sorting · 15.11 Searching · 15.12 Recursion & Backtracking · 15.13 Dynamic Programming · 15.14 Greedy & Divide-and-Conquer |
 | Advanced | 15.15 Union-Find, Tries & Bit Manipulation · 15.16 Interview Patterns |
@@ -1287,10 +1351,11 @@ that `data[::-1]` is correct but is **not** O(1) space.
 stubs removed when those notebooks are written.
 
 ### Verification
-- Folder 15: **0 unexpected problems**
+- Folder 15: **0 unexpected problems**, run twice
 - Folders 01-12 and 15: **0 unexpected problems**
-- **64 notebooks** valid `nbformat` 4, **1386 code cells**, 1 syntax failure (the intentional
+- **65 notebooks** valid `nbformat` 4, **1411 code cells**, 1 syntax failure (the intentional
   6.1 demo)
+- Every algorithm cross-checked against a brute-force implementation
 
 ---
 
