@@ -602,6 +602,6 @@ skips cells that call `sys.exit()`.
 
 ### Verification
 - All 3 notebooks parse as valid `nbformat` 4
-- All **113 code cells compile** cleanly
+- All **105 code cells compile** cleanly
 - All **103 non-interactive cells execute without error** on Python 3.14.4, leaving no files
   behind in the repository
