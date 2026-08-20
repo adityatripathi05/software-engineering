@@ -1220,8 +1220,8 @@ implementation), and `Advance Coding.ipynb` was 2 competition problems, one requ
 `input()`, plus an empty trailing cell.
 
 Being built out as a full DSA curriculum, beginner to advanced, with theory, runnable
-implementations and interview questions. **Batches 1-2 of 5 delivered: 136 cells across
-6 notebooks.**
+implementations and interview questions. **Batches 1-3 of 5 delivered: 208 cells across
+9 notebooks.**
 
 ### `15.1 Complexity Analysis.ipynb` - **NEW**, 23 cells
 Why we count operations rather than seconds; Big-O with Ω and Θ; the growth classes with
@@ -1339,10 +1339,74 @@ file in folder 01:
 
 The GCD topic those stubs gestured at is still planned for **15.12** (recursion).
 
+### Batch 3: Hierarchical structures - 72 cells
+
+### `15.7 Trees and Binary Search Trees.ipynb` - **NEW**, 26 cells
+Vocabulary (with the depth-vs-height confusion addressed head-on); all four traversals
+recursively *and* iteratively; BST search, insert and the three-case delete; rotations;
+height, diameter, LCA; serialise/deserialise; sorted-array-to-BST; kth smallest.
+
+🔴 **Degeneration measured.** The same 2,000 values inserted sorted vs shuffled:
+
+| insertion order | height | comparisons to find the last value |
+|---|---|---|
+| sorted | **1,999** | **2,000** |
+| shuffled | 24 | 11 |
+
+> **A bug of my own, kept as a lesson.** The first version of that cell built the degenerate
+> tree with the *recursive* insert - and died with `RecursionError` before it could measure
+> anything, because recursive insert costs O(height) stack and here height IS n. The cell now
+> uses an iterative insert and says exactly that: degeneration breaks more than lookup speed.
+
+🔴 **The BST validation trap** gets a full treatment: the naive parent/child check declares
+`10 / (5, 15 / (6, 20))` valid, and the notebook shows in-order producing `[5, 10, 6, 15, 20]`
+to prove it is not. Both correct approaches (range-passing and in-order monotonicity) are
+implemented alongside the wrong one.
+
+### `15.8 Heaps and Priority Queues.ipynb` - **NEW**, 23 cells
+The heap property and why it is *weaker* than a BST; the array representation and its index
+arithmetic; sift-up and sift-down implemented by hand before reaching for `heapq`; top-k;
+merging k sorted sequences; running median with two heaps, cross-checked against
+`statistics.median` over 500 random inserts.
+
+> 🔴 **A false claim I had to correct.** The cell originally asserted that building a heap by
+> pushing n items is O(n log n). Measured, that is **only the worst case**. On random input
+> the swap count stays at ~1.28n at every size - constant work per push - because a random
+> value is usually already near the bottom. Provoking the real worst case needs *descending*
+> input, where push/n rises 7.99 → 9.98 → 11.98 → 13.98, gaining 2 per quadrupling of n,
+> which is log₂n. `heapify` stays at ~n on both. The cell now shows both inputs side by side,
+> which makes the average-vs-worst-case distinction concrete rather than blurred.
+
+Top-k measured at **8.6x faster** than sorting for k=10 of 400,000, with O(k) memory - plus a
+streaming version that never holds more than k items. The priority-queue tie-breaking trap is
+demonstrated live (`TypeError: '<' not supported between instances of 'dict' and 'dict'`) and
+fixed with a counter, which also buys stability.
+
+### `15.9 Graphs.ipynb` - **NEW**, 23 cells
+Adjacency list vs matrix; BFS and DFS shown to be *the same code* with a queue swapped for a
+stack; unweighted shortest paths; Dijkstra with lazy deletion (**15.8**); Bellman-Ford;
+Kahn's topological sort; cycle detection; connected components and the grid "number of
+islands" variant; graph cloning; bipartite checking.
+
+Uses **the same service-dependency graph as 10.6**, so the recursive-CTE and Cypher versions
+there line up with the algorithms here.
+
+🔴 **The visited set** is demonstrated by omitting it - an unguarded traversal on a 3-cycle
+runs to its step limit and reports it would never stop.
+
+🔴 **Cycle detection differs by graph type**, and both wrong answers are shown: a plain
+visited set wrongly flags the service graph (three routes to `userdb` is *not* a cycle), and
+an undirected check without the parent guard wrongly flags a tree.
+
+> **A second bug of my own.** The "Dijkstra breaks on negative weights" cell originally
+> reported the *correct* answer, disproving its own text - because the improved vertex had no
+> outgoing edges, so the stale value never propagated. Adding one edge after it makes the
+> failure real: Dijkstra reports cost **3** where the true answer is **2**, and Bellman-Ford
+> gets it right.
+
 ### Still to come
 | Batch | Notebooks |
 |---|---|
-| Hierarchical | 15.7 Trees & BSTs · 15.8 Heaps · 15.9 Graphs |
 | Algorithms | 15.10 Sorting · 15.11 Searching · 15.12 Recursion & Backtracking · 15.13 Dynamic Programming · 15.14 Greedy & Divide-and-Conquer |
 | Advanced | 15.15 Union-Find, Tries & Bit Manipulation · 15.16 Interview Patterns |
 
@@ -1353,7 +1417,7 @@ stubs removed when those notebooks are written.
 ### Verification
 - Folder 15: **0 unexpected problems**, run twice
 - Folders 01-12 and 15: **0 unexpected problems**
-- **65 notebooks** valid `nbformat` 4, **1411 code cells**, 1 syntax failure (the intentional
+- **68 notebooks** valid `nbformat` 4, **1440 code cells**, 1 syntax failure (the intentional
   6.1 demo)
 - Every algorithm cross-checked against a brute-force implementation
 
