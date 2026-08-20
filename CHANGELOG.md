@@ -1212,6 +1212,88 @@ managers and iterators, and an honest threads-vs-asyncio comparison.
 
 ---
 
+## 15 Data Structure and Algorithm  *(in progress - Foundations batch)*
+
+The folder was effectively empty: `Introduction to Data Structure and Algorithm.ipynb` was
+3 cells whose **only code cell was blank** (a "Greatest Common Divisor" heading with no
+implementation), and `Advance Coding.ipynb` was 2 competition problems, one requiring
+`input()`, plus an empty trailing cell.
+
+Being built out as a full DSA curriculum, beginner to advanced, with theory, runnable
+implementations and interview questions. **Batch 1 of 5 delivered: 66 cells.**
+
+### `15.1 Complexity Analysis.ipynb` - **NEW**, 23 cells
+Why we count operations rather than seconds; Big-O with Ω and Θ; the growth classes with
+what each feels like at n = 1,000,000; reading complexity off loops, nested loops and
+recursion; amortised analysis; space complexity including stack depth; and 🔴 five specific
+ways Big-O misleads.
+
+Demonstrated rather than asserted: naive `fib(30)` takes **2,692,537 calls**, and
+`@functools.cache` reduces it to **31**. The list-growth cell prints the actual
+reallocation points (`1, 5, 9, 17, 25, 33, ...`) and the widening gaps between them.
+
+> 🔴 **The doubling experiment had to be rebuilt.** Wall-clock timing was too noisy on a
+> loaded machine to teach from - repeated trials gave linear ratios of 2.36/1.92, 2.86/1.29,
+> 2.31/1.99 and 3.80/1.87, and a printed **1.29x** teaches the wrong row of the table.
+> `time.process_time()` was tried and has ~15.6 ms resolution on Windows (it returned
+> zeros); pre-building the data and best-of-7 did not fix it either.
+>
+> The cell now **counts operations first** - giving exact `2.00x` and `4.00x` with no
+> machine dependence - and then times the same functions with the noise stated openly. That
+> ordering is the better lesson anyway: counting is how you reason, timing is how you check.
+
+### `15.2 Python's Built-ins and Their Real Costs.ipynb` - **NEW**, 20 cells
+Arguably the highest practical value in the folder: the complexity of every operation used
+daily, and the four mistakes behind almost all accidental O(n²) in real Python.
+
+Measured on this machine:
+
+| | | |
+|---|---|---|
+| `x in list` vs `x in set` | 20,000 items | **265x** |
+| `list.pop(0)` vs `deque.popleft()` | draining 30,000 | **312x** |
+| `+=` in a loop vs `str.join` | 40,000 pieces | **652x** |
+| `deque[i]` vs `list[i]` | the other side of the trade | list **24x** faster |
+
+Also: how `dict`/`set` reach O(1) and what that demands of keys - including a live
+demonstration that **mutating a key makes its entry unreachable and un-deletable**; the
+CPython in-place string optimisation being defeated by a second reference (8x); and why
+`bisect.insort` is O(n) despite an O(log n) search.
+
+### `15.3 Arrays, Strings and Two Pointers.ipynb` - **NEW**, 23 cells
+The four patterns that cover most array and string interview questions: converging two
+pointers, fast/slow read-write pointers, sliding windows (fixed and variable), and prefix
+sums.
+
+Each is measured: the sliding window does **2,000 operations where recomputation does
+97,550** (49x at k=50). The prefix-sum + hash-map trick for subarray counting is
+cross-checked against brute force on four inputs including negatives and zeros.
+
+Careful attention to the cases that catch people: `'dvdf'` returning **3, not 2** in the
+longest-unique-substring window (the `last_seen[char] >= left` guard); all-negative Kadane
+returning **the largest element, not 0**; `k %= n` before rotating; and the honest point
+that `data[::-1]` is correct but is **not** O(1) space.
+
+### Still to come
+| Batch | Notebooks |
+|---|---|
+| Linear | 15.4 Linked Lists · 15.5 Stacks & Queues · 15.6 Hashing |
+| Hierarchical | 15.7 Trees & BSTs · 15.8 Heaps · 15.9 Graphs |
+| Algorithms | 15.10 Sorting · 15.11 Searching · 15.12 Recursion & Backtracking · 15.13 Dynamic Programming · 15.14 Greedy & Divide-and-Conquer |
+| Advanced | 15.15 Union-Find, Tries & Bit Manipulation · 15.16 Interview Patterns |
+
+**Note:** the two legacy notebooks are untouched for now. The GCD stub belongs in **15.12**
+(recursion) and the two competition problems in **15.16**; both will be folded in and the
+stubs removed when those notebooks are written.
+
+### Verification
+- Folder 15: **0 unexpected problems**
+- Folders 01-12 and 15: **0 unexpected problems**
+- **64 notebooks** valid `nbformat` 4, **1386 code cells**, 1 syntax failure (the intentional
+  6.1 demo)
+
+---
+
 ## Tooling and environment
 
 ### Virtual environment — `D:\Learn\Python\.venv` (gitignored)

@@ -56,7 +56,7 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 12 | Concurrency | The GIL, threading, multiprocessing, `concurrent.futures`, `asyncio` |
 | 13 | GUI | tkinter |
 | 14 | Project | Applied mini-projects |
-| 15 | Data Structure and Algorithm | Complexity, core structures, sorting and searching |
+| 15 | Data Structure and Algorithm | Complexity, Python's real costs, arrays and two pointers, linked lists, trees, graphs, sorting, DP, interview patterns |
 | 16 | Testing | `unittest`, `pytest`, fixtures, mocking |
 | 17 | Type Hints and Static Typing | `typing`, generics, `mypy` |
 | 18 | Modern Python Features | dataclasses, enum, walrus, logging |
