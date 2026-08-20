@@ -526,3 +526,82 @@ commit/rollback transaction and a demonstration that omitting `try/finally` skip
 - All code cells compile except 6.1 cell 2, which is the notebook's **intentional**
   syntax-error demonstration
 - All non-interactive cells execute without error on Python 3.14.4
+
+---
+
+## 07 Module and Packages
+
+2 notebooks -> 3 (one new). Retargeted to **3.12+**, outputs cleared, standard header and
+**Common Mistakes / Best Practices / Exercises** block added to each.
+
+### Errors fixed in existing content
+- 🔴 **Five hardcoded absolute paths** of the form
+  `r'C:\Users\Aditya\Documents\Ducat Classes\Batch\Temp'` and
+  `r'C:\Users\Aditya\Documents\My Final\Python\07 Module and Packages\Sample Mod'`.
+  Every one failed on any machine but the original author's. All rewritten to use
+  `tempfile.mkdtemp()` and clean up after themselves.
+- 🔴 **`os.chdir()` into a hardcoded directory** partway through 7.1, which silently changed
+  the working directory for every cell that followed. Now demonstrated inside a scratch
+  directory and restored immediately, with a note pointing at `contextlib.chdir()` (3.11+).
+- 🔴 `os.path.expanduser('~\local')` — `"\l"` is an **invalid escape sequence**
+  (`SyntaxWarning` on 3.12+, an error under `-W error`). Replaced with raw-string,
+  forward-slash and `os.path.join` variants.
+- 🔴 **7.2 cells 1-3 imported `Sample_Package`**, a folder removed in the author's cleanup, so
+  the notebook's only working examples raised `ModuleNotFoundError`. The notebook now builds
+  a real package at run time instead of depending on files on disk.
+- 🔴 **7.2 taught `pip3 install virtualenv`.** `venv` has been in the standard library since
+  **Python 3.3**; no installation is needed. Replaced with `python -m venv`, including
+  Windows *and* macOS/Linux activation.
+- 🔴 **7.2 gave `ls` as the way to "see list of packages installed".** `ls` lists files. The
+  command is `pip list`.
+- Several `os`/`shutil`/`pickle` cells created files (`new.txt`, `Extra/`, `Extra2/`,
+  `test.pkl`) in the repository and left them there. All now use temp directories.
+
+### `7.1 Python Module.ipynb` — 116 -> 127 cells
+**Added:** how importing actually works (search / execute / cache), the four import forms,
+`__name__ == "__main__"`, `__all__`, and why `from module import *` is a trap — demonstrated
+by having `math` overwrite a local name; **`pathlib`** with a full `os.path` translation
+table and runnable examples; **`importlib`** including `import_module`, `find_spec` and
+`reload`, with a note that **`imp` was removed in 3.12**; and **circular imports** with all
+three fixes shown working.
+**Rewrote:** the entire `os` directory/file sequence, the `shutil` sequence and the `pickle`
+cells as portable, self-cleaning demonstrations. Added a security warning that
+`pickle.load()` executes arbitrary code.
+
+### `7.2 Python Packages.ipynb` — 6 -> 16 cells *(near-total rewrite)*
+Was six cells, three of which no longer ran.
+**Now covers:** module vs package; what `__init__.py` is actually for; namespace packages
+(PEP 420) and why a *missing* `__init__.py` is now a silent surprise rather than an error;
+**absolute vs relative imports**, with a subprocess demo of
+`attempted relative import with no known parent package` and the `python -m` fix;
+**`python -m venv`** and how to tell whether you are inside one (`sys.prefix` vs
+`sys.base_prefix`); **`pip`** — `list` vs `freeze`, version specifiers, editable installs,
+and why to prefer `python -m pip`; **`requirements.txt`**, pinning exactly for applications
+vs ranges for libraries, and split runtime/dev files.
+The whole notebook builds a real four-module package with a subpackage in a temp directory,
+imports from it, and tears it down.
+
+### `7.3 Standard Library - itertools, functools, datetime.ipynb` — **NEW**, 15 cells
+The three highest-value stdlib modules that had no home.
+**`itertools`:** `chain`, `islice`, **`batched` (3.12+)**, **`pairwise` (3.10+)**,
+`accumulate`, `groupby` (with the sort-first trap demonstrated), `product`, `combinations`,
+`zip_longest`, `takewhile`/`dropwhile`.
+**`functools`:** **`cached_property`** — including the staleness trap and how to invalidate
+it — plus `partial` and `reduce`, and a reference table pointing at where `cache`, `wraps`,
+`singledispatch` and `total_ordering` were introduced.
+**`datetime`:** the four classes and the arithmetic rules; 🔴 **aware vs naive**, and why
+mixing them raises `TypeError`; **`datetime.utcnow()` is deprecated in 3.12** with the
+`datetime.now(timezone.utc)` replacement demonstrated live; `zoneinfo` (stdlib since 3.9,
+no `pytz`); parsing, ISO 8601 round-tripping, and an expiry-window example.
+Closes with all three modules used together on a log-processing pipeline.
+
+### Tooling note
+The verification harness was hardened during this folder: it now catches `BaseException`
+(a `sys.exit()` in 7.1 was terminating the run silently, hiding every subsequent error) and
+skips cells that call `sys.exit()`.
+
+### Verification
+- All 3 notebooks parse as valid `nbformat` 4
+- All **113 code cells compile** cleanly
+- All **103 non-interactive cells execute without error** on Python 3.14.4, leaving no files
+  behind in the repository
