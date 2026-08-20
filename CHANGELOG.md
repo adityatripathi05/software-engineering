@@ -380,3 +380,79 @@ and an honest section on how much typing is worth it, including the costs.
 - All code cells compile cleanly
 - All non-interactive cells execute without error on Python 3.14.4 with
   `warnings.simplefilter("error")`
+
+---
+
+## 05 OOPs
+
+2 notebooks -> 4 (two new). All retargeted to **3.12+**, outputs cleared, standard header
+and **Common Mistakes / Best Practices / Exercises** block added to each.
+
+This was already the best-developed folder — classes, all five inheritance types, MRO,
+`@property` (including the backward-compatibility argument for *why*), class vs static
+methods, composition vs aggregation, ABCs, operator overloading and custom iterators were
+all covered. The gaps were modern class constructs, not errors.
+
+> **New convention from this folder onward:** examples are drawn from real
+> software-development scenarios (cache keys, HTTP responses, storage backends, retry
+> policies, job states, connection pools) rather than textbook `Animal`/`Circle` classes.
+
+### Two traps fixed
+- 🔴 **`__repr__` was absent entirely** while `__str__` was covered — backwards, since
+  `__repr__` is the one developers need. Containers, debuggers, the REPL and tracebacks all
+  use `__repr__`, and `__str__` falls back to it but not the reverse. Added with a runnable
+  demonstration of a list of objects printing as `<object at 0x...>` without it.
+- 🔴 **`__eq__` was covered without `__hash__`.** Defining `__eq__` makes Python set
+  `__hash__ = None`, so instances silently stop working as dict keys or set members. Added
+  with a `CacheKey` example that fails, then the fix, plus why hashable objects must be
+  immutable.
+
+### Checklist gaps closed
+`dataclasses`, `Enum`, `__slots__`, `Protocol`/structural typing, mixins,
+`functools.total_ordering`, `__new__`, `__repr__`, `__hash__` and type hints in class bodies
+had **zero occurrences** across the folder before this pass.
+
+### `5.1 Python OOPs.ipynb` — 161 -> 176 cells
+**Added:** **`__repr__` vs `__str__`** with the fallback rule and container behaviour;
+**`__eq__` + `__hash__`** together; **`@total_ordering`** on a `Version` class;
+**`__slots__`** with measured memory savings and the typo-protection side effect;
+**`__new__` vs `__init__`** (singleton `ConnectionPool`, immutable `Port(int)` subclass);
+and a **dunder reference table** with a `Repository` class implementing the container
+protocol so it works with `len()`, `in`, `for`, `sorted()` and unpacking.
+
+### `5.2 OOPs Elaborated - Payroll System.ipynb` — 59 -> 66 cells
+The original walkthrough ends on the MRO fix for `TemporarySecretary`. That is where the
+RealPython article it follows continues — so the narrative was incomplete.
+**Added:** **mixins** (`LoggingMixin`, `SerialisableMixin`, `ComparableByIdMixin`) with the
+rule that mixins go **first** in the base list, demonstrated by showing a mixin listed last
+being silently ignored; and **composition over inheritance** — the same payroll domain
+rebuilt from role and policy objects, turning N x M classes into N + M, with a run-time
+policy swap that inheritance cannot express.
+
+> The four `TypeError`/`AttributeError` results in this notebook are **intentional** — they
+> are the class-explosion narrative ("that didn't work either... time to dive into MRO").
+
+### `5.3 Dataclasses and Enums.ipynb` — **NEW**, 17 cells
+`@dataclass`: what it generates, `field()`, `default_factory` (dataclasses refuse a mutable
+default outright), `repr=False` for secrets, `compare=False`, `init=False`, `__post_init__`;
+`frozen=True`, `slots=True`, `kw_only=True`, `order=True`, `replace()`, `asdict()`.
+A **decision table** for plain class vs dataclass vs `NamedTuple` vs `TypedDict` vs `dict`,
+plus a note that dataclasses do **not** validate types (pointing at `pydantic`).
+Enums: `Enum`, `IntEnum`, `StrEnum` (3.11+), `auto()`, `Flag` for combinable permissions,
+enums carrying methods, and **enums with `match`/`case`** — which sidestep the
+capture-pattern trap from 3.4 because an enum member is always a dotted name.
+
+### `5.4 Duck Typing, Protocols and Composition.ipynb` — **NEW**, 14 cells
+Duck typing stated properly, and why `isinstance` checks usually fight it (EAFP vs LBYL).
+**ABC vs Protocol** — nominal vs structural typing, as a comparison table and as runnable
+code: an ABC that refuses to instantiate an incomplete subclass, and a Protocol that accepts
+a class which inherits nothing. `@runtime_checkable`, and its limit (it checks method names,
+not signatures). `ABC.register()` shown to be an unchecked promise.
+**Dependency injection without a framework** — a `SessionCache` taking storage and clock
+collaborators, made deterministic in tests by a `FrozenClock`. Closes with a decision table
+and the folder's four design principles.
+
+### Verification
+- All 4 notebooks parse as valid `nbformat` 4
+- All **142 code cells compile** cleanly
+- 5.3 and 5.4 execute end to end with `warnings.simplefilter("error")` on Python 3.14.4
