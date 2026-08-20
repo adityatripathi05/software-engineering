@@ -681,7 +681,7 @@ turns 1 into 16,777,216.
 
 ### Verification
 - All 5 notebooks parse as valid `nbformat` 4
-- All **62 code cells compile** cleanly
+- All **54 code cells compile** cleanly
 - All **53 non-interactive cells execute without error** on Python 3.14.4
 
 > Note: `File2Save/output.txt1` is a stray file produced by the filename typo fixed above.
