@@ -1220,8 +1220,8 @@ implementation), and `Advance Coding.ipynb` was 2 competition problems, one requ
 `input()`, plus an empty trailing cell.
 
 Being built out as a full DSA curriculum, beginner to advanced, with theory, runnable
-implementations and interview questions. **Batches 1-3 of 5 delivered: 208 cells across
-9 notebooks.**
+implementations and interview questions. **Batches 1-4 of 5 delivered: 309 cells across
+14 notebooks.**
 
 ### `15.1 Complexity Analysis.ipynb` - **NEW**, 23 cells
 Why we count operations rather than seconds; Big-O with Ω and Θ; the growth classes with
@@ -1404,20 +1404,99 @@ an undirected check without the parent guard wrongly flags a tree.
 > failure real: Dijkstra reports cost **3** where the true answer is **2**, and Bellman-Ford
 > gets it right.
 
+### Batch 4: Algorithms - 101 cells
+
+### `15.10 Sorting.ipynb` - **NEW**, 24 cells
+The O(n²) family (and why insertion sort is not a toy - O(n) on nearly-sorted input is why
+real sorts embed it); merge sort; quicksort with its worst case **provoked on purpose**;
+heap sort; stability; the Ω(n log n) lower bound; counting and radix sort; Timsort; and
+using `sorted()` well.
+
+Measured highlights:
+
+| | |
+|---|---|
+| Counting sort (Python) vs `sorted()` (C) on 30,000 values in 0-99 | **3.2 ms vs 6.3 ms** |
+| `sorted()` on already-sorted vs random, 300,000 items | **16x faster** |
+| Quicksort with `data[0]` pivot on sorted input | quadratic comparisons, recursion depth = n |
+
+Interpreted Python beating C is the point of the counting-sort cell: it escaped the
+comparison bound entirely. The Timsort cell shows the adaptive best case you hit constantly
+in practice.
+
+### `15.11 Searching and Binary Search.ipynb` - **NEW**, 18 cells
+The off-by-one minefield, with **one half-open template** to avoid all of it; `bisect_left`
+vs `bisect_right` and what each is *for*; rotated arrays, verified **exhaustively over every
+rotation and every target** including the non-rotated case; quickselect.
+
+🔴 **Binary search on the answer** gets the depth it deserves - the pattern behind minimum
+ship capacity, Koko bananas and split-array-largest-sum. The monotonicity precondition is
+*printed*: `NNNNNYYYYYYYY...`, with the answer at the first `Y`. Quickselect measures ~2n
+comparisons where sorting would need 61,438.
+
+Also the `mid = (lo + hi + 1) // 2` infinite-loop trap, and the note that Python's arbitrary
+precision integers make the famous Java overflow bug impossible here.
+
+### `15.12 Recursion and Backtracking.ipynb` - **NEW**, 19 cells
+Base case, recursive case, and the leap of faith; **Euclid's GCD** - which folds in the topic
+from the deleted `Introduction to Data Structure and Algorithm.ipynb` stub, whose only code
+cell was empty; the recursion limit and why raising it is the wrong fix; memoisation as the
+bridge to DP; backtracking's choose/explore/**unchoose**.
+
+**Pruning measured** on N-Queens, with identical answers both ways:
+
+| n | pruned nodes | unpruned nodes | saving |
+|---|---|---|---|
+| 6 | 153 | 55,987 | 366x |
+| 8 | 2,057 | 19,173,961 | **9,321x** |
+
+Plus word search (where the *unmark* is the shipped bug), and generating valid parentheses -
+whose counts come out as the Catalan numbers.
+
+### `15.13 Dynamic Programming.ipynb` - **NEW**, 21 cells
+The two preconditions; the **four-step progression** (naive → memoised → tabulated →
+space-optimised) demonstrated end to end on Fibonacci; how to *recognise* a DP problem;
+1-D classics (climbing stairs, house robber, coin change) and 2-D (LCS, edit distance, 0/1
+knapsack); reconstructing the answer, not just its size; and when DP does **not** apply.
+
+🔴 **Greedy is shown failing three times**, because that is the distinction that costs marks:
+coin change `[1,3,4]` target 6 (greedy 3 coins, optimal 2), house robber `[2,7,9,3,1]`, and
+0/1 knapsack where greedy loses by 10 on a constructed case.
+
+Longest increasing subsequence closes it with both implementations: **1,049.9 ms vs 0.7 ms**
+at n=4,000 - a **1,555x** gap, agreeing on 300 random inputs.
+
+### `15.14 Greedy and Divide-and-Conquer.ipynb` - **NEW**, 19 cells
+When greedy is provably right (the **exchange argument**, worked for interval scheduling)
+and when it is not. All three interval-scheduling sort keys are run: earliest-end is correct,
+earliest-start and shortest-duration are shown failing on specific inputs.
+
+**Fractional vs 0/1 knapsack** is the sharpest illustration of the greedy/DP boundary in the
+folder - identical numbers, one word different in the problem statement, and the correct
+paradigm changes. **Huffman coding** compresses `abracadabra` by 74% and decodes with no
+delimiters. Divide and conquer covers the master theorem informally, maximum subarray
+(**29x slower** than Kadane - D&C is not automatically better), and Karatsuba.
+
+Ends with a decision table for greedy vs DP vs D&C.
+
+> **A bug worth recording.** The Karatsuba verification was **vacuous**: I wrote
+> `all(... for _ in range(0)) or all(... for _ in range(500))`, and `all()` over an empty
+> generator is `True`, so the `or` short-circuited and the real comparison **never executed**.
+> It printed `True`. That is the worst kind of passing test, because it reads as evidence.
+> Now it runs and reports "500 random pairs: 0 mismatches".
+
 ### Still to come
 | Batch | Notebooks |
 |---|---|
-| Algorithms | 15.10 Sorting · 15.11 Searching · 15.12 Recursion & Backtracking · 15.13 Dynamic Programming · 15.14 Greedy & Divide-and-Conquer |
 | Advanced | 15.15 Union-Find, Tries & Bit Manipulation · 15.16 Interview Patterns |
 
-**Note:** the two legacy notebooks are untouched for now. The GCD stub belongs in **15.12**
-(recursion) and the two competition problems in **15.16**; both will be folded in and the
-stubs removed when those notebooks are written.
+**Note:** the GCD topic from the deleted `Introduction` stub is now covered in **15.12**
+(Euclid's algorithm). The competition problems from `Advance Coding` remain for **15.16**.
 
 ### Verification
 - Folder 15: **0 unexpected problems**, run twice
 - Folders 01-12 and 15: **0 unexpected problems**
-- **68 notebooks** valid `nbformat` 4, **1440 code cells**, 1 syntax failure (the intentional
+- **73 notebooks** valid `nbformat` 4, **1476 code cells**, 1 syntax failure (the intentional
   6.1 demo)
 - Every algorithm cross-checked against a brute-force implementation
 
