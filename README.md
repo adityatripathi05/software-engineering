@@ -52,7 +52,7 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 08 | File Handling | Text, CSV, JSON, binary, `pathlib` |
 | 09 | Regular Expression | The `re` module, patterns, groups |
 | 10 | Database | SQL, `sqlite3`, MySQL/PostgreSQL, SQLAlchemy ORM, key-value and document stores, graph data |
-| 11 | Socket Programming | Networking fundamentals, TCP/UDP, HTTP clients |
+| 11 | Socket Programming | Networking fundamentals, TCP framing, UDP, concurrent servers, HTTP and `requests` |
 | 12 | Multithreading | threading, multiprocessing, `concurrent.futures`, `asyncio` |
 | 13 | GUI | tkinter |
 | 14 | Project | Applied mini-projects |
@@ -64,7 +64,7 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 20 | Working with APIs | `requests`, REST/JSON, auth, error handling |
 | 21 | Capstone Projects | End-to-end builds tying it together |
 
-Folders 11 and 15 are being built out; 16–21 are new. See [CHANGELOG.md](CHANGELOG.md)
+Folder 15 is being built out; 16–21 are new. See [CHANGELOG.md](CHANGELOG.md)
 for what has been modernised so far.
 
 ---

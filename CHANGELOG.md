@@ -992,6 +992,117 @@ closing the connection cell 10 opened. Both fixed; the warning is gone.
 
 ---
 
+## 11 Socket Programming
+
+**The folder was completely empty.** Five notebooks written from scratch, 106 cells,
+fundamentals to advanced. Everything runs offline against `127.0.0.1`.
+
+### 🔴 The constraint that shaped the whole folder
+Sockets block. `accept()` and `recv()` wait **forever** by default, so one unguarded call
+hangs the notebook - and hangs `smoke.py` with no output, needing a kill. Every example
+therefore:
+
+- binds to **`127.0.0.1` port 0**, so the OS assigns a free port - no collisions, no
+  `Address already in use` on a second run, no hardcoded numbers
+- runs servers on **daemon threads**, which cannot outlive the interpreter
+- sets a **timeout on every blocking call**, including the `accept()` loop, so it can notice
+  a stop flag instead of blocking
+- ends with a cell asserting **no threads were left alive**
+
+These patterns were prototyped and verified in a standalone script before any notebook cell
+was written.
+
+### `11.1 Networking Fundamentals.ipynb` - 20 cells
+IP/ports/DNS via `ipaddress` and `getaddrinfo`; the four layers that matter; TCP vs UDP as
+the decision it actually is; the socket API shape before using it; byte order with `struct`
+(`1` read little-endian instead of network order becomes **16777216**, silently); and
+🔴 bytes vs `str` on the wire, with the same encoding lesson as **8.1**.
+
+The external DNS lookup is guarded - nothing else in the folder needs a network.
+
+> **Corrected during review:** the markdown promised `ConnectionRefusedError` when nothing is
+> listening, but this machine's firewall produced a **timeout** instead. Teaching text the
+> output contradicts is worse than none, so the cell now handles both and explains the
+> difference - refused means the machine answered, timeout means nothing did.
+
+### `11.2 TCP Client and Server.ipynb` - 23 cells
+The full lifecycle, then the reason the notebook exists.
+
+🔴 **The framing problem, demonstrated.** Three separate `sendall(b"AAA")`, `(b"BBB")`,
+`(b"CCC")` calls arrive at a single `recv()` as **`b'AAABBBCCC'`**. TCP guarantees bytes,
+never message boundaries. Then all three fixes: length prefix with `struct`, newline
+delimiters via `makefile()`, and fixed size - plus `recv_exactly`, because `recv(n)` returns
+*up to* n bytes.
+
+Also `send()` vs `sendall()` (the 4 MB test sent completely on loopback, which is exactly why
+the truncation bug hides until production), `SO_REUSEADDR`/`TIME_WAIT` with the Windows
+caveat, and what `ConnectionReset`/`BrokenPipe` actually mean.
+
+### `11.3 UDP - Datagrams and Unreliability.ipynb` - 20 cells
+The mirror image: **one `sendto` is one `recvfrom`**, always - boundaries preserved, directly
+contrasted with 11.2's `b'AAABBBCCC'`.
+
+🔴 **Truncation differs by platform**, confirmed by testing: Windows raises **WinError
+10040**; Linux/macOS silently discard the excess. Either way the remainder is destroyed, and
+a second read gets nothing. Datagram ceiling measured at **65507 bytes** (65535 − 20 IP − 8
+UDP), with the practical ~1472 MTU advice.
+
+Loss, reordering and duplication via a simulated lossy channel, then reliability by hand -
+sequence numbers, acks, timeouts, retries - ending on the point that **retries cause
+duplicates** when an ack is lost.
+
+> **Three defects caught by reading output against claims.** The seeded RNG dropped nothing
+> across all ten messages, so the cell demonstrating loss demonstrated none; reseeded to give
+> 2 losses and 2 duplicates. A `ConnectionResetError` escaped and killed a cell - and
+> revealed the surrounding text was wrong, since on Windows *unconnected* UDP sockets also
+> receive ICMP errors. And acks were never lost, so the "retries cause duplicates" point was
+> asserted but never shown; the ack path is now lossy too, and the receiver visibly processes
+> two messages twice.
+
+### `11.4 Serving Many Clients.ipynb` - 19 cells
+Measured, not asserted. 6 clients needing 0.3s each:
+
+| Approach | Wall clock |
+|---|---|
+| Serial (the 11.2 loop) | **1.81s** |
+| Thread per client | **0.32s** (5.7x) |
+| Thread pool, max 3 | **0.61s** - bounded, and cannot be swamped |
+| `selectors`, one thread | 40 clients in **0.53s** |
+| `asyncio` | **0.31s** |
+| `asyncio` with one `time.sleep` | **1.81s** - serial again |
+
+That last row is the lesson: changing one line makes async code 5.8x slower with no warning.
+Includes 🔴 `asyncio.run()` failing inside Jupyter because a loop is already running, and a
+`run_async` helper that works in both a notebook and a plain script. Notes that a thread
+blocked on `recv()` **releases the GIL**, so it limits CPU parallelism, not I/O concurrency.
+
+### `11.5 HTTP - From Sockets to requests.ipynb` - 24 cells
+HTTP written by hand over a raw socket first - request text, `\r\n` line endings, the blank
+line, the byte-for-byte response - with the observation that **HTTP solves 11.2's framing
+problem using both techniques at once**: newline-delimited headers, then `Content-Length` as
+a length prefix.
+
+Then `urllib.request` (errors arrive as exceptions) and `requests` (🔴 they do **not** - a
+500 is parsed happily unless you call `raise_for_status()`), all against a local
+`http.server`. Timeouts as non-optional, proven with a `/slow` endpoint; `Session` connection
+reuse; `Retry` with backoff restricted to idempotent methods; status-code semantics; and why
+`verify=False` is never the answer.
+
+> **Two bugs found here.** `handle_error` was overridden on the request *handler*, but
+> `ThreadingMixIn` calls it on the **server** - so an abandoned request still dumped a
+> traceback from a background thread. And `urllib.error.HTTPError` is file-like, backed by a
+> temporary file; unclosed it raises `ResourceWarning`, which the harness runs as an error.
+
+### Verification
+- Folder 11: **0 unexpected problems**, run **twice** in succession with no stderr noise
+- Folders 01-11: **0 unexpected problems**
+- **57 notebooks** valid `nbformat` 4, **1331 code cells**, 1 syntax failure (the intentional
+  6.1 demo)
+- Every notebook ends by asserting no background threads survive
+- `git status` clean; nothing binds outside `127.0.0.1`
+
+---
+
 ## Tooling and environment
 
 ### Virtual environment — `D:\Learn\Python\.venv` (gitignored)
