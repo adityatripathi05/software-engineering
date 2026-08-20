@@ -457,6 +457,17 @@ and the folder's four design principles.
 - All **142 code cells compile** cleanly
 - 5.3 and 5.4 execute end to end with `warnings.simplefilter("error")` on Python 3.14.4
 
+### Retro-fix (found by the folder 11 verification sweep)
+Two **undefined-name typos** in `5.1 Python OOPs.ipynb`, both of which meant the cell had
+never once run:
+- 🔴 **Cell 103** — the payoff cell of the operator-overloading lesson. It builds
+  `pt3 = pt1 + pt2` using the `__add__` defined immediately above, then calls
+  `print(point3)`. `point3` is never bound anywhere.
+- 🔴 **Cell 125** — `print(isinstance(tr1, Triangle))`. **`tr1` appears exactly once in
+  all 176 cells** — only here. The triangle is built as `tri` two cells earlier.
+
+Both corrected with an inline comment recording what the original said.
+
 ---
 
 ## 06 Exception Handling
@@ -687,6 +698,40 @@ turns 1 into 16,777,216.
 > Note: `File2Save/output.txt1` is a stray file produced by the filename typo fixed above.
 > It is left in place rather than deleted unilaterally; it can be removed safely.
 
+### Retro-fix: the notebooks were writing into the repository
+🔴 Running folder 08 left **three tracked fixtures modified**, so `git status` was dirty
+after every run and each run produced different output. It survived the original check
+because that looked for *stray untracked* files; these were *modifications to tracked* ones.
+
+| Cell | File | Mode | Effect |
+|---|---|---|---|
+| 8.1 cell 43 | `msg2.txt` | `'r+'` + seek to end | appended `This is line 8.` every run |
+| 8.2 cell 4 | `tab1.csv` | `'a'` | re-appended the header every run |
+| 8.2 cell 6 | `tab1.csv` | `'a'`, **no trailing newline** | appended, and collided with the next run |
+
+The damage was already committed: `tab1.csv` contained `Neetu,negName,Corona Test` — cell 6's
+newline-less append running into cell 4's header on the following run — and `msg2.txt` held
+`This is line 6.This is line 8.` for the same reason.
+
+**Fixed** by giving each notebook a `WORK` directory from `tempfile`:
+- `8.1` — 25 cells repointed, +3 cells (scratch-directory setup, explanation, cleanup);
+  56 → 59 cells. `msg2.txt` is now *seeded* clean rather than mutated in place.
+- `8.2` — 11 cells repointed, +3 cells; 27 → 30 cells. `write_file()` now writes a trailing
+  newline, and opens with `newline=''`.
+- `File2Save/` is now **read-only**, used solely for `Image.jpg`.
+
+> **One bug introduced and caught during this fix.** The rewrite stripped a `Path(...)`
+> wrapper and left `WORK / "Image_copy.jpg".stat()`, where `.stat()` binds to the string
+> literal instead of the path — `AttributeError: 'str' object has no attribute 'stat'`.
+> The harness caught it immediately; parenthesised.
+
+**Note:** nine fixtures in `File2Save/` are now unreferenced — `msg1.txt`, `msg2.txt`,
+`Log.txt`, `output1.txt`, `output.txt1`, `tab1.csv`, `tab2.csv`, `tab3.csv`,
+`Image_copy.jpg`. They are left in place pending a decision; only `Image.jpg` is still read.
+
+**Verified** by running the folder twice in succession: 0 unexpected problems both times,
+`git status` clean, and no `py08_*` temp directories left behind.
+
 ---
 
 ## 09 Regular Expression
@@ -842,3 +887,47 @@ deletions are recorded in this commit.
 - All 4 notebooks parse as valid `nbformat` 4
 - All **45 code cells compile** cleanly
 - All **45 cells execute without error** on Python 3.14.4, leaving no database files behind
+
+---
+
+## Tooling and environment
+
+### Virtual environment — `D:\Learn\Python\.venv` (gitignored)
+Created on Python 3.14.4 so the notes have a reproducible interpreter with every driver
+they need. `.venv/` was already covered by `.gitignore`.
+
+**Installed:** `pymongo` 4.17.0, `neo4j` 6.2.0, `psycopg[binary]` 3.3.4, `pymysql` 2.2.8,
+`tinydb` 4.9.0, `pytest` 9.1.1, `mypy`, plus the previously system-only `sqlalchemy` 2.0.52,
+`pandas` 3.0.5, `requests` 2.34.2, `networkx` 3.6.1, `duckdb` 1.5.5, `redis` 8.1.0,
+`colorama` 0.4.6, `nbformat`, `ipykernel`.
+
+🔴 **Correction to the earlier record:** `pandas` and `requests` were documented as *not
+installed*. Both are present (and were already present on the system interpreter). This
+matters for the planned folder 20 (Working with APIs), which was scoped around their absence.
+
+A sweep of folders 01–10 under the venv produced **failures identical to the system
+interpreter**, so the newer package versions introduced **no drift** — including SQLAlchemy
+2.0.49 → 2.0.52 against `10.4`.
+
+### `.tools/smoke.py` rewritten — it was over-reporting by 12
+The harness reported 20 failures across 01–10. Only **2 were real defects** (both in 5.1,
+above). The rest split into 12 harness artefacts and 7 intentional teaching failures.
+
+Two flaws, both fixed:
+- 🔴 **Substring skip test.** Any cell whose source merely *contained* `input(` was skipped —
+  including one where `input()` sat inside a method body and was harmless at definition time.
+  Skipping it dropped the `Polygon`/`Triangle` definitions and manufactured **11 phantom
+  `NameError`s** across cells 117–140 of 5.1. Replaced with an **AST walk** that skips only
+  when a blocking call (`input`/`help`/`exit`/`quit`/`breakpoint`) executes at module level.
+- 🔴 **No cascade awareness.** Names a skipped or failed cell would have bound are now
+  tracked; a later `NameError` naming one is reported as a *cascade*, not a fresh defect.
+  `EOFError` raised by calling an `input()`-using method is classified as interactive.
+
+**Intentional failures are now registered** in an `EXPECTED` table with reasons — the
+deliberate syntax error in 6.1, `del display` in 4.1, the pre-`__add__` `TypeError` in 5.1,
+and the four-step MRO walkthrough in 5.2 that the surrounding markdown narrates. If one of
+those ever *stops* failing, the harness now reports a **regression**. The file doubles as the
+written record of which errors are teaching material.
+
+**Result across folders 01–10:** 0 unexpected problems, 50 notebooks valid `nbformat` 4,
+1253 code cells, 1 syntax failure (the intentional 6.1 demo).
