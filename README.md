@@ -41,6 +41,7 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 
 | # | Folder | Covers |
 |---|--------|--------|
+| 00 | Books and References | Reference PDFs — Van Rossum's tutorial, Kuhlman, *Fluent Python*, *Architecture Patterns with Python* |
 | 01 | Basic | Programming concepts, Python intro, REPL, syntax, I/O, operators |
 | 02 | Datatypes | str, numbers, tuple, list, dict, set; mutability, copying, unpacking |
 | 03 | Flow Control Statement | if/elif/else, `match`/`case`, loops, comprehensions, generators |
@@ -50,7 +51,7 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 07 | Module and Packages | Imports, packages, pip, venv, standard library |
 | 08 | File Handling | Text, CSV, JSON, binary, `pathlib` |
 | 09 | Regular Expression | The `re` module, patterns, groups |
-| 10 | Database | SQL, `sqlite3`, ORM basics |
+| 10 | Database | SQL, `sqlite3`, MySQL/PostgreSQL, SQLAlchemy ORM, key-value and document stores, graph data |
 | 11 | Socket Programming | Networking fundamentals, TCP/UDP, HTTP clients |
 | 12 | Multithreading | threading, multiprocessing, `concurrent.futures`, `asyncio` |
 | 13 | GUI | tkinter |
