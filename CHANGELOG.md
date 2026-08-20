@@ -765,3 +765,80 @@ failed and cascaded into 36 spurious `NameError`s — `utils.py` was present all
 - Parses as valid `nbformat` 4
 - **Zero `SyntaxWarning`s remain** (from 41 cells)
 - All **163 code cells execute without error** on Python 3.14.4
+
+---
+
+## 10 Database
+
+3 notebooks -> 4 (one new, one renamed). Retargeted to **3.12+**, outputs cleared, standard
+header and **Common Mistakes / Best Practices / Exercises** block added to each.
+
+### Errors fixed in existing content
+- 🔴 **`SQLite in Python.ipynb` stopped mid-lesson.** Cell 20 was a heading — `### Create
+  Table` — followed by an **empty cell**. The notebook connected, created a cursor, and
+  ended. No `CREATE TABLE`, no `INSERT`, no `SELECT`. That is why `Masterly.DB` was 0 bytes.
+- 🔴 **`sqlite3.version` was removed in Python 3.14** (deprecated 3.12). The cell reading
+  `db.version` raised `AttributeError`. Replaced with `sqlite3.sqlite_version`, plus a table
+  of what was removed and a feature-gating example showing why the *library* version matters.
+- 🔴 **A plain-text MySQL root password** was in a markdown cell of 10.2. Removed, with a note
+  on reading credentials from the environment instead. (This is the second credential found
+  in the notes; the first was a Gmail password in `14 Project`.)
+- 🔴 **Twelve cells of 10.2 held MySQL statements in Python *code* cells**, so every one raised
+  `SyntaxError` — the notebook could not be run at all. Converted to fenced SQL blocks, and
+  the notebook now says up front that it is a CLI transcript requiring a server.
+- **`from pymysql import *`** replaced with a guarded driver check that works with no MySQL
+  installed.
+
+### `10.1 Introduction to SQL.ipynb` — 20 -> 43 cells
+Was 19 markdown cells and 1 code cell — a readable SQL reference where **nothing executed**.
+Now every statement runs against an **in-memory SQLite database**, so the whole notebook is
+explorable: `CREATE`, `INSERT` (with constraint violations demonstrated), `SELECT`, operators,
+aliases, views, `ALTER`, aggregates, `GROUP BY`/`HAVING`, `UPDATE`/`DELETE`.
+**Added JOINs**, which were absent entirely — inner, left, cross, the `LEFT JOIN ... IS NULL`
+idiom for finding non-matches, and the observation that using `INNER` where you meant `LEFT`
+silently drops rows. Also added NULL semantics (`= NULL` matching nothing, `COALESCE`), the
+logical evaluation order of a query, and dialect notes wherever SQLite differs from MySQL.
+
+### `10.2 MySQL Command Line Client.ipynb` — 23 -> 27 cells
+Reframed honestly as a CLI transcript. **Added** how to reach MySQL from Python through a
+**PEP 249** driver, with the point that the `connect`/`cursor`/`execute`/`commit` shape is
+identical to `sqlite3`; the `%s` vs `?` placeholder difference; the `utf8` vs `utf8mb4` trap;
+and a comparison table of MySQL / SQLite / PostgreSQL syntax.
+
+### `10.3 SQLite in Python.ipynb` — 22 -> 41 cells *(renamed from `SQLite in Python.ipynb`)*
+Renamed for consistency with the rest of the folder, and **completed** from the abandoned
+"Create Table" heading onward.
+**Added:** 🔴 **parameterised queries and SQL injection** — with a working `' OR '1'='1'`
+data-leak attack against an f-string query, a `DROP TABLE` demonstration via
+`executescript`, and the honest note that `execute()`'s single-statement rule is not a
+defence; named placeholders and the single-element-tuple trap; `executemany`;
+`fetchone`/`fetchmany`/`fetchall`/iteration; **`sqlite3.Row`**; **transactions** with a
+worked all-or-nothing example showing an uncommitted stock decrement surviving without one;
+**`PRAGMA foreign_keys = ON`** and the orphan row you get without it; a small data-access
+layer; and **`:memory:` databases for testing**.
+
+> **Two bugs found by executing it.** `Connection.backup()` **hangs indefinitely** if the
+> source has an uncommitted write transaction holding a lock — no error, no timeout, the
+> notebook simply stops. And writing the demo database into the repository meant a crashed
+> run left a locked file that broke every subsequent run on Windows. Both fixed: commit
+> before `backup()`, and use a `tempfile` directory.
+
+### `10.4 ORM Intro - SQLAlchemy.ipynb` — **NEW**, 24 cells
+Closes the "ORM intro (SQLAlchemy basics)" checklist item, fully runnable against
+SQLAlchemy 2.0.
+Covers: what an ORM is and its **honest trade-offs**; Core vs ORM; **2.0-style declarative
+models** with `Mapped`/`mapped_column` (with a note that `session.query()` and
+`declarative_base()` are the superseded 1.x idiom); `Engine` vs `Session`; CRUD via
+`select()`/attribute assignment/`session.delete`; relationships and `back_populates`;
+🔴 **the N+1 query problem**, demonstrated by counting the actual SQL statements emitted and
+then fixed with `selectinload`; dropping down to Core and to `text()` — still with bound
+parameters; and a decision table for ORM vs raw SQL.
+
+### Housekeeping
+The author removed `DB SQlite/`, `MySQL/` and the Practice directory (28 files); those
+deletions are recorded in this commit.
+
+### Verification
+- All 4 notebooks parse as valid `nbformat` 4
+- All **45 code cells compile** cleanly
+- All **45 cells execute without error** on Python 3.14.4, leaving no database files behind
