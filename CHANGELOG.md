@@ -1103,6 +1103,115 @@ reuse; `Retry` with backoff restricted to idempotent methods; status-code semant
 
 ---
 
+## 12 Concurrency  *(renamed from `12 Multithreading`)*
+
+One notebook, 38 cells, covering threads only. Now **five notebooks, 122 cells**: threads,
+processes, the GIL, `concurrent.futures` and `asyncio`.
+
+### 🔴 The constraint that shaped it
+`multiprocessing` on Windows uses **`spawn`**: every child re-imports the parent's `__main__`
+to rebuild the target function. Probing this first turned out to be essential.
+
+- A function defined in a **notebook cell cannot be sent to a child at all** — a cell is not
+  importable, so the pool dies with `BrokenProcessPool`.
+- Without `if __name__ == "__main__":`, each child re-executes the parent module and spawns
+  its own children. My first probe script hit exactly this.
+- Under `smoke.py` the "main module" is the harness itself, so an unguarded pool would
+  **re-run an entire folder of notebooks per child**.
+
+So every multiprocessing example runs as a **guarded script via `subprocess`**. That is safe
+under both Jupyter and the harness — and it happens to be the honest way to teach the guard,
+since the guard is what you must write in real code anyway.
+
+### `12.1 Concurrency, Parallelism and the GIL.ipynb` — **NEW**, 17 cells
+Concurrency vs parallelism; CPU-bound vs I/O-bound; what the GIL is and the three myths.
+Measured on the same machine, same code shape, same pool:
+
+| workload | serial | 4 threads | speedup |
+|---|---|---|---|
+| CPU-bound | 0.71s | 0.78s | **0.91x** — *slower* |
+| I/O-bound | 1.60s | 0.40s | **3.98x** |
+
+The only difference is whether the work waits or computes. Includes the free-threaded build
+(PEP 703) and the warning that removing the GIL makes races *more* likely, not less.
+
+### `12.2 Threading.ipynb` — 38 cells *(rewritten from `Multithreading.ipynb`)*
+
+**Fixed in the original:**
+- 🔴 `getName()`, `setName()`, `activeCount()` — all deprecated, all raise under `-W error`,
+  so two cells failed outright
+- 🔴 `from threading import *` in seven cells — demonstrated shadowing the builtin `enumerate`
+- 🔴 it **wrote into the repository** (`File2Save/`, and copied a video file); now `tempfile`
+- 🔴 `RuntimeError: release unlocked lock` — a thread outlived its cell after
+  `join(timeout=5)` on a 10-second job, and a later cell rebound the global `lock`, so the
+  orphan released a *different* lock. Now the worked example for "`join(timeout=)` does not
+  stop a thread"
+- `input()` in the opening example, and an empty trailing cell
+
+> ### 🔴 The textbook race condition no longer races
+> The classic demonstration — four threads doing `counter += 1` — lost **zero** updates. I
+> measured six configurations: up to **4,000,000 increments across 8 threads with the switch
+> interval at 1 microsecond**, always exact, while the threads were verifiably interleaving.
+> On CPython 3.14 the interpreter does not preempt between the three bytecodes of a bare
+> in-place increment.
+>
+> Teaching "this loses updates" beside a cell printing a perfect total is worse than teaching
+> nothing, so the notebook now says what is true: the tight loop **gets away with it**, that
+> is an implementation accident rather than a guarantee, and adding one realistic yield point
+> between the read and the write — any call that can block — loses **75% of all updates**.
+> The `Lock` example then repairs *that* version, so the fix demonstrably fixes something.
+
+**Added:** `RLock` and self-deadlock, two-lock deadlock with the lock-ordering fix,
+`Event`/`Semaphore`/`Barrier`/`Condition`, **`queue.Queue`** producer/consumer with sentinels,
+exceptions vanishing from threads, and thread-local storage.
+
+### `12.3 Multiprocessing.ipynb` — **NEW**, 21 cells
+`spawn` vs `fork` vs `forkserver`, with the **3.14 change of the Linux default to
+`forkserver`**. The `__main__` guard proved by printing `__name__` in both processes — the
+child sees **`__mp_main__`**, which is exactly why the guard works. Measured 4 tasks:
+serial 2.15s, threads 2.05s (1.05x — the GIL), processes 1.07s (**2.00x**). Startup cost
+measured too: a trivial task is far *slower* through a pool. `Queue`/`Pipe`/`Value`,
+`shared_memory`, and what can be pickled.
+
+> **Two self-inflicted bugs, caught by running it.** The `Pipe` example used a **lambda** as
+> the `Process` target — the exact thing the next cell documents as unpicklable. And the
+> pickling table claimed "nested functions" fail while the demo printed `OK`, because the
+> function was defined inside `if __name__ == "__main__":`, which is still module scope. The
+> table and the demonstration now distinguish *inside the guard* (picklable) from *inside
+> another function* (not).
+
+### `12.4 concurrent.futures.ipynb` — **NEW**, 22 cells
+One API over both engines. ✅ `future.result()` **re-raises** — the fix for 12.2's silent
+failures — with the caveat that a result never collected is just as silent. `map()` (input
+order) vs `as_completed()` (completion order); `wait()` with `FIRST_EXCEPTION`; cancellation
+and its hard limit; `max_workers`; and 🔴 the deadlock from submitting to a pool from inside
+that pool. Swapping one class name:
+
+| workload | threads | processes |
+|---|---|---|
+| CPU-bound | 1.92s | **0.94s** |
+| I/O-bound | **0.40s** | 0.69s |
+
+### `12.5 asyncio.ipynb` — **NEW**, 24 cells
+Coroutines, the event loop, and 🔴 that calling an `async def` runs nothing. Sequential
+`await` vs `gather()` (3.0x). **`TaskGroup`** (3.11+) shown to be strictly better than
+`gather()`: `gather` reported one of two failures and left the third task running;
+`TaskGroup` reported both and cancelled the sibling. `asyncio.timeout()` (3.11+), and the
+point that async cancellation *actually cancels*, unlike `join(timeout=)`. 🔴 Blocking calls
+measured at **3.9x** slower than `asyncio.to_thread`. `Semaphore` rate limiting — with the
+observation that the counter needs **no lock**, because the 12.2 race is structurally
+impossible between two awaits. Fire-and-forget tasks being garbage-collected, async context
+managers and iterators, and an honest threads-vs-asyncio comparison.
+
+### Verification
+- Folder 12: **0 unexpected problems**, run **twice**; no repo writes; no leftover temp
+  directories or child processes
+- Folders 01-12: **0 unexpected problems**
+- **61 notebooks** valid `nbformat` 4, **1362 code cells**, 1 syntax failure (the intentional
+  6.1 demo)
+
+---
+
 ## Tooling and environment
 
 ### Virtual environment — `D:\Learn\Python\.venv` (gitignored)
