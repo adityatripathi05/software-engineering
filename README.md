@@ -64,8 +64,8 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 20 | Working with APIs | `requests`, REST/JSON, auth, error handling |
 | 21 | Capstone Projects | End-to-end builds tying it together |
 
-Folder 15 is being built out; 16–21 are new. See [CHANGELOG.md](CHANGELOG.md)
-for what has been modernised so far.
+Folders 13 and 14 are not yet modernised; 16–21 are new. See [CHANGELOG.md](CHANGELOG.md)
+for what has been done so far.
 
 ---
 

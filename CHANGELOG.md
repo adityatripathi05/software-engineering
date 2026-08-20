@@ -1212,7 +1212,7 @@ managers and iterators, and an honest threads-vs-asyncio comparison.
 
 ---
 
-## 15 Data Structure and Algorithm  *(in progress - Foundations batch)*
+## 15 Data Structure and Algorithm
 
 The folder was effectively empty: `Introduction to Data Structure and Algorithm.ipynb` was
 3 cells whose **only code cell was blank** (a "Greatest Common Divisor" heading with no
@@ -1220,8 +1220,7 @@ implementation), and `Advance Coding.ipynb` was 2 competition problems, one requ
 `input()`, plus an empty trailing cell.
 
 Being built out as a full DSA curriculum, beginner to advanced, with theory, runnable
-implementations and interview questions. **Batches 1-4 of 5 delivered: 309 cells across
-14 notebooks.**
+implementations and interview questions. **Complete: 346 cells across 16 notebooks.**
 
 ### `15.1 Complexity Analysis.ipynb` - **NEW**, 23 cells
 Why we count operations rather than seconds; Big-O with Ω and Θ; the growth classes with
@@ -1485,10 +1484,64 @@ Ends with a decision table for greedy vs DP vs D&C.
 > It printed `True`. That is the worst kind of passing test, because it reads as evidence.
 > Now it runs and reports "500 random pairs: 0 mismatches".
 
-### Still to come
-| Batch | Notebooks |
-|---|---|
-| Advanced | 15.15 Union-Find, Tries & Bit Manipulation · 15.16 Interview Patterns |
+### Batch 5: Advanced and practice - 37 cells
+
+### `15.15 Union-Find, Tries and Bit Manipulation.ipynb` - **NEW**, 21 cells
+**Union-Find** with path compression and union by size, and the two optimisations
+**measured** against a naive implementation on the chain-building worst case:
+
+| n | naive steps | optimised steps | ratio |
+|---|---|---|---|
+| 1,000 | 499,500 | 1,996 | 250x |
+| 4,000 | 7,998,000 | 7,996 | **1,000x** |
+
+The optimised count is essentially 2n while the naive one is n²/2. Kruskal's MST is built on
+it, using `union` returning `False` as the cycle detector - and is a good example of
+*provably correct* greedy to contrast with **15.13**'s failures.
+
+**Tries**, with the honest verdict measured rather than assumed: for a **static** word list a
+sorted list plus `bisect` (**15.11**) matches a trie and uses far less memory. The trie wins
+when the set changes constantly, since insertion is O(L) rather than O(n).
+
+**Bit manipulation**: the operators, the four standard manipulations, XOR's three properties
+and the one-liners they enable, Kernighan's `x &= x-1` (with a version note for
+`int.bit_count()`, new in 3.10), and bitmasks as sets - ending with **bitmask DP for TSP**,
+verified against brute force over all permutations.
+
+🔴 Also demonstrates the XOR-swap failure mode: swapping an element with **itself** zeroes it.
+
+### `15.16 Interview Patterns and Problem-Solving.ipynb` - **NEW**, 16 cells
+The capstone. A six-step framework; **the pattern-recognition table** mapping question
+phrasing to technique across all fifteen notebooks; reading constraints to infer the intended
+complexity (with a computed table showing what each complexity costs at each n); the full
+complexity cheat sheet; and what interviewers actually assess.
+
+Absorbs the two problems from the deleted `Advance Coding.ipynb` - diagonal difference and
+positive/negative/zero fractions - rewritten without `input()`, in one pass, with tests and
+the edge cases the originals ignored (empty input, and the shared centre element when n is
+odd).
+
+Ends with a 30-problem practice set naming the *pattern* rather than the solution, an index
+of the folder, and a `verify(fast, slow, generate)` harness - which is then used on a
+**deliberately broken** Kadane implementation and finds the failure on `[-7, -6]` in under a
+second.
+
+## 15 Data Structure and Algorithm - complete
+
+**346 cells across 16 notebooks**, built in five batches from an effectively empty folder
+(two stubs, one with a blank code cell and one requiring `input()`).
+
+Every algorithm is cross-checked against a brute-force implementation, the standard library,
+or an exhaustive search. That discipline caught several errors in my own drafts, each
+recorded above: a race condition demonstration that did not race, a heap claim that was true
+only in the worst case, a Dijkstra failure demo that printed the correct answer, and a
+Karatsuba verification that was vacuously true.
+
+### Verification
+- Folder 15: **0 unexpected problems**, run twice
+- All 13 folders: **0 unexpected problems**
+- **75 notebooks** valid `nbformat` 4, **1489 code cells**, 1 syntax failure (the intentional
+  6.1 demo)
 
 **Note:** the GCD topic from the deleted `Introduction` stub is now covered in **15.12**
 (Euclid's algorithm). The competition problems from `Advance Coding` remain for **15.16**.
@@ -1496,7 +1549,7 @@ Ends with a decision table for greedy vs DP vs D&C.
 ### Verification
 - Folder 15: **0 unexpected problems**, run twice
 - Folders 01-12 and 15: **0 unexpected problems**
-- **73 notebooks** valid `nbformat` 4, **1476 code cells**, 1 syntax failure (the intentional
+- **75 notebooks** valid `nbformat` 4, **1489 code cells**, 1 syntax failure (the intentional
   6.1 demo)
 - Every algorithm cross-checked against a brute-force implementation
 
