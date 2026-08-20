@@ -605,3 +605,84 @@ skips cells that call `sys.exit()`.
 - All **105 code cells compile** cleanly
 - All **103 non-interactive cells execute without error** on Python 3.14.4, leaving no files
   behind in the repository
+
+---
+
+## 08 File Handling
+
+4 notebooks -> 5 (one new). Retargeted to **3.12+**, outputs cleared, standard header and
+**Common Mistakes / Best Practices / Exercises** block added to each.
+
+Two of the four notebooks were effectively empty: 8.3 had **three cells and no runnable
+code at all**, and 8.4 had four cells, no headings, and two network calls with no error
+handling.
+
+### Errors fixed in existing content
+- 🔴 **`./Files/Image.jpg` in two cells of 8.1.** There has never been a `Files` directory —
+  the images are in `File2Save`. Both cells raised `FileNotFoundError`.
+- 🔴 **`sys.stdout = open(...)` in 8.1, never restored.** Every subsequent `print` in the
+  session went silently into that file, and the handle was never closed. Replaced with
+  `contextlib.redirect_stdout`.
+- 🔴 **`nwords = len(word)`** in the word-count cell — `word` was never defined. `NameError`;
+  the cell could never run.
+- 🔴 **Two leaked file handles** in the `print(file=open(...))` cell, plus a typo
+  (`output.txt1` for `output1.txt`) that is why a stray file of that name exists in
+  `File2Save`.
+- **`x`-mode cells were not re-runnable** — they raised `FileExistsError` on a second pass.
+  Rewritten to demonstrate the exclusive-creation behaviour deliberately.
+- **8.4 used plain `http://`**, with no timeout and no exception handling.
+
+### `8.1 File Handling — Text.ipynb` — 47 -> 56 cells
+**Added:** 🔴 an **encoding** section — `open()`'s default is platform-dependent, which is
+why files written on Windows break on Linux; plus `errors=` strategies and the
+`utf-8` vs `utf-8-sig` BOM trap; **`pathlib` I/O** (`read_text`/`write_text`/`read_bytes`)
+with a comparison table; **atomic writes** — write to a temp file in the same directory,
+`fsync`, then `os.replace()` — demonstrated by crashing mid-write and showing the original
+survives.
+
+### `8.2 File Handling — CSV.ipynb` — 19 -> 27 cells
+**Added:** 🔴 an explanation of **`newline=""`**, which the original used in every cell and
+never justified — shown by writing the same rows with and without it and diffing the raw
+bytes; 🔴 **why `line.split(",")` is wrong**, demonstrated with fields containing commas,
+quotes and embedded newlines; explicit **type conversion** (the reader always returns
+strings); `DictWriter` `restval`/`extrasaction`; **`csv.Sniffer`**; streaming 10,000 rows
+without materialising them; and an honest "when to stop and use `pandas`" table.
+
+### `8.3 File Handling — JSON.ipynb` — 3 -> 16 cells *(complete rewrite)*
+Was two markdown cells and one empty code cell.
+**Now covers:** why JSON beat the alternatives (including that it is safe to parse, unlike
+`pickle`); all four functions with the `s`-means-string mnemonic; the full type-mapping
+table; 🔴 **the two silent lossy conversions** — tuples become lists, and all dict keys
+become strings; the types JSON cannot represent at all; **custom `default=` encoders and
+`object_hook` decoders** round-tripping `datetime`, `Decimal` and `set`; **`JSONDecodeError`**
+handling across seven malformed inputs, including the very common "API returned an HTML
+error page"; and **JSON Lines**, with a demonstration that one corrupt line does not destroy
+the file.
+The external `imgix.net` meme image was removed.
+
+### `8.4 File Handling — Online Text.ipynb` — 4 -> 11 cells
+**Rewritten:** HTTPS, an explicit **timeout**, and `HTTPError`/`URLError`/`TimeoutError`
+handling, with an **offline fallback** so the notebook runs without a network. Explains why
+the network hands you `bytes` and where to decode (the Unicode-sandwich rule from 2.1),
+taking the charset from the response headers; streaming line by line versus `.read()`;
+downloading to disk with `shutil.copyfileobj`; and a comparison table showing why real
+projects use `requests` (**20**).
+
+### `8.5 Binary Files.ipynb` — **NEW**, 16 cells
+Text mode vs binary mode, and what the text layer actually does — demonstrated by showing
+non-UTF-8 bytes both failing to decode *and* being silently corrupted by newline
+translation. Then: **chunked reading** with a `chunks()` generator so file size stops
+mattering; **`hashlib`** for verification and deduplication, including `file_digest()`
+(3.11+), a one-bit-flip demo, and a note that MD5/SHA-1 are broken and that no
+general-purpose hash belongs near a password; `shutil.copyfileobj` and **`io.BytesIO`**;
+**magic bytes** for identifying a file regardless of its extension, with a renamed-file demo;
+and **`struct`** for fixed-width records, including a big-endian/little-endian misread that
+turns 1 into 16,777,216.
+
+### Verification
+- All 5 notebooks parse as valid `nbformat` 4
+- All **62 code cells compile** cleanly
+- All **53 non-interactive cells execute without error** on Python 3.14.4
+
+> Note: `File2Save/output.txt1` is a stray file produced by the filename typo fixed above.
+> It is left in place rather than deleted unilaterally; it can be removed safely.
