@@ -686,3 +686,82 @@ turns 1 into 16,777,216.
 
 > Note: `File2Save/output.txt1` is a stray file produced by the filename typo fixed above.
 > It is left in place rather than deleted unilaterally; it can be removed safely.
+
+---
+
+## 09 Regular Expression
+
+1 notebook, 247 -> 259 cells. Retargeted to **3.12+**, outputs cleared, standard header and
+**Common Mistakes / Best Practices / Exercises** block added.
+
+This was already the most thorough notebook in the set — history, syntax, all the matching
+functions, character classes, quantifiers, greediness, boundaries, substitution, every
+compilation flag, grouping, backreferences, named and non-capturing groups, and both
+lookahead and lookbehind. The work here was correction and completion, not expansion.
+
+### 🔴 The headline defect: it teaches raw strings, then stops using them
+
+Cells 42-54 are an excellent section called **"Backslash Plague"** explaining precisely why
+regex patterns must be raw strings. **Then 41 of the following cells write
+`re.compile("\w+")` instead of `r"\w+"`.**
+
+| Escape | Occurrences |
+|---|---|
+| `\w` | 17 |
+| `\d` | 10 |
+| `\W` | 5 |
+| `\s` | 4 |
+| `\.` | 2 |
+| `\$`, `\g` | 1 each |
+
+These still **run** on Python 3.14 — an invalid escape is a `SyntaxWarning`, not an error —
+but the warning is documented as becoming a `SyntaxError` in a future release, and the
+notebook was contradicting its own advice 41 times.
+
+All 41 converted to raw strings, verified by recompiling every cell with
+`warnings.simplefilter("error")` until zero remained. Two needed hand conversion:
+a multi-line Windows-path literal, and `re.compile("(\w+) \1")` — where the naive raw form
+`r"(\w+) \1"` would have changed the backreference into a literal backslash. It is now
+`r"(\w+) \1"`, which is also the idiomatic way to write it.
+
+### Other errors fixed
+- 🔴 **The `re.LOCALE` section was wrong for Python 3.** `re.compile(r"\w", re.LOCALE)` raises
+  `ValueError: cannot use LOCALE flag with a str pattern` — the flag is **bytes-only** since
+  Python 3, because `str` is Unicode and `re.UNICODE` is already the default. The prose
+  described `str` behaviour while the demo quietly used `re.A` instead. Rewritten to
+  demonstrate the `ValueError`, show the valid `bytes` form, and point at `re.ASCII` as the
+  flag people actually want.
+- 🔴 **`re.split(' ', txt, 2)`** — passing `maxsplit` positionally is **deprecated in Python
+  3.13** (as is `count` for `re.sub`). Rewritten to the keyword form, with a live
+  demonstration of the warning.
+- **The flags section skipped number 6.** It ran 1, 2, 3, 4, 5, 7, 8 — `re.ASCII` was
+  missing. Added, with the Unicode-vs-ASCII comparison for `\w`, `\d` and `\s`.
+- **`import regex`** (third-party) was unguarded, so the notebook hard-failed if it was not
+  installed. Now falls back to the standard library with an install hint.
+
+### Added
+- **`re.fullmatch()`** (3.4+) — the missing third matching function, with a table showing
+  that `match`, `search` and `fullmatch` disagree on `"123abc"`, which is the classic
+  validation bug.
+- **The `Match` object properly** — `group()`, `groups()`, **`groupdict()`**, `span()`,
+  `start()`, `end()`, `m[...]` subscripting, and the **walrus idiom**
+  `if match := pattern.match(line):`.
+- 🔴 **Catastrophic backtracking (ReDoS)** — a live timing loop showing `(a+)+$` doubling in
+  cost per added character, a table of the warning signs, and why it is a security issue and
+  not just a performance one.
+- **Atomic groups `(?>...)` and possessive quantifiers `*+`** — **added to `re` in Python
+  3.11** — as two of the three fixes, alongside restructuring. Includes the trade-off:
+  `(?>a*)a` never matches, because atomic groups change semantics as well as speed.
+- **Performance and when *not* to use a regex** — compile-once timings, and a table showing
+  `str.startswith`, `in`, `split` and `replace` beating `re` on both speed and clarity for
+  fixed strings.
+
+### Tooling note
+The harness was extended again during this folder: it now adds each notebook's own directory
+to `sys.path`, as Jupyter does. Without that, `from utils import highlight_regex_matches`
+failed and cascaded into 36 spurious `NameError`s — `utils.py` was present all along.
+
+### Verification
+- Parses as valid `nbformat` 4
+- **Zero `SyntaxWarning`s remain** (from 41 cells)
+- All **163 code cells execute without error** on Python 3.14.4
