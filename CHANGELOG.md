@@ -2029,6 +2029,104 @@ lives.
 
 ---
 
+## 16 Type Hints and Static Typing
+
+New folder. **4.5** had taught the *syntax* of annotations; this folder is the *system* — what a
+checker can prove, what it cannot, and how to use it on real code.
+
+### Scan before writing
+Checking for **dedicated** coverage rather than incidental mentions found a clean split:
+
+| Already taught | Where |
+|---|---|
+| basic annotations, `Optional`, `Callable`, `Sequence` | **4.5** |
+| `Protocol`, `runtime_checkable` | **5.4** — real coverage, so 16.4 must build on it |
+| `TypedDict` (introductory) | **5.3** |
+
+| Not taught anywhere | |
+|---|---|
+| `TypeVar`, generics, **variance** | only name-dropped in 4.5 as "see 16" |
+| 🔴 **PEP 695** (`def first[T](...)`, the `type` statement) | nothing, and it is the 3.12 default now |
+| `ParamSpec`, `@overload`, `Self`, `assert_never`, `Annotated` | nothing |
+| `reveal_type`, strictness settings, stub files, `TYPE_CHECKING` | nothing |
+
+There are also **nine inbound cross-references** promising this folder, from 1.1, 4.1, 4.5
+(×4), 10.5, 14.16 and 15.6 — including `TypeVar`, `NewType`, `Protocol` and variance by name.
+
+Built against **mypy 2.3.1** on **Python 3.14.4**. Every example runs `mypy` for real in a
+temporary directory and prints its actual report, with `--cache-dir` pointed inside the temp
+directory so `.mypy_cache` never reaches the repository.
+
+**Batch 1: foundations — 53 cells across 2 notebooks.**
+
+### `16.1 The Type System - What a Checker Actually Does.ipynb` — **NEW**, 28 cells
+- 🔴 **Annotations are data, not enforcement**, shown by type-checking a file and then *running*
+  it: mypy reports two errors, Python prints `user:not-an-int:42`, and the annotations turn out
+  to be a plain dict on the function object.
+- **`reveal_type`** — and the distinction nobody documents clearly: the **bare** form is a mypy
+  pseudo-function that is a `NameError` at runtime, while `from typing import reveal_type`
+  (3.11+) really runs, prints `Runtime type is 'dict'` **and returns its argument**. Both shown.
+  The revealed `counts.get("done") -> int | None` is the payoff.
+- 🔴 **`Any` is an off switch, not a type**, reached most often by *omitting a return
+  annotation*: two functions with identical bodies, where the unannotated one lets
+  `a.completely_made_up_method()` pass in silence and the annotated one catches it.
+- **`Any` vs `object`** side by side — same acceptance, opposite permissiveness.
+- Default mypy reporting **nothing** on an unannotated file, and `--strict` reporting four
+  errors on the same file: the whole gradual-adoption story in one contrast.
+- 🔴 **`# type: ignore` written two ways wrong**: a stale one caught by `--warn-unused-ignores`,
+  and trailing prose after `[code]` making the comment *invalid*, so you get **two** errors
+  instead of none.
+- 🔴 **The closing demonstration**: a file that passes `--strict` with **zero** findings and
+  contains three real bugs — `max` where `min` was meant, division by an empty sequence, and a
+  missing `429` case. The third is **15.6**'s coverage lesson exactly: *missing code has no
+  type*. Ends with a types-vs-tests table.
+
+> 🔴 **Two of my own claims were wrong and the output caught both.** The `reveal_type` demo used
+> a mixed-value dict, so mypy revealed `dict[str, object]` and `object`, not the `dict[str, int]`
+> the prose claimed — and the runtime half crashed on the bare form before reaching the imported
+> one, so "it printed `Runtime type is 'dict'`" described output that never appeared. Split into
+> two files with an annotated homogeneous dict. Worse, the three-bug file was **not** `--strict`
+> clean: `base * 2 ** attempt` made mypy infer `Any`, producing a `[no-any-return]` error and
+> destroying the entire point of the section. Rewritten as an explicit doubling loop, now
+> genuinely clean at exit 0.
+
+### `16.2 Unions, Narrowing, Literal and TypedDict.ipynb` — **NEW**, 25 cells
+- `X | Y`, and 🔴 the note that **`Optional[X]` does not mean "optional argument"** — with a
+  three-way table separating required-may-be-None from optional-never-None.
+- **Narrowing** demonstrated: the same function broken, fixed by an early `return`, and fixed by
+  `assert`, with `reveal_type` showing `str` in both survivors — plus the reminder from **15.1**
+  that `python -O` deletes the `assert` while the *narrowing* survives.
+- 🔴 **The truthiness trap**, run rather than described: `timeout_for(0)` returns **30** under
+  `if not raw:` and **0** under `if raw is None:`. Both versions type-check perfectly, which is
+  16.1's lesson recurring.
+- **`Literal`** rejecting `"cancelled"` and `"x"`, and narrowing to `Literal['queued']` inside a
+  `==` branch; with a `Literal` vs `Enum` note — literal at the boundary, enum in the domain.
+- 🔴 **`assert_never` for exhaustiveness** — the highest-value pattern in the notebook. The
+  incomplete version reports `expected "Never"` and *names the unhandled literals*, so adding a
+  state produces a compile-time list of every place needing an update.
+- **`Final`** rejecting reassignment of both a module constant and an attribute, and revealing
+  `MAX_ATTEMPTS` as `Literal[3]?` rather than `int`.
+- **`TypedDict`** producing four distinct errors (missing key, wrong value type, unknown key)
+  with `Required`/`NotRequired`, then the decision table against `dataclass` and `NamedTuple` —
+  and a runtime demo where `type(as_dict).__name__` is plain **`dict`**: the class vanishes.
+- **`Annotated`**, with the checker enforcing `int` and ignoring the metadata, then
+  `get_type_hints(..., include_extras=True)` recovering it — 🔴 the default *strips* it.
+
+> **Build note.** Three cells used an inline `write_text(...) or "name"` construct that could not
+> survive the notebook's quoting, and a fourth carried a newline escape inside a raw string that
+> became a real newline and defeated `textwrap.dedent`. Replaced with an explicit `write()`
+> helper — the same shape used in every other folder here, and the reason that convention exists.
+
+### Verification
+- Folder 16: **0 unexpected problems**, run **twice**, identical both times
+- **53 cells across 2 notebooks**; **21 code cells**, all compile, outputs cleared, `nbformat` 4.4
+- **mtime snapshot of all 194 repository files: 0 touched, 0 created, 0 removed** — `.mypy_cache`
+  stays in the temp directory
+- **Remaining in this folder:** 16.3 generics and variance, 16.4 protocols, 16.5 typing real
+  code, 16.6 adoption
+
+---
+
 ## Housekeeping: repository writes and orphaned fixtures
 
 The "ten unreferenced fixture files awaiting a delete decision" turned out to be a
