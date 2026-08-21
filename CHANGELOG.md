@@ -1575,7 +1575,7 @@ row in `14.11`'s binary-search table, and "a tree of height **20**" in `14.7`.
 
 ---
 
-## 15 Testing
+## 15 Testing and Debugging
 
 New folder, nothing existed. Testing had appeared only in passing: `assert` in **6.1**,
 `@pytest.fixture` in a decorator table in **4.4**, a `pytest>=8.0` line in **7.2**'s

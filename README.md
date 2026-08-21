@@ -55,7 +55,7 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 11 | Socket Programming | Networking fundamentals, TCP framing, UDP, concurrent servers, HTTP and `requests` |
 | 12 | Concurrency | The GIL, threading, multiprocessing, `concurrent.futures`, `asyncio` |
 | 14 | Data Structure and Algorithm | Complexity, Python's real costs, arrays and two pointers, linked lists, trees, graphs, sorting, DP, interview patterns |
-| 15 | Testing | `assert`, `unittest`, `pytest`, fixtures, mocking, coverage, property-based testing |
+| 15 | Testing and Debugging | `assert`, `unittest`, `pytest`, fixtures, mocking, coverage, property-based testing; tracebacks, `pdb`, debugging strategy |
 | 16 | Type Hints and Static Typing | `typing`, generics, `mypy` |
 | 17 | Modern Python Features | dataclasses, enum, walrus, logging |
 | 18 | Tooling, Packaging and Environments | venv, `pyproject.toml`, profiling |
