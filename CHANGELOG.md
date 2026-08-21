@@ -2338,13 +2338,75 @@ them the notebooks would describe output instead of producing it.
 > the folder that cannot work offline. And a dead `write()`/`shutil.copy()` fragment left over
 > from an earlier draft was removed from the TOML-gotchas cell.
 
+**Batch 2: packaging and linting — 42 cells across 2 notebooks.** Folder total so far:
+**85 cells, 4 notebooks**.
+
+### `17.3 Packaging and Publishing.ipynb` — **NEW**, 19 cells
+A complete round trip, executed: **write a package → build it → open the artefacts → install
+into a clean environment → run the command it created.**
+
+- 🔴 The **`src/` layout** argument restated from the packaging side: with a flat layout
+  `import jobkit` works whether or not the package is correctly installed, so a missing
+  subpackage reaches your users (**15.6**).
+- `python -m build --no-isolation` producing a **2,227-byte wheel** and a **1,620-byte sdist**.
+- **Inside the wheel**, listed from the zip: `jobkit/{__init__,cli,retry}.py`, **`py.typed`**,
+  and a `dist-info/` directory whose four files are each explained — `WHEEL` (`Tag:
+  py3-none-any`), `entry_points.txt` (`jobkit = jobkit.cli:main`), and `RECORD` with a SHA-256
+  and byte count per file, which is how uninstall is exact.
+- **Inside the sdist**: `tests/`, `pyproject.toml` and `README.md` — everything needed to
+  rebuild — against the wheel, which holds only what belongs in `site-packages`.
+- 🔴 **What did *not* ship.** A `SCRATCH-NOTES.txt` and a `.env` were planted in the project and
+  checked for by name in the artefacts: both absent. The notebook is explicit that this is
+  partly luck — a `.env` **inside the package directory** would ship, and a PyPI upload can
+  never be deleted, only yanked.
+- **The round trip finishing**: a throwaway venv, `pip install` of the local wheel, the import
+  resolving to that venv's `site-packages`, and the generated `jobkit.exe` printing
+  `attempt 4 -> 16.0s`.
+- Editable installs and 🔴 why `pip install -e . --no-build-isolation` fails in a fresh 3.12+
+  venv (no `setuptools`); SemVer with the note that a version can never be reused on PyPI;
+  publishing via TestPyPI with **twine and trusted publishing described but deliberately not
+  executed** — this notebook uploads nothing.
+
+### `17.4 Linting and Formatting with ruff.ipynb` — **NEW**, 23 cells
+- **Formatter vs linter** as two different questions, and the table of five tools ruff replaced.
+- A genuinely messy file producing **8 findings**, each mapped to why it matters: `I001`,
+  `F401` ×3, `B006`, `F841`, `E722`, `S110`. 🔴 `B006` is called out as justifying a linter on
+  its own — it is **4.1**'s mutable-default bug found in code you have not read.
+- **`ruff rule B006`** printing the full rationale with before/after examples, including the
+  `lru_cache` caveat. No web search needed.
+- 🔴 **Safe vs unsafe fixes**: `--diff` reports *"Would fix 3 errors (2 additional fixes
+  available with `--unsafe-fixes`)"*, and the notebook explains why deleting
+  `payload = json.loads(...)` is classed unsafe — the call could raise, so removing it changes
+  behaviour.
+- `ruff format --diff` normalising `def process_rows( rows,seen = [] )` and **leaving the
+  unused imports and the mutable default alone** — the concrete argument for running both, plus
+  the ordering rule: format first, then lint.
+- **The rule families table**, a real `[tool.ruff.lint]` config, and the wider selection finding
+  `UP035`/`UP045`/`UP006` (`Dict`, `List`, `Optional` are the old spellings) and `SIM118`
+  (`key in dict.keys()`). Then `--fix` clearing **13 of 18** and the after-file showing
+  `float | None`, `list[float]`, `dict[str, int]`.
+- 🔴 **`# noqa` three ways, run**: bare `# noqa` reports **nothing at all**; `# noqa: F401` is
+  correct; `# noqa: E501` on a line whose real problem is F401 leaves the F401 reported *and*
+  adds `RUF100 Unused noqa directive`. Bare `# noqa` is named as the exact counterpart of a bare
+  `except:` (**6.1**) and a bare `# type: ignore` (**16.1**), with `RUF100` as the counterpart of
+  `--warn-unused-ignores`.
+- Editor / pre-commit / CI as three placements with different jobs, and a closing table of what
+  a linter catches that a type checker and tests do not — ending on the point that **none of the
+  first two columns can tell you the answer is right**.
+
+> 🔴 **Three claims corrected against the output.** I wrote *"Would fix 2 errors"* where ruff
+> says **3**; I cited `UP007` where this version emits **`UP045`** for `Optional` → `X | None`;
+> and I claimed the `per-file-ignores` for `S101` "did its job" when `S` is not in the `select`
+> list, so that entry is inert until the security family is enabled. Only the `__init__.py`
+> `F401` ignore was doing visible work, and the notebook now says so.
+
 ### Verification
 - Folder 17: **0 unexpected problems**, run **twice**, identical both times
-- **43 cells across 2 notebooks**; **17 code cells**, all compile, outputs cleared,
+- **85 cells across 4 notebooks**; **34 code cells**, all compile, outputs cleared,
   `nbformat` 4.4
-- **mtime snapshot of all 200 repository files: 0 touched, 0 created, 0 removed** — every venv,
-  package and build artefact is created under `tempfile`
-- **Remaining:** 17.3 packaging and publishing, 17.4 ruff, 17.5 profiling
+- **mtime snapshot of all 202 repository files: 0 touched, 0 created, 0 removed** — the venvs,
+  wheels, sdists and installed packages all live under `tempfile`
+- **Remaining:** 17.5 profiling and performance
 
 ---
 
