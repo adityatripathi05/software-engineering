@@ -9,6 +9,13 @@ venv/
 .ipynb_checkpoints/
 *.ipynb_checkpoints
 
+# Tool caches (folder 15 runs pytest in temp dirs, but belt and braces)
+.pytest_cache/
+.mypy_cache/
+.hypothesis/
+.coverage
+htmlcov/
+
 # OS / editor
 Thumbs.db
 .DS_Store
