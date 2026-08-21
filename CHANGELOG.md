@@ -2080,3 +2080,8 @@ pointing at the deleted Project folder.
 > 🔴 **The credentials removed in `27ef473` remain in commit `b0537f6`.** Deleting `14 Project`
 > does not change that — the Gmail password and OpenWeatherMap API key are still readable in
 > history and must be rotated.
+>
+> ✅ **Resolved 2026-08-21.** The author changed the `pydevop1@gmail.com` password and deleted
+> the OpenWeatherMap API key. Both values remain in `b0537f6` but are now inert, so no history
+> rewrite was needed. Rotation — not rewriting — is what actually closes an exposure like this,
+> since the values had been sitting in a working tree for years.
