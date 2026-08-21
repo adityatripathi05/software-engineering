@@ -2185,12 +2185,83 @@ Builds on **5.4**, which taught `Protocol` as an idea; this is the checkable for
 - The `collections.abc` protocols you already use, with `Sized`, `Iterable` and a generic `take`
   working on a generator and on a string.
 
+**Batch 3: real code and adoption — 42 cells across 2 notebooks.** Folder complete:
+**148 cells, 6 notebooks**.
+
+### `16.5 Typing Real Code - Generators, Async, Imports and Third-Party.ipynb` — **NEW**, 23 cells
+The parts of a real codebase where people get stuck. No new machinery — the same generics and
+protocols applied to shapes you actually meet.
+
+- **Generators**: `Iterator[T]` as the normal case against `Generator[Yield, Send, Return]`, with
+  a *generic* generator `chunk[T]` revealed as `Iterator[list[int]]`, and the mismatch caught.
+- **Async**, with mypy's own note doing the teaching: assigning an unawaited coroutine gives
+  `Coroutine[Any, Any, bytes]` and **"Maybe you forgot to use `await`?"**. Plus the
+  `Awaitable` vs `Coroutine` parameter distinction, mirroring `Iterable` vs `Iterator`.
+- 🔴 **The `@contextmanager` return-type trap**: you annotate what the *generator* yields —
+  `Iterator[list[str]]` — not `ContextManager[...]`, because the decorator does that conversion.
+- 🔴 **`cast` is an unchecked assertion, demonstrated in two runs**: mypy reveals `int` and
+  reports **nothing**; the same code at runtime prints `cast returned: 'not a number' of type
+  str` and dies on the next line with `TypeError: can only concatenate str`. It is
+  `# type: ignore` with a nicer face.
+- **`TYPE_CHECKING`** breaking a genuine two-module import cycle — mypy clean **and** the
+  program runs — with `from __future__ import annotations` explained, including 🔴 that it can
+  break libraries doing runtime annotation introspection, and the PEP 649 note for 3.14.
+- 🔴 **`--ignore-missing-imports` silences the error but not the `Any`**, shown by running mypy
+  twice on the same file: the error and exit code disappear, `reveal_type` still says `Any`, and
+  the made-up method call is still unchecked in both. Followed by the fix that works — wrapping
+  the untyped library at a single boundary typed with a `Protocol`, after which a wrong argument
+  **is** caught despite the vendor being untyped.
+- Writing a `.pyi` stub, and shipping `py.typed` with your own package.
+
+> **Build note.** The `cast` cell first crashed at its own bare `reveal_type` before reaching
+> the interesting output — 16.1's own lesson, self-inflicted. Split into a checked file and a
+> runnable one.
+
+### `16.6 Adopting Types in an Existing Codebase.ipynb` — **NEW**, 19 cells
+The realistic case, built on a small untyped project created in the notebook, with one real bug
+planted in it.
+
+- 🔴 **Never `--strict` on day one.** Thousands of unprioritised errors is how a team concludes
+  typing is not worth it.
+- **Step 1 — `--check-untyped-defs`, before annotating anything.** Default mypy reports
+  **nothing** on the untyped project; the flag finds
+  `Unsupported operand types for / ("None" and "int")` with the note *Left operand is of type
+  "Any | None"* — `summarise` starts `total = None` and divides by `len(rows)`, two bugs on one
+  line, found with **zero annotations added**. It is not part of `--strict`, which is why most
+  people never find it.
+- **Step 2 — configuration**, with the argument for the direction: `strict = true` globally plus
+  a **shrinking list of per-module exemptions**, so the exemptions are a visible to-do list and
+  new modules are strict by default. Shown three ways on the same project — strict with no
+  exemptions (8 errors), strict with two modules exempted (the planted bug still reported
+  because `check_untyped_defs` is global), and then annotated.
+- 🔴 **Step 3 — the compounding effect, measured.** Annotating `app/spool.py` alone makes mypy
+  report `Unsupported operand types for + ("str" and "float")` in `app/report.py` — a
+  *different, still-unannotated* module. Annotating a module improves checking in everything
+  that calls it, which is why boundaries and signatures come first and local variables come
+  almost never.
+- Step 4: the narrowest-tool-that-works ladder for errors you cannot fix today, and the
+  error-code histogram trick for finding the one mechanical fix that clears hundreds.
+- Step 5: CI beside pytest (**15.6**), pinned version, and 🔴 run over the **tests** too — wrong
+  mock signatures are exactly what **15.5** showed `autospec` catching.
+- 🔴 **Where types do not pay** — an honest table, because that is what makes the rest credible.
+- **13 interview questions** indexed to the notebook that answers each.
+
+> 🔴 **A wrong claim caught by reading the output.** I wrote that `--check-untyped-defs` found
+> the `str + float` bug in `report.py`. It found the `None` division in `spool.py`; the
+> `report.py` error only appears in step 3, *after* `spool.py` is annotated — which is the
+> compounding point the notebook is making. Corrected to quote the actual error.
+
+### Cross-references
+`16.2`'s "Where next" table stopped at 16.4 and now lists 16.5 and 16.6. README's folder 16 row
+was expanded, and the completion line moved to **00–16 complete, 17–19 remaining**.
+
 ### Verification
 - Folder 16: **0 unexpected problems**, run **twice**, identical both times
-- **106 cells across 4 notebooks**; **43 code cells**, all compile, outputs cleared,
-  `nbformat` 4.4
-- **mtime snapshot of all 196 repository files: 0 touched, 0 created, 0 removed**
-- **Remaining:** 16.5 typing real code, 16.6 adoption
+- **148 cells across 6 notebooks** — 28/25/27/26/23/19; **59 code cells**, all compile, outputs
+  cleared, `nbformat` 4.4
+- Still **no `EXPECTED` entries** — every mypy run and every deliberate failure is in a
+  subprocess
+- **mtime snapshot of all 198 repository files: 0 touched, 0 created, 0 removed**
 
 ---
 

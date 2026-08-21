@@ -56,12 +56,12 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 12 | Concurrency | The GIL, threading, multiprocessing, `concurrent.futures`, `asyncio` |
 | 14 | Data Structure and Algorithm | Complexity, Python's real costs, arrays and two pointers, linked lists, trees, graphs, sorting, DP, interview patterns |
 | 15 | Testing and Debugging | `assert`, `unittest`, `pytest`, fixtures, mocking, coverage, property-based testing; tracebacks, `pdb`, debugging strategy, logging |
-| 16 | Type Hints and Static Typing | `typing`, generics, `mypy` |
+| 16 | Type Hints and Static Typing | `mypy`, narrowing, `Literal`, `TypedDict`, generics and variance, protocols, adoption |
 | 17 | Tooling, Packaging and Environments | venv, `pyproject.toml`, `ruff`, profiling |
 | 18 | Working with APIs | `requests`, REST/JSON, auth, error handling |
 | 19 | Capstone Projects | End-to-end builds tying it together |
 
-Folders 00–15 are complete and verified. Folders 16–19 are still to be written. See
+Folders 00–16 are complete and verified. Folders 17–19 are still to be written. See
 [CHANGELOG.md](CHANGELOG.md) for what has been done so far.
 
 > **Numbering note.** `13 GUI` and the old `14 Project` were removed, and `15 Data Structure
