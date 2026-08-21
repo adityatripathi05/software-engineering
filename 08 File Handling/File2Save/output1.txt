@@ -1,3 +1,0 @@
-Hello Python!
-We are printing to file.
-Each statement will print.

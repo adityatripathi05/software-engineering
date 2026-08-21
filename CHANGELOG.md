@@ -1806,6 +1806,95 @@ The closing notebook: layout, coverage, property-based testing, doctest, flakine
 
 ---
 
+## Housekeeping: repository writes and orphaned fixtures
+
+The "ten unreferenced fixture files awaiting a delete decision" turned out to be a
+**mis-diagnosis**, and investigating it found a live defect.
+
+### What was actually true
+
+Grepping every notebook for each filename gave a different picture than the standing
+assumption. Of the ten files, **only one (`Log.txt`) was genuinely unreferenced.** The rest
+were named in code cells — but almost all of those cells now write to a `tempfile` directory,
+so the copies sitting in the repository were **stale leftovers from 2019–2020 runs**, not
+fixtures anything reads.
+
+The exception is what mattered:
+
+### 🔴 `8.5 Binary Files` was still writing into the repository
+
+The folder-08 retro-fix covered `8.1`–`8.3` and **missed `8.5` entirely**. It wrote six files
+into `File2Save/` across five cells — `mode_demo.bin`, `Image_copy.jpg`, `tampered.jpg`,
+`Image_copyfileobj.jpg`, `definitely_an_image.jpg` and `orders.bin` — and left
+`Image_copy.jpg` behind on every single run.
+
+**This was invisible to `git status`**, which is why it survived. The file it left was a
+byte-identical copy of `Image.jpg`, so git saw no change; only the **mtime** gave it away
+(`Image_copy.jpg` was dated the same day as that session's smoke runs, while `Image.jpg` was
+still dated June 2019).
+
+Worse than the leftovers: **two demos iterated `File2Save/` directly** — the deduplication
+scan and the magic-bytes identification table — so their output depended on whatever stale
+files happened to be lying in the repository at the time. They were not reproducible.
+
+**Fixed** with a seeded temp directory. A new setup cell creates `WORK`, keeps
+`File2Save/Image.jpg` as the one read-only fixture, and seeds `WORK` deterministically with
+`photo.jpg` (a copy), `notes.txt`, `config.json` and a `fake.png` carrying a real PNG
+signature. Both directory-scanning demos now read `WORK`, so they print the same thing every
+run — and print something better than before:
+
+| file | extension | actual content |
+|---|---|---|
+| `config.json` | `.json` | probably JSON |
+| `fake.png` | `.png` | PNG image |
+| `Image_copy.jpg` | `.jpg` | JPEG image |
+| `notes.txt` | `.txt` | text (no binary signature) |
+| `photo.jpg` | `.jpg` | JPEG image |
+
+A closing cleanup cell removes `WORK` and asserts the source fixture is untouched. 8.5 is
+16 → **18 cells**.
+
+### 🔴 `4.5 Type Hints for Functions` wrote `mypy_demo.py` into the repository
+
+Confirmed, and `.gitignore` had been hiding it rather than fixing it. The cell also only
+**described** the output mypy would produce — it never ran the checker.
+
+Both fixed at once: the sample is written to a temp directory, **mypy actually runs on it**
+via `subprocess`, and the real output is printed. It matches what the cell used to claim,
+line numbers included:
+
+```
+$ mypy mypy_demo.py      (exit 1)
+mypy_demo.py:7: error: Item "None" of "str | None" has no attribute "upper"  [union-attr]
+mypy_demo.py:14: error: Argument 1 to "add" has incompatible type "str"; expected "int"  [arg-type]
+Found 2 errors in 1 file (checked 1 source file)
+```
+
+`--cache-dir` points inside the temp directory, so `.mypy_cache` does not land in the repo
+either. The `mypy_demo.py` line was removed from `.gitignore` — there is nothing left to
+ignore.
+
+### Deleted — 11 files
+
+Nine stale leftovers from `08 File Handling/File2Save/` (`Image_copy.jpg`, `Log.txt`,
+`msg1.txt`, `msg2.txt`, `output.txt1`, `output1.txt`, `tab1.csv`, `tab2.csv`, `tab3.csv`),
+the tracked 0-byte `10 Database/Masterly.DB` (orphaned since `10.3` moved to a temp
+directory), and the untracked `04 Functions/mypy_demo.py`.
+
+**`08 File Handling/File2Save/Image.jpg` is kept** — it is a genuine read-only fixture, read
+by `8.1` and `8.5`, and after this change it is the only file in that folder.
+
+### Verification
+- 🔴 **The real test: an mtime snapshot of all 188 repository files, a full sweep of all 14
+  folders, then a re-comparison.** Result: **0 files touched, 0 created, 0 removed.** No
+  notebook writes into the repository any longer — proved directly, rather than inferred from
+  a clean `git status`, which had been blind to this exact class of bug.
+- All **14 folders: 0 unexpected problems**, `07 Module and Packages` included this time.
+- `04`, `08` and `10` each run twice: clean, and nothing regenerated.
+- `File2Save/Image.jpg` still carries its June 2019 mtime after two full runs.
+
+---
+
 ## Tooling and environment
 
 ### Virtual environment — `D:\Learn\Python\.venv` (gitignored)
