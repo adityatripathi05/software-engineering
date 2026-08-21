@@ -1927,6 +1927,108 @@ and a **Where next — the debugging half** section.
 
 ---
 
+## `15.10 Logging`, and dropping the *Modern Python Features* folder
+
+### Why folder 17 went away
+
+Asked where logging belonged, I checked what folder **17 Modern Python Features** would
+actually contain. Scanning for *dedicated headings* rather than incidental mentions:
+
+| Planned topic | Actual state |
+|---|---|
+| dataclasses | ✅ **5.3 Part 1** — dedicated, with `slots`, `frozen`, `field` |
+| enum | ✅ **5.3 Part 2** — dedicated, including enums with `match`/`case` |
+| walrus | ✅ three dedicated sections — **1.4**, **3.2.1** (in `while`), **3.3** (in comprehensions) |
+| logging | ❌ the only item with no home |
+
+The folder was **~75% already delivered**, and keeping it alive would have meant housing one
+topic that belongs elsewhere. Logging is not a modern Python feature — it has been in the
+standard library since 2003. It is a **debugging instrument**, and specifically the one you
+reach for when the debugger cannot help (**15.9**). So it became **15.10**, directly continuing
+**15.7**, which had already made the case for *why* to log without ever showing *how*.
+
+**Folder 17 dropped; 18 → 17, 19 → 18, 20 → 19.** The curriculum now runs **00–19** with no
+gaps.
+
+**28 references rewritten**, again from an explicit table with per-anchor match assertions.
+Three of them pointed at folder 17 for **dataclasses** and were **redirected to 5.3** rather
+than renumbered — they had been forward-promising a folder that would never exist, while the
+content was already written. The two `**20**` occurrences in folder 14 (a table cell in `14.11`
+and "a tree of height 20" in `14.7`) were again excluded by name and re-asserted intact
+afterwards.
+
+> 🔴 **My expected match count was wrong and the script caught it.** I predicted 8 occurrences
+> of `**18 Tooling, Packaging and Environments**`; there were **10**. The earlier survey grep
+> counted *lines*, and two cells contain the string twice. The assertion fired after the writes,
+> so the edit was correct and only the expectation was wrong — but this is exactly why the
+> renumber scripts assert counts rather than trusting a grep.
+
+### `15.10 Logging - Configuration, Handlers and Structured Output.ipynb` — **NEW**, 31 cells
+
+Every demo runs in a **subprocess**, because logging configuration is global process state —
+`basicConfig`, handlers and levels persist for the life of an interpreter. A fresh process per
+demo is the only way to show honest behaviour, and it is the same reason logging bugs so often
+present as "works in the test, breaks in the app".
+
+- 🔴 **Logging goes to `stderr`**, shown by capturing the two streams separately — the first
+  `logging.warning` lands on stderr via the *last-resort handler* while `print` goes to stdout.
+  This is why logs vanish from `prog > out.txt`.
+- **The two gates**: one logger at `DEBUG` feeding a console handler at `WARNING` and a file
+  handler at `DEBUG`. The `DEBUG` record reaches one handler, the `WARNING` reaches both —
+  which is the answer to "I set the level to DEBUG and still see nothing".
+- **The hierarchy**, in four steps: propagation to root; raising `app.db` to `WARNING`
+  **silencing its child** `app.db.pool`; `propagate = False` stopping the bubbling; and own
+  level vs **effective** level, with two loggers holding `NOTSET` and still answering `WARNING`.
+- 🔴 **`basicConfig` is a silent no-op the second time.** The demo's second call changes neither
+  the level nor the format — no error, no warning — then `force=True` (3.8+) works.
+- 🔴 **Double logging**, the most common logging bug: `setup_logging()` called three times gives
+  one, two, then three copies of each line, and the printed handler count matches the duplicate
+  count exactly.
+- **`RotatingFileHandler`** with `maxBytes=200, backupCount=3`: 40 messages become 4 files of
+  ~192 bytes and the earliest are **gone** — `backupCount` bounds disk usage, not history.
+- **`dictConfig`** with per-subsystem levels, including 🔴 the note that
+  `disable_existing_loggers` defaults to **`True`** and silences every logger created at import
+  time — the second-most-common logging mystery.
+- **Structured logging**: a `JsonFormatter` plus `extra=`, emitting queryable records with
+  `job_id`, `attempt` and `region`, and the exception rendered into an `error` field. Explains
+  why the formatter must call `record.getMessage()` — that is where **15.7**'s lazy `%s`
+  formatting is finally applied.
+- 🔴 **`extra` cannot overwrite reserved `LogRecord` fields**: `message`, `name` and `args` each
+  raise `KeyError: "Attempt to overwrite '...' in LogRecord"` at the call site.
+- **Libraries and `NullHandler`**, with both halves shown on separate streams: an unconfigured
+  library reaches stderr through the last-resort handler, while one with a `NullHandler` is
+  silent until the application opts in.
+- **Testing logging with `caplog`** (**15.4**) — three tests, including one asserting that
+  `record.msg` holds the *template* and `record.args` the values, with the note to test only the
+  log lines that are **contracts**, never `DEBUG` chatter.
+- Performance and concurrency: `isEnabledFor`, `QueueHandler`/`QueueListener` for workers, and
+  🔴 the warning that several **processes** appending to one file will interleave and corrupt.
+
+> **Two build corrections.** The `JsonFormatter` cell failed with a `SyntaxError` from a
+> three-level triple-quote collision (build script → notebook cell → the generated file's
+> docstring); the docstring became a comment. And step 4 of the hierarchy demo originally reset
+> every level to `NOTSET` before printing, so all three loggers showed the same thing and
+> demonstrated nothing — it now sets a level on `app` alone, so the two descendants visibly
+> inherit it.
+
+### Cross-references updated
+`15.6`, `15.7` and `15.9` all gained `15.10` in their folder tables; `15.7`'s scope note, which
+deferred configuration to the dropped folder, now points at `15.10`. README's map lost the
+*Modern Python Features* row and gained a numbering note explaining where that content actually
+lives.
+
+### Verification
+- Folder 15: **0 unexpected problems**, run **twice**, identical both times
+- **283 cells across 10 notebooks**; **106 code cells**, all compile, all outputs cleared,
+  `nbformat` 4.4
+- Still **no `EXPECTED` entries** — every demo runs in a subprocess
+- **mtime snapshot of all 192 repository files: 0 touched, 0 created, 0 removed**, the rotating
+  file handler included
+- 0 stale references to the dropped folder or the old numbering; both protected `**20**` values
+  re-asserted intact
+
+---
+
 ## Housekeeping: repository writes and orphaned fixtures
 
 The "ten unreferenced fixture files awaiting a delete decision" turned out to be a

@@ -55,20 +55,21 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 11 | Socket Programming | Networking fundamentals, TCP framing, UDP, concurrent servers, HTTP and `requests` |
 | 12 | Concurrency | The GIL, threading, multiprocessing, `concurrent.futures`, `asyncio` |
 | 14 | Data Structure and Algorithm | Complexity, Python's real costs, arrays and two pointers, linked lists, trees, graphs, sorting, DP, interview patterns |
-| 15 | Testing and Debugging | `assert`, `unittest`, `pytest`, fixtures, mocking, coverage, property-based testing; tracebacks, `pdb`, debugging strategy |
+| 15 | Testing and Debugging | `assert`, `unittest`, `pytest`, fixtures, mocking, coverage, property-based testing; tracebacks, `pdb`, debugging strategy, logging |
 | 16 | Type Hints and Static Typing | `typing`, generics, `mypy` |
-| 17 | Modern Python Features | dataclasses, enum, walrus, logging |
-| 18 | Tooling, Packaging and Environments | venv, `pyproject.toml`, profiling |
-| 19 | Working with APIs | `requests`, REST/JSON, auth, error handling |
-| 20 | Capstone Projects | End-to-end builds tying it together |
+| 17 | Tooling, Packaging and Environments | venv, `pyproject.toml`, `ruff`, profiling |
+| 18 | Working with APIs | `requests`, REST/JSON, auth, error handling |
+| 19 | Capstone Projects | End-to-end builds tying it together |
 
-Folders 00–14 are complete and verified. Folders 15–20 are being built now. See
+Folders 00–15 are complete and verified. Folders 16–19 are still to be written. See
 [CHANGELOG.md](CHANGELOG.md) for what has been done so far.
 
 > **Numbering note.** `13 GUI` and the old `14 Project` were removed, and `15 Data Structure
-> and Algorithm` became **14**. The planned folders, previously numbered 16–21, were
-> renumbered to **15–20** so the curriculum runs 00–20 with no gap. Earlier CHANGELOG entries
-> use the old numbers.
+> and Algorithm` became **14**. A planned *Modern Python Features* folder was dropped, because
+> it was already delivered elsewhere — dataclasses and enums in **5.3**, the walrus operator in
+> **1.4**, **3.2.1** and **3.3** — and its one remaining topic, logging, belongs with debugging
+> and is now **15.10**. The curriculum runs **00–19** with no gaps. Earlier CHANGELOG entries
+> use the older numbering.
 
 ---
 
