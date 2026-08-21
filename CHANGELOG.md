@@ -2400,13 +2400,64 @@ into a clean environment → run the command it created.**
 > list, so that entry is inert until the security family is enabled. Only the `__init__.py`
 > `F401` ignore was doing visible work, and the notebook now says so.
 
+**Batch 3: profiling — 26 cells.** Folder complete: **111 cells, 5 notebooks**.
+
+### `17.5 Profiling and Performance.ipynb` — **NEW**, 26 cells
+The last piece of the toolchain, and the notebook that finally spends the `cProfile` deferral
+made in **15.9**.
+
+- **Measure first**, with the Knuth quotation restored to its actual argument, and the three
+  questions in order. Opens by citing **14.2**'s measured ratios (265×, 312×, 652×) as evidence
+  that intuition about Python performance is unreliable.
+- **`timeit`** comparing `in list` against `in set` at 20,000 items — **6,387× on this machine**
+  — followed immediately by the most common `timeit` mistake, measured: building the list
+  *inside* `stmt` reports `0.0387s` against `0.0137s` for the same lookup with the setup where
+  it belongs. Plus the four ways `timeit` misleads, tied back to **14.1**'s rebuilt timing cell.
+- **`cProfile`** on a program that builds an index and then scans it: `lookup_scan` takes
+  essentially all 0.029s while `build_index` — the part that *looks* expensive — does not
+  register. The profiler correcting the guess you were about to act on.
+- 🔴 **`tottime` vs `cumtime`, the same profile sorted both ways.** By `cumulative` the top
+  entry is `outer()` — true and useless. By `tottime` it is `inner()`, which is where the loop
+  actually runs. Stated as: *sort by `tottime` to find the work, `cumulative` to find the caller
+  responsible for it.*
+- **The fix, measured**: replacing the O(n) key scan with `dict.get` — 27.6 ms to 0.1 ms,
+  **190×**, by deleting a loop. The dict was already an index; the scan threw that away
+  (**14.2**).
+- 🔴 **The profiler distorts what it measures**, demonstrated: the same profiler on two
+  workloads gives **5.27× overhead on call-heavy code and 0.86× (i.e. none) on loop-heavy code**,
+  because the cost is per *call*. So a profile over-reports function-call cost — verify with
+  `timeit` before restructuring, and use a sampling profiler (`py-spy`, `scalene`) for
+  production.
+- **`tracemalloc`** distinguishing a never-evicted cache from transient allocation that never
+  appears; **`-X importtime`** with the ten slowest imports by *self* time, and the lazy-import
+  fix for slow CLI startup.
+- 🔴 **The optimisation hierarchy** — do it less > algorithm > data structure > library >
+  micro-optimisation > another language.
+
+> 🔴 **The hierarchy demonstration came out stronger than the claim I wrote for it.** I had
+> predicted the micro-optimisation (hoisting `append` and `__contains__` into locals) would buy
+> "a small factor". Measured, it bought **nothing at all** — 725 ms against a 719 ms baseline,
+> fractionally *slower*, which is noise. The prose now says so, and explains why it could not
+> have helped: the cost is a `not in list` scan run 40,000 times, and hoisting an attribute
+> lookup *around* an O(n²) loop cannot touch it. The data-structure change measured **500×**.
+> Level 5 applied to a level-3 problem buys zero.
+
+- Closes with when *not* to optimise — including 🔴 that a 95% I/O-bound program shows almost
+  nothing in `cProfile` and wants concurrency (**12**) rather than a faster loop — and **10
+  interview questions**.
+
+### Cross-references
+`17.1` and `17.2` now point at the folder index at the end of `17.5`. README's folder 17 row was
+expanded and the completion line moved to **00–17 complete, 18–19 remaining**; HANDOFF updated
+to 17 folders and 93 notebooks.
+
 ### Verification
 - Folder 17: **0 unexpected problems**, run **twice**, identical both times
-- **85 cells across 4 notebooks**; **34 code cells**, all compile, outputs cleared,
-  `nbformat` 4.4
-- **mtime snapshot of all 202 repository files: 0 touched, 0 created, 0 removed** — the venvs,
-  wheels, sdists and installed packages all live under `tempfile`
-- **Remaining:** 17.5 profiling and performance
+- **111 cells across 5 notebooks** — 24/19/19/23/26; **44 code cells**, all compile, outputs
+  cleared, `nbformat` 4.4
+- Still **no `EXPECTED` entries** anywhere in the folder — every build, venv, profile and lint
+  run happens in a subprocess
+- **mtime snapshot of all 203 repository files: 0 touched, 0 created, 0 removed**
 
 ---
 
