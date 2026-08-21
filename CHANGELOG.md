@@ -2265,6 +2265,89 @@ was expanded, and the completion line moved to **00–16 complete, 17–19 remai
 
 ---
 
+## 17 Tooling, Packaging and Environments
+
+New folder — the one with the most inbound debt in the curriculum: **18 references across 8
+notebooks** promise it, from `ruff` in **1.2**, `pip`/`uv`/`poetry` in **7.2**, secrets in
+**10.2**, `rootdir` and `pyproject.toml` in **15.2/15.3/15.4/15.6**, `cProfile` deferred from
+**15.9**, and `py.typed` plus stub packaging from **16.5/16.6**.
+
+### Tooling installed
+The folder needed tools that were **not present**: no `ruff`, no `build`, no `setuptools`.
+Installed into `.venv`: **ruff 0.16.4**, **build 1.5.0**, **setuptools 84.0.0**, **wheel 0.48.0**
+— the same precedent as `hypothesis`/`coverage` for folder 15, and for the same reason: without
+them the notebooks would describe output instead of producing it.
+
+> 🔴 **`python -m build` needs `--no-isolation` to work offline.** By default `build` creates an
+> isolated environment and *downloads* the backend into it, so the cell would fail on a machine
+> without network. With `setuptools` present in the venv, `--no-isolation` builds a real wheel
+> with no network at all. Verified before writing anything.
+
+**Batch 1: environments and configuration — 43 cells across 2 notebooks.**
+
+### `17.1 Environments - venv, pip and Dependencies.ipynb` — **NEW**, 24 cells
+- **What `venv` actually creates**, listed from a real one built in a temp directory:
+  `pyvenv.cfg`, `Scripts/`, `Lib/site-packages/`. The config file is printed in full, because
+  🔴 **it *is* the mechanism** — it names the base interpreter and whether system packages are
+  visible.
+- 🔴 **"Activating" is just `PATH`.** Shown by running the venv's interpreter directly, with
+  `sys.prefix != sys.base_prefix` as the way to detect a venv in code.
+- 🔴 **`pip` vs `python -m pip`, demonstrated live on this machine** — and it is a genuine hit:
+  `shutil.which("pip")` resolves to `C:\\Users\\eepl\\AppData\\Local\\Python\\bin\\pip.EXE` while the
+  interpreter running the notebook is `D:\\Learn\\Python\\.venv\\Scripts\\python.exe`. Typing
+  `pip install X` on this very machine would install into the wrong environment. The cell prints
+  all three paths so the reader can check their own.
+- **`sys.path` in search order**, with the note that entry 0 is the working directory, so a file
+  named `random.py` or `json.py` shadows the standard library.
+- **Declared dependencies vs `pip freeze`** — the venv currently freezes to **72 lines** for
+  roughly five things anyone actually asked for; the rest are transitive.
+- Version specifiers with the rule that settles most arguments: **libraries declare ranges,
+  applications pin exactly**; `pip show` for `Requires:`/`Required-by:` graph edges; `pipx` for
+  CLI tools; and `pip install --target` used to install and import a package **without touching
+  the environment running the notebook**.
+- The `uv` / `poetry` / `pdm` / `conda` landscape, with the argument for learning `venv` and
+  `pip` first.
+
+### `17.2 pyproject.toml - One File for Everything.ipynb` — **NEW**, 19 cells
+- The history — `setup.py` as an *executable* you had to run to learn a package's name, and the
+  eight config files it accumulated — then a **complete, working `pyproject.toml`** for a real
+  `jobkit` package, taken apart section by section.
+- `[build-system]`, with the backend comparison table and the note that omitting it drops tools
+  back to legacy behaviour.
+- **`tomllib`** (3.11+, stdlib) reading the file back: name, version, `requires-python`, both
+  optional-dependency groups and the five `[tool.*]` tables — plus 🔴 `tomllib.load()` needing a
+  **binary** file object and there being no `dump`.
+- Dependencies vs optional groups, the `pip install '.[dev]'` table, what `coverage[toml]`'s
+  brackets mean, and a note on PEP 735 `[dependency-groups]`.
+- `[project.scripts]` annotated part by part — the mechanism that put `pytest` and `ruff` into
+  the `Scripts/` directory listed in **17.1**.
+- 🔴 **One file, every tool, zero flags**: `ruff check` and `mypy src` both run against the
+  project picking up their own tables. mypy ran under `strict = true` because the file said so,
+  not because anyone typed `--strict`.
+- Three ways to single-source the version, with `importlib.metadata.version()` demonstrated on
+  the installed packages.
+- 🔴 **Four TOML gotchas, one of them proved by parsing.** `line-length` placed under
+  `[tool.ruff.lint]` instead of `[tool.ruff]`: the parse shows `[tool.ruff] -> (not set!)` while
+  the wrong table holds it, so ruff silently uses its default of 88 and never complains. Next to
+  it, `flag = True` raising `TOMLDecodeError` while `flag = true` parses — the good case, where
+  the mistake is loud. Closes with the advice to print a tool's **resolved** settings before
+  changing anything (**15.9**).
+
+> **Build notes.** Two cells truncated their output mid-word on a character slice and now cut by
+> lines; the `pip install --target` cell gained a **network guard**, since it is the one step in
+> the folder that cannot work offline. And a dead `write()`/`shutil.copy()` fragment left over
+> from an earlier draft was removed from the TOML-gotchas cell.
+
+### Verification
+- Folder 17: **0 unexpected problems**, run **twice**, identical both times
+- **43 cells across 2 notebooks**; **17 code cells**, all compile, outputs cleared,
+  `nbformat` 4.4
+- **mtime snapshot of all 200 repository files: 0 touched, 0 created, 0 removed** — every venv,
+  package and build artefact is created under `tempfile`
+- **Remaining:** 17.3 packaging and publishing, 17.4 ruff, 17.5 profiling
+
+---
+
 ## Housekeeping: repository writes and orphaned fixtures
 
 The "ten unreferenced fixture files awaiting a delete decision" turned out to be a
