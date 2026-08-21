@@ -2838,3 +2838,132 @@ pointing at the deleted Project folder.
 > the OpenWeatherMap API key. Both values remain in `b0537f6` but are now inert, so no history
 > rewrite was needed. Rotation — not rewriting — is what actually closes an exposure like this,
 > since the values had been sitting in a working tree for years.
+
+---
+
+## Content audit and fix pass (2026-08-22)
+
+The completed folders were re-audited independently: a 15-notebook sample (~15%, spanning
+every era of the work) was deep-read against the quality bar with claims verified by
+execution, plus a fresh smoke-harness sweep of all 17 folders. The sweep confirmed the
+execution record (**0 unexpected problems everywhere**) — but reading found what the
+harness cannot: **prose that lies about what the code does.** Three notebooks failed
+outright, five more carried single-cell factual errors, and a targeted sweep of the four
+largest un-sampled legacy notebooks (2.1, 2.4, 4.1, 4.2) failed all four with the same
+disease: modernized bookends around an unedited 2019 middle band.
+
+Every finding below is fixed, and every touched folder re-verified to
+**TOTAL UNEXPECTED PROBLEMS: 0** with the intentional-failure registry intact.
+
+### The pattern that caused it
+
+Earlier passes added strong new sections and fixed what *crashed*, but a cell that runs
+and then describes its own output wrongly is invisible to warnings-based verification.
+The worst examples: a pattern-matching demo annotated "`<- the pattern REBOUND it to 500`"
+that actually prints 200 (the capture bound a function-local name), and a list-mutation
+trap cell claiming "6 survived" when execution yields `[1, 3, 5]` — a fabricated output in
+a *modernized* cell.
+
+### 🔴 Failures fixed
+
+**`5.1 Python OOPs`** — modern inserts were correct; the ~120-cell legacy body was not:
+- `Rectangle` built with 2 sides whose `findArea` returned `2*(a+b)` — the **perimeter
+  formula labelled as area**; `Square.area` returned `2*side` instead of `side**2`
+- MRO taught as "Depth-First, Left-Right" — Python 2's classic-class rule; rewritten as
+  **C3 linearisation** with the diamond divergence and a pointer to 5.2's walkthrough
+- "Access Denied" claims about `_protected` members — false; rewritten as
+  convention-vs-name-mangling with `obj._A__var` shown working
+- Six `input()` cells (5.1 now runs 100 cells, skips 0), three imgur screenshots replaced
+  with self-contained code, `date(2019,11,17)` modernised, full typo sweep ("memeber" ×10
+  et al.), snake_case renames throughout. All 176 cells edited in place — the harness's
+  EXPECTED index for cell 94 needed no change.
+
+**`9.1 Regular Expression`** — the raw-string record was wrong in three places:
+- 🔴 Cell compiling `"\b[a-e7-9]+\b"` non-raw — `\b` is a **backspace character**, so the
+  pattern was semantically wrong and invisible to the warnings check (`\b` is a valid
+  string escape). Now raw, with the trap called out as the sneakiest Backslash Plague case
+- 🔴 The **Common Mistakes / Best Practices cells carried doubled backslashes**, making
+  pitfall #1, pitfall #3 and best-practice #1 factually wrong as rendered. All three now
+  display single backslashes (verified byte-exact)
+- Legacy `"\\b(and|or|the)\\b"` teaching converted to raw strings; orphaned 2019
+  pandas/YouTube leftover (4 cells incl. one empty) deleted; section lettering restored to
+  a-f order; "Alteration" → "Alternation". 259 → 255 cells.
+
+**`1.2 Python Basic`** — legacy middle band: "33 keywords" (35 since 3.10, and the
+notebook's own live-count cell disagreed), a **Python 2 delimiter table listing backticks**
+(now covers `@`, `@=`, `->`, `:=`), "None is used for end of lists" nonsense (rewritten:
+sentinel, `is None`, implicit return), a wrong stack/heap variable model (rewritten as
+names→objects, cross-referenced to 2.7), ASCII-only identifier rule contradicting its own
+Unicode exercise.
+
+### 🔴 The legacy-band sweep: 2.1, 2.4, 4.1, 4.2
+
+- **2.1 Strings** — `split()` bullet taught a fabricated signature with wrong defaults
+  (contradicting the notebook's own Common Mistakes item); an orphan cell containing only
+  `-case.` (a severed bullet tail, unread since 2019) merged back; endswith bullet said
+  `startswith` and its demo demonstrated nothing; find()/rstrip/centre() copy-paste
+  errors; two `input()` blockers. 99 → 98 cells.
+- **2.4 Lists** — 🔴 shallow copy **defined as aliasing** (the modernized cell below it
+  said the opposite); 🔴 the fabricated "6 survived" trap output (input changed so a
+  survivor genuinely appears, claim now matches execution); an **`eval(input())`** cell
+  with no warning; del() as a function; "Replication Operator(+)"; `'w'` typecode (3.13)
+  added and `'u'` deprecation noted.
+- **4.1 User-defined Functions** — 🔴 the 120-line interactive Banking cell (`sys.exit`,
+  menu via unbounded mutual recursion, an infinite signup loop) rewritten as a scripted
+  `Account` demo with the "menus are loops, not recursion" lesson; 🔴 lottery matching
+  zipped two *sets* (meaningless order) and paid Rs.1 for zero matches — now set
+  intersection with a sane payout table; default-parameter rule was stated **backwards**;
+  `count()` listed as a builtin; **18 `input()` blockers** removed (4.1 now skips 0).
+- **4.2 Builtin Functions** — 🔴 "`# empty list always True`" on the all/any demo
+  (`any([])` is `False`, as the cell's own output showed); 🔴 a lambda that interpolated
+  the **global `n`** instead of its parameter and worked by accident; damaged property()
+  section (stray backtick, no code) repaired with a runnable `@property` example;
+  Python 2 `next()` phrasing; `cls` restored in classmethods; 7 `input()` blockers
+  removed. 85 → 86 cells.
+
+### Single-cell factual fixes
+
+- **3.4** — the flagship capture-trap demo now *demonstrates* the rebinding (module-level
+  match) alongside the function-local shadowing case, with the scoping nuance taught
+  explicitly; printed annotations verified against real output.
+- **7.3** — "cannot compare aware and naive datetimes" narrowed to the truth: ordering
+  raises `TypeError`, **`==` silently returns `False`** — the demo now shows the silent
+  case, which is the nastier bug.
+- **14.7** — `sorted_array_to_bst` sliced its input, making the claimed O(n) actually
+  O(n log n); rewritten on index bounds (verified to n=1000) with the slip called out;
+  `is_balanced` now uses the standard sentinel-height pattern.
+- **15.5** — the Version notes table had 3 of 5 rows wrong. Corrected against primary
+  sources: `ThreadingMock` is **3.13**; the `assret_` guard dates to **3.5** and was
+  widened in **3.10** (bpo-41877); dataclass support in `create_autospec` is **3.14**
+  (gh-124176) — not the 3.10 the table claimed nor the 3.12 the audit guessed.
+- **17.2** — the "misplaced key is silently ignored" demo was **false for ruff**, which
+  hard-fails with exit 2 on the notebook's own broken config. Reframed as loud-vs-quiet
+  failure modes with both run live: ruff's real `unknown field 'line-length'` error, and
+  pytest's warning-unless-`--strict-config` behaviour. Also: `setuptools>=77` for the
+  PEP 639 SPDX licence string, redundant `check_untyped_defs` dropped.
+- **18.3** — `backoff_factor` comment corrected (first retry sleeps **0**: 0, 0.2, 0.4,
+  0.8 — verified via `Retry.get_backoff_time()`); `Retry-After` handling now parses the
+  HTTP-date form the adjacent table teaches; 401 guidance reconciled ("retry once *after
+  refreshing credentials*, never blindly"). The version-note correction outdid the audit:
+  Retry-After honouring is default since urllib3 **1.19**, opt-out since 1.25 — not 1.26,
+  not 2.x.
+- **6.3** — the nonexistent `contextlib.reentrant` API replaced with the real story
+  (reentrancy is a property of specific managers; `RLock`, `redirect_stdout`); the `with`
+  desugaring sketch no longer implies `__exit__` receives exception details on success.
+- **12.5** — the header's promise of 3.13/3.14 notes is now kept: added the verified
+  3.14 `python -m asyncio ps` debugging note; gather's abandoned-task wording and the
+  thread-stack "8 MB" claim made precise.
+- **16.3** — `AnyStr` noted as deprecated since 3.13 with the PEP 695 replacement.
+- **2.6 / 8.3 / 10.3** — stale copy-paste comments fixed (2.6); the True==1 dict-key
+  collision that muddied 8.3's coercion demo split into a clean demo plus its own ⚠️
+  trap; 8.3's last two repo-relative writes moved to temp directories; 10.3's "Stage 1/2"
+  headings, broken-English prose, self-cancelling `victim` CREATE/DROP tail and
+  alias-shadowing cleaned up.
+
+### Verification
+- All 17 folders re-swept after the fixes: **0 unexpected problems**, all 6 intentional
+  failures confirmed, no regressions
+- Interactive-skip counts after de-`input()`ing: 5.1 six → 0, 4.1 eighteen → 0,
+  4.2 seven → 0, 2.1 two → 0, 2.4 four → 0, 2.6 one → 0
+- All edits via `nbformat` scripts; outputs remain cleared; kernel metadata untouched;
+  `.tools/smoke.py`'s EXPECTED registry unchanged (cell indices held stable)
