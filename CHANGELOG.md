@@ -1688,13 +1688,121 @@ output is genuine.
 > **`encoding="utf-8"` on `subprocess.run`.** pytest prints `0.0 ± 1.0e-12`; without it the
 > Windows locale codec turned `±` into `Â±` throughout the captured output.
 
+**Batch 2: practice — 78 cells across 3 notebooks.** Folder total: **184 cells, 6 notebooks**.
+
+### `15.4 Fixtures, Isolation and Test Data.ipynb` — **NEW**, 29 cells
+Fixtures presented as dependency injection — the parameter name *is* the wiring — then scopes,
+`conftest.py`, and the built-ins. `yield` fixtures are tied back to `@contextmanager` (**6.3**),
+which is what they are.
+
+Demonstrated:
+
+- **Teardown runs after a failing test** — the event log shows setup / test B fails / teardown.
+- **The full scope order**, from a three-deep chain (`connection` → `schema` → `db_engine`):
+  session sets up first and tears down last, and the function-scoped fixture is rebuilt **twice**
+  for two tests. Then the same picture from `--setup-show`, which needs no instrumentation.
+- 🔴 **The session-scoped mutable fixture** — `test_b` fails only because `test_a` ran first,
+  and pytest's report prints `registry = {'jobs': ['build-1']}`, which is usually enough to
+  diagnose it. Three fixes given, in order of preference, with a **factory fixture** built out.
+- **The built-ins**: `tmp_path` (two different directories printed, one per test), `capsys`,
+  `caplog`, `recwarn`, and `monkeypatch.setenv` **with a second test proving the variable is
+  gone again**.
+- `--fixtures-per-test`, which prints "no docstring available" for the local fixtures — making
+  the case for the Best Practice two cells later.
+- **Parametrised fixtures**: 2 tests × 2 params = 4 generated tests, and a third test that does
+  not request the fixture runs **once**.
+
+> 🔴 **Fixtures do not work on `unittest.TestCase` methods**, and the real error is quoted
+> because it is so misleading: `TypeError: SpoolTests.test_...() missing 1 required positional
+> argument: 'spool'`, with a traceback pointing into `unittest/case.py` rather than pytest.
+> (An earlier draft of this notebook paraphrased the message as "takes 2 positional arguments
+> but 1 was given" — wrong; corrected against the actual output.)
+
+> **Build note.** Three cells initially failed with `IndentationError: unexpected indent`. The
+> embedded test sources are triple-quoted strings inside a notebook cell, and a `\n` written
+> inside one becomes a **real newline** — leaving a continuation line at column 0, which
+> defeats `textwrap.dedent`, so nothing was dedented and the written file was invalid Python.
+> Fixed by making the embedded sources **raw strings**. Two other claims in the notebook were
+> asserted but not shown, and now are: `addCleanup` LIFO ordering, and cleanup running after a
+> failure.
+
+### `15.5 Test Doubles - Mocking, Patching and Faking.ipynb` — **NEW**, 22 cells
+Dummy / stub / spy / mock / fake, with the distinction that actually matters: a stub sets up a
+situation and you assert on the **result**; a mock asserts on the **interaction**, so every mock
+assertion is a claim about your own implementation and breaks on refactor.
+
+- `Mock` call recording and the assertion family; `return_value` vs `side_effect`, with a retry
+  test that fails twice then succeeds — **3 attempts, sleeps of 1 and 2 seconds, instant**,
+  because `sleep` was passed in rather than patched.
+- **`Mock` vs `MagicMock`** across five protocols. 🔴 The unsupported ones raise **two different
+  exception types** — `TypeError` for `len`/`[]`/`iter`, but `AttributeError: __enter__` for
+  `with`, because `Mock` auto-creates ordinary attributes and not dunders. (The first draft
+  caught only `TypeError` and the cell raised.)
+- 🔴 **Where to patch**, run as two tests in one file: `patch("clock.now")` has **no effect** —
+  the failing assertion prints a real Unix timestamp — while `patch("scheduler.now")` works,
+  because `from clock import now` binds a second name. With the table for both import styles.
+- 🔴 **`autospec`**: a plain `Mock` accepts a wrong signature, an invented method **and a
+  misspelled one** — the demo ends by asserting `fake.saev.called`, so the typo is "verified".
+  `create_autospec` rejects both: `too many positional arguments` and
+  `Mock object has no attribute 'saev'`.
+- **`monkeypatch`** pinning down a 7-day grace period at three points including the exact
+  boundary — untestable otherwise, since you cannot wait eight days — plus a fourth test proving
+  the real function was restored.
+- A **fake** `CacheStore` and an injected `ProfileService`: 3 calls, **2 backend loads**, no
+  patching and no `Mock` at all. Then the three rules — don't mock what you don't own, a
+  drifting fake is worse than no test, and asserting on calls tests the implementation.
+
+### `15.6 Testing in Practice - Coverage, Properties, Structure and CI.ipynb` — **NEW**, 27 cells
+The closing notebook: layout, coverage, property-based testing, doctest, flakiness, CI, and an
+**Interview Questions** section of 13 questions indexed back to the notebook that answers each.
+
+- 🔴 **The coverage demo that makes the point.** `retrying.py` reaches **100% statement
+  coverage** on four passing tests and contains **two bugs**: `429 Too Many Requests` is absent
+  from `RETRYABLE`, and no test ever takes the `delay <= cap` branch. The first is the important
+  one — **coverage is structurally incapable of finding missing code**, because a requirement
+  you never implemented has no line to miss.
+- The same file under `--branch` drops to **92%** with `BrPart 1`, naming the missed jump
+  `13->15`. Hence `branch = true` in the recommended config.
+- **Property-based testing** as the grown-up form of **14.16**'s `verify()`. `hypothesis` finds
+  `truncate` returning a string **longer than the limit** and shrinks the counterexample to
+  `text='0', limit=0` — with its `Explanation` naming the only line run by failing cases. The
+  bug: `text[:limit - 3]` slices with a negative index when `limit < 3`.
+- The **stdlib-only version** of the same idea, so the notebook stands up without `hypothesis`:
+  `check_property` finds the same bug but returns `('RcLtcaJorHe', 2)` — the contrast is exactly
+  what shrinking buys you.
+- **doctest**: a docstring claiming `humanise(45) == '45sec'` when it returns `'45s'`, caught by
+  `--doctest-modules`.
+- `--durations=3` and `-m "not slow"`; a flakiness cause/fix table; a GitHub Actions workflow
+  annotated line by line; and a decision table mapping situations to tools across the folder.
+
+> 🔴 **Two demos had to be redesigned because the first versions did not prove their point.**
+> The original coverage example reported 100% on a function that was simply *correct*, which
+> demonstrates nothing; and the original hypothesis property (idempotence of a tag normaliser)
+> **passed** all 200 examples. Both were rebuilt around bugs that genuinely exist.
+
+> **Build note.** The doctest cell needs three nested levels of triple-quoted string — build
+> script, notebook cell, and the docstring inside the generated file — which two quote styles
+> cannot express. Resolved by escaping the innermost delimiter (`\\"\\"\\"`), the same approach
+> already used in **15.3**.
+
 ### Verification
 - Folder 15: **0 unexpected problems**, run **twice**, identical both times
-- 106 cells across 3 notebooks — 34 / 36 / 36; **38 code cells**, all compile, all outputs
-  cleared, `nbformat` 4.4
-- No `EXPECTED` entries needed: every deliberate failure is inside a subprocess or a
-  `TextTestRunner`, so no cell raises
-- `git status` clean apart from the new folder; no temp directories survived either run
+- **184 cells across 6 notebooks** — 34 / 36 / 36 / 29 / 22 / 27; **67 code cells**, all
+  compile, all outputs cleared, `nbformat` 4.4
+- Still **no `EXPECTED` entries**: every deliberate failure runs inside a subprocess or a
+  `TextTestRunner`, so no notebook cell raises
+- `git status` clean apart from the new files; no temp directories survived either run
+- Full-repository sweep after the renumber: folders 01–06, 08–12 and 14 all **0 unexpected
+  problems**
+
+> ⚠️ **One unreproduced failure, recorded rather than explained away.** During the first
+> full-repository sweep, `07 Module and Packages` reported **1 unexpected problem**. The output
+> was truncated by the command that produced it, and the folder has since reported **0** on six
+> consecutive isolated runs, so the message was never captured. The renumber touched only a
+> markdown cell in `7.2`, so this is not new. The most likely candidate is `7.2` cell 10, which
+> runs **`pip` four times via `subprocess` with no `timeout=`**; `7.1` also uses `random` 36
+> times without a seed. Worth pinning down separately — a suite that fails once in seven runs is
+> exactly the flakiness **15.6** warns about.
 
 ---
 
