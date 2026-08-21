@@ -1212,7 +1212,7 @@ managers and iterators, and an honest threads-vs-asyncio comparison.
 
 ---
 
-## 15 Data Structure and Algorithm
+## 14 Data Structure and Algorithm
 
 The folder was effectively empty: `Introduction to Data Structure and Algorithm.ipynb` was
 3 cells whose **only code cell was blank** (a "Greatest Common Divisor" heading with no
@@ -1222,7 +1222,7 @@ implementation), and `Advance Coding.ipynb` was 2 competition problems, one requ
 Being built out as a full DSA curriculum, beginner to advanced, with theory, runnable
 implementations and interview questions. **Complete: 346 cells across 16 notebooks.**
 
-### `15.1 Complexity Analysis.ipynb` - **NEW**, 23 cells
+### `14.1 Complexity Analysis.ipynb` - **NEW**, 23 cells
 Why we count operations rather than seconds; Big-O with Ω and Θ; the growth classes with
 what each feels like at n = 1,000,000; reading complexity off loops, nested loops and
 recursion; amortised analysis; space complexity including stack depth; and 🔴 five specific
@@ -1235,14 +1235,14 @@ reallocation points (`1, 5, 9, 17, 25, 33, ...`) and the widening gaps between t
 > 🔴 **The doubling experiment had to be rebuilt.** Wall-clock timing was too noisy on a
 > loaded machine to teach from - repeated trials gave linear ratios of 2.36/1.92, 2.86/1.29,
 > 2.31/1.99 and 3.80/1.87, and a printed **1.29x** teaches the wrong row of the table.
-> `time.process_time()` was tried and has ~15.6 ms resolution on Windows (it returned
+> `time.process_time()` was tried and has ~14.6 ms resolution on Windows (it returned
 > zeros); pre-building the data and best-of-7 did not fix it either.
 >
 > The cell now **counts operations first** - giving exact `2.00x` and `4.00x` with no
 > machine dependence - and then times the same functions with the noise stated openly. That
 > ordering is the better lesson anyway: counting is how you reason, timing is how you check.
 
-### `15.2 Python's Built-ins and Their Real Costs.ipynb` - **NEW**, 20 cells
+### `14.2 Python's Built-ins and Their Real Costs.ipynb` - **NEW**, 20 cells
 Arguably the highest practical value in the folder: the complexity of every operation used
 daily, and the four mistakes behind almost all accidental O(n²) in real Python.
 
@@ -1260,7 +1260,7 @@ demonstration that **mutating a key makes its entry unreachable and un-deletable
 CPython in-place string optimisation being defeated by a second reference (8x); and why
 `bisect.insort` is O(n) despite an O(log n) search.
 
-### `15.3 Arrays, Strings and Two Pointers.ipynb` - **NEW**, 23 cells
+### `14.3 Arrays, Strings and Two Pointers.ipynb` - **NEW**, 23 cells
 The four patterns that cover most array and string interview questions: converging two
 pointers, fast/slow read-write pointers, sliding windows (fixed and variable), and prefix
 sums.
@@ -1276,7 +1276,7 @@ that `data[::-1]` is correct but is **not** O(1) space.
 
 ### Batch 2: Linear structures - 70 cells
 
-### `15.4 Linked Lists.ipynb` - **NEW**, 23 cells
+### `14.4 Linked Lists.ipynb` - **NEW**, 23 cells
 Nodes and references; the full complexity contrast with arrays; insert, delete and traverse;
 the **dummy head** trick that removes the head special case; reversal both iteratively
 (O(1) space) and recursively (O(n) stack, and shown hitting `RecursionError` at 2,000 nodes);
@@ -1290,7 +1290,7 @@ doubly linked list for O(1) reordering and eviction. Neither structure can do it
 Closes with the palindrome check that combines three techniques and **restores the list
 afterwards** - mutating a caller's data and not putting it back is treated as a real defect.
 
-### `15.5 Stacks and Queues.ipynb` - **NEW**, 25 cells
+### `14.5 Stacks and Queues.ipynb` - **NEW**, 25 cells
 LIFO vs FIFO and how to recognise which a problem wants; bracket matching with all **three**
 failure modes (the unclosed-opener case being the one people forget); RPN evaluation, with
 `10 2 /` vs `2 10 /` as the test that catches a reversed operand pop; the call stack as a
@@ -1308,7 +1308,7 @@ two stacks**, whose amortised claim is *measured*: 10,000 enqueues and 10,000 de
 produce exactly **1.0 element transfers per element**. Ends on `deque` vs `queue.Queue` and
 when thread safety is the point (**12.2**).
 
-### `15.6 Hashing.ipynb` - **NEW**, 22 cells
+### `14.6 Hashing.ipynb` - **NEW**, 22 cells
 How a key becomes a memory location; chaining vs open addressing; a **working `HashMap`
 built from scratch** with instrumentation, showing capacity doubling at load factor 0.75
 while the longest bucket stays at 2-3 entries.
@@ -1336,11 +1336,11 @@ file in folder 01:
 - `Advance Coding.ipynb` - 2 competition problems, one requiring `input()`
 - `01 Basic/00 First Step to Programming and Python.pptx`
 
-The GCD topic those stubs gestured at is still planned for **15.12** (recursion).
+The GCD topic those stubs gestured at is still planned for **14.12** (recursion).
 
 ### Batch 3: Hierarchical structures - 72 cells
 
-### `15.7 Trees and Binary Search Trees.ipynb` - **NEW**, 26 cells
+### `14.7 Trees and Binary Search Trees.ipynb` - **NEW**, 26 cells
 Vocabulary (with the depth-vs-height confusion addressed head-on); all four traversals
 recursively *and* iteratively; BST search, insert and the three-case delete; rotations;
 height, diameter, LCA; serialise/deserialise; sorted-array-to-BST; kth smallest.
@@ -1362,7 +1362,7 @@ height, diameter, LCA; serialise/deserialise; sorted-array-to-BST; kth smallest.
 to prove it is not. Both correct approaches (range-passing and in-order monotonicity) are
 implemented alongside the wrong one.
 
-### `15.8 Heaps and Priority Queues.ipynb` - **NEW**, 23 cells
+### `14.8 Heaps and Priority Queues.ipynb` - **NEW**, 23 cells
 The heap property and why it is *weaker* than a BST; the array representation and its index
 arithmetic; sift-up and sift-down implemented by hand before reaching for `heapq`; top-k;
 merging k sorted sequences; running median with two heaps, cross-checked against
@@ -1381,9 +1381,9 @@ streaming version that never holds more than k items. The priority-queue tie-bre
 demonstrated live (`TypeError: '<' not supported between instances of 'dict' and 'dict'`) and
 fixed with a counter, which also buys stability.
 
-### `15.9 Graphs.ipynb` - **NEW**, 23 cells
+### `14.9 Graphs.ipynb` - **NEW**, 23 cells
 Adjacency list vs matrix; BFS and DFS shown to be *the same code* with a queue swapped for a
-stack; unweighted shortest paths; Dijkstra with lazy deletion (**15.8**); Bellman-Ford;
+stack; unweighted shortest paths; Dijkstra with lazy deletion (**14.8**); Bellman-Ford;
 Kahn's topological sort; cycle detection; connected components and the grid "number of
 islands" variant; graph cloning; bipartite checking.
 
@@ -1405,7 +1405,7 @@ an undirected check without the parent guard wrongly flags a tree.
 
 ### Batch 4: Algorithms - 101 cells
 
-### `15.10 Sorting.ipynb` - **NEW**, 24 cells
+### `14.10 Sorting.ipynb` - **NEW**, 24 cells
 The O(n²) family (and why insertion sort is not a toy - O(n) on nearly-sorted input is why
 real sorts embed it); merge sort; quicksort with its worst case **provoked on purpose**;
 heap sort; stability; the Ω(n log n) lower bound; counting and radix sort; Timsort; and
@@ -1423,7 +1423,7 @@ Interpreted Python beating C is the point of the counting-sort cell: it escaped 
 comparison bound entirely. The Timsort cell shows the adaptive best case you hit constantly
 in practice.
 
-### `15.11 Searching and Binary Search.ipynb` - **NEW**, 18 cells
+### `14.11 Searching and Binary Search.ipynb` - **NEW**, 18 cells
 The off-by-one minefield, with **one half-open template** to avoid all of it; `bisect_left`
 vs `bisect_right` and what each is *for*; rotated arrays, verified **exhaustively over every
 rotation and every target** including the non-rotated case; quickselect.
@@ -1436,7 +1436,7 @@ comparisons where sorting would need 61,438.
 Also the `mid = (lo + hi + 1) // 2` infinite-loop trap, and the note that Python's arbitrary
 precision integers make the famous Java overflow bug impossible here.
 
-### `15.12 Recursion and Backtracking.ipynb` - **NEW**, 19 cells
+### `14.12 Recursion and Backtracking.ipynb` - **NEW**, 19 cells
 Base case, recursive case, and the leap of faith; **Euclid's GCD** - which folds in the topic
 from the deleted `Introduction to Data Structure and Algorithm.ipynb` stub, whose only code
 cell was empty; the recursion limit and why raising it is the wrong fix; memoisation as the
@@ -1452,7 +1452,7 @@ bridge to DP; backtracking's choose/explore/**unchoose**.
 Plus word search (where the *unmark* is the shipped bug), and generating valid parentheses -
 whose counts come out as the Catalan numbers.
 
-### `15.13 Dynamic Programming.ipynb` - **NEW**, 21 cells
+### `14.13 Dynamic Programming.ipynb` - **NEW**, 21 cells
 The two preconditions; the **four-step progression** (naive → memoised → tabulated →
 space-optimised) demonstrated end to end on Fibonacci; how to *recognise* a DP problem;
 1-D classics (climbing stairs, house robber, coin change) and 2-D (LCS, edit distance, 0/1
@@ -1465,7 +1465,7 @@ coin change `[1,3,4]` target 6 (greedy 3 coins, optimal 2), house robber `[2,7,9
 Longest increasing subsequence closes it with both implementations: **1,049.9 ms vs 0.7 ms**
 at n=4,000 - a **1,555x** gap, agreeing on 300 random inputs.
 
-### `15.14 Greedy and Divide-and-Conquer.ipynb` - **NEW**, 19 cells
+### `14.14 Greedy and Divide-and-Conquer.ipynb` - **NEW**, 19 cells
 When greedy is provably right (the **exchange argument**, worked for interval scheduling)
 and when it is not. All three interval-scheduling sort keys are run: earliest-end is correct,
 earliest-start and shortest-duration are shown failing on specific inputs.
@@ -1486,7 +1486,7 @@ Ends with a decision table for greedy vs DP vs D&C.
 
 ### Batch 5: Advanced and practice - 37 cells
 
-### `15.15 Union-Find, Tries and Bit Manipulation.ipynb` - **NEW**, 21 cells
+### `14.15 Union-Find, Tries and Bit Manipulation.ipynb` - **NEW**, 21 cells
 **Union-Find** with path compression and union by size, and the two optimisations
 **measured** against a naive implementation on the chain-building worst case:
 
@@ -1497,10 +1497,10 @@ Ends with a decision table for greedy vs DP vs D&C.
 
 The optimised count is essentially 2n while the naive one is n²/2. Kruskal's MST is built on
 it, using `union` returning `False` as the cycle detector - and is a good example of
-*provably correct* greedy to contrast with **15.13**'s failures.
+*provably correct* greedy to contrast with **14.13**'s failures.
 
 **Tries**, with the honest verdict measured rather than assumed: for a **static** word list a
-sorted list plus `bisect` (**15.11**) matches a trie and uses far less memory. The trie wins
+sorted list plus `bisect` (**14.11**) matches a trie and uses far less memory. The trie wins
 when the set changes constantly, since insertion is O(L) rather than O(n).
 
 **Bit manipulation**: the operators, the four standard manipulations, XOR's three properties
@@ -1510,7 +1510,7 @@ verified against brute force over all permutations.
 
 🔴 Also demonstrates the XOR-swap failure mode: swapping an element with **itself** zeroes it.
 
-### `15.16 Interview Patterns and Problem-Solving.ipynb` - **NEW**, 16 cells
+### `14.16 Interview Patterns and Problem-Solving.ipynb` - **NEW**, 16 cells
 The capstone. A six-step framework; **the pattern-recognition table** mapping question
 phrasing to technique across all fifteen notebooks; reading constraints to infer the intended
 complexity (with a computed table showing what each complexity costs at each n); the full
@@ -1526,7 +1526,7 @@ of the folder, and a `verify(fast, slow, generate)` harness - which is then used
 **deliberately broken** Kadane implementation and finds the failure on `[-7, -6]` in under a
 second.
 
-## 15 Data Structure and Algorithm - complete
+## 14 Data Structure and Algorithm - complete
 
 **346 cells across 16 notebooks**, built in five batches from an effectively empty folder
 (two stubs, one with a blank code cell and one requiring `input()`).
@@ -1543,8 +1543,8 @@ Karatsuba verification that was vacuously true.
 - **75 notebooks** valid `nbformat` 4, **1489 code cells**, 1 syntax failure (the intentional
   6.1 demo)
 
-**Note:** the GCD topic from the deleted `Introduction` stub is now covered in **15.12**
-(Euclid's algorithm). The competition problems from `Advance Coding` remain for **15.16**.
+**Note:** the GCD topic from the deleted `Introduction` stub is now covered in **14.12**
+(Euclid's algorithm). The competition problems from `Advance Coding` remain for **14.16**.
 
 ### Verification
 - Folder 15: **0 unexpected problems**, run twice
@@ -1596,3 +1596,26 @@ written record of which errors are teaching material.
 
 **Result across folders 01–10:** 0 unexpected problems, 50 notebooks valid `nbformat` 4,
 1253 code cells, 1 syntax failure (the intentional 6.1 demo).
+
+---
+
+## Removed by the author
+
+`13 GUI` and `14 Project` were deleted, and `15 Data Structure and Algorithm` renamed to
+**`14 Data Structure and Algorithm`** (folder and all 16 notebook files).
+
+**Cross-references repaired:** the renames left **369 stale references** across 18 notebooks —
+`15.7`-style section links, `**15**` folder links, prerequisite lines and notebook titles. All
+were rewritten to `14.x`. Verified beforehand that no `15.N` occurrence was a timing or a bare
+float, so the substitution could not corrupt a real number.
+
+Two things were deliberately **not** rewritten, because they only look like folder references:
+- `rich==13.7.0` in **07** — a version pin
+- `**20**` in a complexity table and in "a tree of height **20**" — values
+
+Also corrected: **1.0 About Programming** promised *"by folder 14 you'll be able to build it"*,
+pointing at the deleted Project folder.
+
+> 🔴 **The credentials removed in `27ef473` remain in commit `b0537f6`.** Deleting `14 Project`
+> does not change that — the Gmail password and OpenWeatherMap API key are still readable in
+> history and must be rotated.

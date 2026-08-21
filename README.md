@@ -54,9 +54,7 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 10 | Database | SQL, `sqlite3`, MySQL/PostgreSQL, SQLAlchemy ORM, key-value and document stores, graph data |
 | 11 | Socket Programming | Networking fundamentals, TCP framing, UDP, concurrent servers, HTTP and `requests` |
 | 12 | Concurrency | The GIL, threading, multiprocessing, `concurrent.futures`, `asyncio` |
-| 13 | GUI | tkinter |
-| 14 | Project | Applied mini-projects |
-| 15 | Data Structure and Algorithm | Complexity, Python's real costs, arrays and two pointers, linked lists, trees, graphs, sorting, DP, interview patterns |
+| 14 | Data Structure and Algorithm | Complexity, Python's real costs, arrays and two pointers, linked lists, trees, graphs, sorting, DP, interview patterns |
 | 16 | Testing | `unittest`, `pytest`, fixtures, mocking |
 | 17 | Type Hints and Static Typing | `typing`, generics, `mypy` |
 | 18 | Modern Python Features | dataclasses, enum, walrus, logging |
@@ -64,8 +62,9 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 20 | Working with APIs | `requests`, REST/JSON, auth, error handling |
 | 21 | Capstone Projects | End-to-end builds tying it together |
 
-Folders 13 and 14 are not yet modernised; 16–21 are new. See [CHANGELOG.md](CHANGELOG.md)
-for what has been done so far.
+Folders 00–14 are complete and verified. Folders 16–21 are planned and not yet written —
+their numbering still has a gap at 15, left deliberately until they are built. See
+[CHANGELOG.md](CHANGELOG.md) for what has been done so far.
 
 ---
 
