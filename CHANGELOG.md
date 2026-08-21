@@ -2117,13 +2117,80 @@ directory so `.mypy_cache` never reaches the repository.
 > became a real newline and defeated `textwrap.dedent`. Replaced with an explicit `write()`
 > helper — the same shape used in every other folder here, and the reason that convention exists.
 
+**Batch 2: generics and protocols — 53 cells across 2 notebooks.** Folder total so far:
+**106 cells, 4 notebooks**.
+
+### `16.3 Generics - TypeVar, PEP 695 and Variance.ipynb` — **NEW**, 27 cells
+The hardest material in the folder, taught with the **3.12 syntax first** and the legacy form
+kept for reading older code.
+
+- **PEP 695** — `def first[T](items: Sequence[T]) -> T | None` revealed as `int | None`,
+  `str | None` and `float | None` from one definition. This is precisely the exercise **4.5**
+  left open.
+- **Generic classes** — `class Stack[T]`, with `Stack[str].push(42)` rejected and `Stack[int]()`
+  explicit parameterisation shown.
+- **Bounds vs constraints**, and why it matters: `highest(builds)` with `[J: Job]` is revealed as
+  **`BuildJob`**, not `Job`, so `.build()` remains available — a **bound preserves the caller's
+  type while a constraint collapses it**.
+- **The `type` statement**, including a generic alias `Registry[T]`, plus a runtime cell showing
+  `type(JobId).__name__` is `TypeAliasType` and 🔴 that its right-hand side is **lazy**, which is
+  why an alias can refer forward.
+- 🔴 **Why `list` is invariant, demonstrated rather than asserted.** A correctly-typed
+  `sabotage(jobs: list[Job])` appends a `DeployJob`; if `list[BuildJob]` were accepted the next
+  `.build()` would explode at runtime. mypy supplies the fix in its own note: *"Consider using
+  `Sequence` instead, which is covariant."*
+- 🔴 **PEP 695 infers variance.** Two near-identical classes — `ReadOnlyBox[T]` and
+  `MutableBox[T]`, differing only by a `put` method — and the checker works out that the first is
+  covariant and the second invariant with nothing declared. **Adding a setter silently changes
+  what your generic class is compatible with.**
+- The practical rule (`Iterable`/`Sequence` in, `list` out) shown three ways, with only the
+  `list[Job]` parameter rejecting a perfectly reasonable argument.
+- **`ParamSpec` via `[**P, R]`**, paying off **4.4**: the decorated `fetch` keeps
+  `def (url: str, timeout: float =) -> bytes` **through the decorator** and rejects `fetch(123)`,
+  while the `Callable[..., object]` version degrades to `def (*Any, **Any) -> object` and lets
+  the same mistake through.
+- A legacy-vs-modern translation table, and the same `Generic[T]` code checked to prove they
+  interoperate.
+
+> **Probe correction.** My first variance test looked "clean" and proved nothing: I wrote
+> `mut: MutableBox[Job] = MutableBox(BuildJob())`, where mypy simply infers the constructor as
+> `MutableBox[Job]` and no variance question arises. Rewritten to assign an **existing**
+> `MutableBox[BuildJob]` to a `MutableBox[Job]`, which is the actual test and does error.
+
+### `16.4 Protocols, Structural Typing, Self and overload.ipynb` — **NEW**, 26 cells
+Builds on **5.4**, which taught `Protocol` as an idea; this is the checkable form and its edges.
+
+- **Nominal vs structural**, shown with one third-party class that satisfies a `Protocol` and is
+  rejected by an equivalent `ABC` — the case protocols exist for.
+- **Signature conflicts reported member by member**: mypy prints `Expected:` /
+  `Got:` for a `close(self, force: bool)` that should have been `close(self)`.
+- **Generic protocols** — `Comparable[T]` accepting `int`, `str` and a user class with `__lt__`,
+  rejecting one without, *before* `min()` would have raised at runtime.
+- **Callback protocols**, with the point sharpened after reading the output: assigning
+  `exponential` to `Callable[[int], float]` **does not fail** — it succeeds and **silently
+  discards** the keyword parameter, so the later `plain(1, ceiling=30.0)` is
+  `Unexpected keyword argument "ceiling"`. `Callable` did not reject the function, it forgot
+  half of it.
+- 🔴 **`runtime_checkable` checks presence and nothing else** — run at runtime, not described:
+  a class whose `close()` takes a required argument returns `True`, and an object whose
+  `name` attribute is an `int` returns `True` for a `name: str` protocol. Both would be
+  rejected statically. With a table contrasting the two.
+- **`Self`** — `TimedQueryBuilder().where(...)` revealed as the subclass so the chain continues,
+  against a hardcoded return type that collapses to the parent and fails with
+  `"HardcodedBuilder" has no attribute "timeout"`.
+- **`@overload`** — `get_setting("region", "us")` is `str` while `get_setting("missing")` is
+  `str | None`, so the two-argument form needs no narrowing; plus the implementation-mismatch
+  error (`cannot produce return type of signature 2`) and a table on when two named functions
+  beat one overloaded one.
+- The `collections.abc` protocols you already use, with `Sized`, `Iterable` and a generic `take`
+  working on a generator and on a string.
+
 ### Verification
 - Folder 16: **0 unexpected problems**, run **twice**, identical both times
-- **53 cells across 2 notebooks**; **21 code cells**, all compile, outputs cleared, `nbformat` 4.4
-- **mtime snapshot of all 194 repository files: 0 touched, 0 created, 0 removed** — `.mypy_cache`
-  stays in the temp directory
-- **Remaining in this folder:** 16.3 generics and variance, 16.4 protocols, 16.5 typing real
-  code, 16.6 adoption
+- **106 cells across 4 notebooks**; **43 code cells**, all compile, outputs cleared,
+  `nbformat` 4.4
+- **mtime snapshot of all 196 repository files: 0 touched, 0 created, 0 removed**
+- **Remaining:** 16.5 typing real code, 16.6 adoption
 
 ---
 
