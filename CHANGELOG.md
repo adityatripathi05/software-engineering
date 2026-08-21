@@ -1555,6 +1555,149 @@ Karatsuba verification that was vacuously true.
 
 ---
 
+## Renumbering: planned folders 16–21 → 15–20
+
+The curriculum ran `00`–`14` and then jumped to `16` — a gap left by deleting `13 GUI` and
+`14 Project` and renaming `15` → `14`. Closed before writing any new content, because the cost
+only grows: 21 cross-references now, against hundreds once the new folders reference each other.
+
+**21 references rewritten across 14 notebooks**, driven by an explicit
+`(file, cell, old, new)` table that asserts exactly one match per edit — not a regex sweep. Of
+317 lines in the repository containing 16–21 as a bare number, only 23 were reference-shaped and
+**two of those were values, deliberately left alone**: the `| 1,000,000 | 1,000,000 | **20** |`
+row in `14.11`'s binary-search table, and "a tree of height **20**" in `14.7`.
+
+`README.md` gained the new map and a numbering note. `.gitignore` gained `.pytest_cache/`,
+`.mypy_cache/`, `.hypothesis/`, `.coverage`, `htmlcov/`.
+
+> Earlier entries in this file use the **old** numbering. They have not been rewritten — this
+> is a historical record.
+
+---
+
+## 15 Testing
+
+New folder, nothing existed. Testing had appeared only in passing: `assert` in **6.1**,
+`@pytest.fixture` in a decorator table in **4.4**, a `pytest>=8.0` line in **7.2**'s
+`requirements-dev.txt`, the `assertEquals` removal note in **1.1**, and `14.16`'s
+`verify(fast, slow, generate)` harness with its forward reference *"done properly with
+`pytest`"*. **15.1** picks that harness up by name.
+
+Built against **pytest 9.1.1** and **Python 3.14.4**. `hypothesis` 6.165.10 and `coverage`
+7.15.4 were installed into `.venv` for **15.6**.
+
+**Batch 1: foundations — 106 cells across 3 notebooks.**
+
+### `15.1 Why Test, and the assert Statement.ipynb` — **NEW**, 34 cells
+The cost curve; `assert` anatomy; Arrange–Act–Assert; unit/integration/e2e and what the pyramid
+actually claims; and a **working 20-line test runner** built so that `pytest` later reads as
+"the one I didn't have to write" rather than magic. It reports `FAIL` vs `ERROR` separately,
+which sets up **15.2**.
+
+Demonstrated rather than asserted:
+
+- 🔴 **`python -O` deletes `assert` entirely.** The same file run twice: normally a 150%
+  discount raises; under `-O` it returns **−100.0**. Then the bytecode, which is the honest
+  proof — **29 instructions → 9**, `RAISE_VARARGS` gone, and the failure message
+  `"percent out of range"` **no longer in `co_consts`**. There is nothing left to trigger.
+- 🔴 **`assert (expr, msg)` can never fail** — a non-empty tuple is truthy. Shown passing while
+  claiming `8.0 == 999.0`.
+- 🔴 **Order-dependent tests.** Two tests sharing a module-level cache: order A passes, order B
+  fails. Same code, same tests, different verdict.
+
+> 🔴 **The tuple-`assert` cell had to be moved into a subprocess.** Python 3.12+ emits
+> `SyntaxWarning: assertion is always true, perhaps remove parentheses?` at **compile** time —
+> which under the harness's `warnings.simplefilter("error")` becomes a `SyntaxError`, breaking
+> both the smoke run and the "every cell compiles" check. Running it in a child interpreter
+> fixes that *and* shows the learner the real warning, which is better teaching. The subprocess
+> helper was moved earlier in the notebook to make this possible.
+
+> 🔴 **A claim of mine was wrong and the output caught it.** The bytecode cell originally tested
+> for the string `"AssertionError"` in the disassembly and the markdown table asserted it was
+> present normally. It printed `False` in **both** modes — in 3.14 the exception is loaded via
+> `LOAD_COMMON_CONSTANT`, so it is not in `co_names` or any `argval`. Replaced with two
+> discriminators that actually hold: the `RAISE_VARARGS` opcode and the message in `co_consts`.
+
+### `15.2 unittest - the Standard Library.ipynb` — **NEW**, 36 cells
+`TestCase`, the `assert*` family, the full lifecycle, `subTest`, `assertRaises`/`assertLogs`/
+`assertWarns`, skips and expected failures, and `python -m unittest discover` run for real
+against a temporary two-package project. One `Job` state machine carries the whole notebook.
+
+Measured, not claimed:
+
+- **`assertTrue` vs `assertEqual` on the same bug**: `AssertionError: False is not true`
+  against `AssertionError: 'running' != 'done'` with a diff. That is the entire argument for
+  the specific methods.
+- 🔴 **Failure vs error**, side by side — a wrong answer versus a `ValueError` — and the note
+  that `pytest` discards the distinction.
+- **The lifecycle trace printed as it happens**: `setUpClass → (setUp → test → tearDown) × 3 →
+  tearDownClass`, with `test_a` running before `test_b` **because methods run alphabetically**,
+  and a third test proving `setUp` isolation held.
+- **`subTest` against a plain loop** on the same 5-case table: the loop reports **1** failure
+  and stops; `subTest` reports **both** `'2.5'` and `' 5 '`, named. And `testsRun` is 1 either
+  way — which is the argument for `@parametrize`.
+- **`@expectedFailure` on a bug someone quietly fixed** → `unexpected success`, reported.
+- 🔴 **The 3.12 alias removals**, probed with `hasattr`: all 8 of `assertEquals`,
+  `assertNotEquals`, `assertAlmostEquals`, `failUnless`, `failUnlessRaises`,
+  `assertRegexpMatches`, `assertNotRegexpMatches`, `assertItemsEqual` report `False`.
+
+> 🔴 **Two cells asserted things they did not show.** The `addCleanup` cell claimed LIFO order
+> and "runs even if the test fails" while printing neither; it now registers three cleanups per
+> test and logs the order, printing `3rd registered` before `1st registered`, with a
+> deliberately failing third test proving cleanup still ran. And the failure-vs-error cell was
+> printing the last line of the traceback — which is a diff line (`+ running`), not the
+> exception. It now scans back to the real `SomeError: message` line.
+
+### `15.3 pytest - Writing and Running Tests.ipynb` — **NEW**, 36 cells
+Discovery, node IDs, exit codes, assertion rewriting, `approx`, `raises`, `parametrize`, the
+CLI, and marks. Every example runs `pytest` in a throwaway project via `subprocess`, so all
+output is genuine.
+
+- **Assertion rewriting** explained as what it is — bytecode rewriting at import — then shown
+  on five failures: string (with the caret pointing at the differing character), dict
+  (`Differing items`), list (`At index 1 diff`), set (`Extra items in the left set`), and 🔴 a
+  **bare boolean** `assert x.startswith(...)` which can only manage `assert False`, because
+  there is nothing to diff.
+- 🔴 **Exit code 5.** A project whose tests are named `check_*` runs **zero** tests and reports
+  no failures. Only the exit code distinguishes it from a green build.
+- 🔴 **`pytest.raises(Exception)` passing for the wrong reason** — the demo passes because a
+  `bogus_kwarg` typo raised `TypeError`, not because the code under test raised anything. Next
+  to it, `DID NOT RAISE` proves the opposite failure mode.
+- **`@parametrize`** generating 14 real tests where `subTest` gave 1, with `pytest.param(id=...)`
+  for readable IDs, a per-case `xfail(raises=ValueError)`, and stacked decorators producing
+  the 2 × 3 = 6 cartesian product.
+- **`unittest` and `pytest` files in one run**: 3 tests from one, 5 from the other, 8 collected.
+- **The CLI**: `--collect-only`, `-k` (4 selected, 2 deselected), `-x` stopping after 1 failure,
+  then `--lf` rerunning exactly that one.
+
+> 🔴 **Three states of a custom mark, and the one that breaks builds.** The same file run three
+> ways: unregistered with `-m "not slow"` → **exit 0, and the typo'd `@pytest.mark.slwo` test
+> ran anyway** because the mark did nothing; unregistered under `-W error` → **exit 2,
+> collection error, zero tests run**; registered in `pytest.ini` with `--strict-markers` →
+> exit 2 with `'slwo' not found in markers configuration option`, naming the typo. The middle
+> case matters because `filterwarnings = error` is an otherwise-good setting many projects ship.
+
+> 🔴 **A second wrong claim of mine, caught by reading the output.** The `approx` section stated
+> that "a relative tolerance times 0 is 0, so `approx(0)` only matches exactly 0". It does not:
+> `pytest.approx(0.0)` falls back on the **default absolute tolerance of `1e-12`**, so `1e-18`
+> passes. The real trap is subtler and now taught instead — `approx(0.3)` has an effective
+> tolerance of `3e-07` while `approx(0.0)` has `1e-12`, a million times tighter, so a residual
+> of `1e-11` fails while looking negligible; and passing `rel=` does not help, because it is
+> still multiplied by zero. The cell asserts both tolerances directly and now fails 3 of 8.
+
+> **`encoding="utf-8"` on `subprocess.run`.** pytest prints `0.0 ± 1.0e-12`; without it the
+> Windows locale codec turned `±` into `Â±` throughout the captured output.
+
+### Verification
+- Folder 15: **0 unexpected problems**, run **twice**, identical both times
+- 106 cells across 3 notebooks — 34 / 36 / 36; **38 code cells**, all compile, all outputs
+  cleared, `nbformat` 4.4
+- No `EXPECTED` entries needed: every deliberate failure is inside a subprocess or a
+  `TextTestRunner`, so no cell raises
+- `git status` clean apart from the new folder; no temp directories survived either run
+
+---
+
 ## Tooling and environment
 
 ### Virtual environment — `D:\Learn\Python\.venv` (gitignored)
