@@ -58,10 +58,10 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 15 | Testing and Debugging | `assert`, `unittest`, `pytest`, fixtures, mocking, coverage, property-based testing; tracebacks, `pdb`, debugging strategy, logging |
 | 16 | Type Hints and Static Typing | `mypy`, narrowing, `Literal`, `TypedDict`, generics and variance, protocols, adoption |
 | 17 | Tooling, Packaging and Environments | venv and pip, `pyproject.toml`, building and publishing, `ruff`, profiling |
-| 18 | Working with APIs | `requests`, REST/JSON, auth, error handling |
+| 18 | Working with APIs | REST semantics, auth and secrets, pagination and retries, `pydantic` validation, testing and concurrency |
 | 19 | Capstone Projects | End-to-end builds tying it together |
 
-Folders 00–17 are complete and verified. Folders 18–19 are still to be written. See
+Folders 00–18 are complete and verified. Folder 19 is still to be written. See
 [CHANGELOG.md](CHANGELOG.md) for what has been done so far.
 
 > **Numbering note.** `13 GUI` and the old `14 Project` were removed, and `15 Data Structure

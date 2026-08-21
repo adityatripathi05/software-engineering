@@ -2618,13 +2618,65 @@ Closes the gap **16.1** opened ("annotations are not enforcement") and pays off 
 - Turning a `ValidationError` into a `422` body (**18.1**), with the caution not to return
   `str(exc)` because it can echo input values back (**18.2**).
 
+**Batch 3: testing and concurrency — 27 cells.** Folder complete: **125 cells, 5 notebooks**.
+
+### `18.5 Testing API Clients and Concurrency.ipynb` — **NEW**, 27 cells
+Answers the two questions the folder had left: how do you test this, and why is it slow.
+
+- 🔴 **Do not mock `requests`** — the argument from **15.5**, sharpened for HTTP: a `Mock`
+  response has no status semantics, no header parsing and no `raise_for_status`, so you end up
+  reimplementing `requests` badly inside your fixtures. The `JobsClient` takes `session=`
+  precisely so a test can inject a fake.
+- **Three layers, all run for real** with `pytest` in a temp project: **3 unit tests** against a
+  `FakeSession` (including one asserting the **timeout was passed through** — the check a
+  `patch("requests.get")` makes awkward), then **2 integration tests** over real HTTP against a
+  session-scoped server fixture (**15.4**). Five tests, still offline.
+- Recorded fixtures noted with their two hazards: they **freeze the API as it was**, and they
+  routinely capture credentials into the recording (**18.2**).
+- 🔴 **The empty profile.** `cProfile` over ten real HTTP calls: **1,545 ms of wall clock** and
+  a `tottime` column showing essentially nothing but `time.sleep`. This is **17.5**'s closing
+  warning made concrete — the program is blocked in a socket read, which is not CPU time.
+- **`ThreadPoolExecutor`** taking 20 sequential requests from ~3,060 ms to a few hundred, an
+  order of magnitude — with the explanation from **12.1** that a thread waiting on a socket has
+  released the GIL.
+- 🔴 **Connection pooling measured with the artificial latency switched off**: 120 requests take
+  **~1,380 ms with a new connection each and ~160 ms through a `Session`** — roughly **9×**, from
+  using one object, before any concurrency at all. Named as the highest benefit-to-effort change
+  in the folder, and the most common thing missing from a slow client.
+- **Bounded concurrency** with an `asyncio.Semaphore`, printing the observed peak in flight to
+  prove the cap holds — paired with **18.3**'s retry policy rather than replacing it.
+- Timeouts under concurrency: one request without a timeout does not merely hang, it **holds a
+  worker forever**. Ten interview questions close the notebook.
+
+> 🔴 **The asyncio measurement is honest, and it does not say what people expect.** On this
+> benchmark **threads beat `httpx` + asyncio**, consistently. Rather than rig the demo, the
+> notebook explains the three reasons — the local `ThreadingHTTPServer` is the bottleneck (one
+> OS thread per connection), loopback has no real latency for async to hide, and `httpx` plus
+> event-loop setup is a fixed cost — and then gives the table of when each genuinely wins:
+> threads for tens to hundreds of calls, asyncio for thousands of concurrent connections. The
+> stated takeaway is *measure your own workload*, not *threads are faster*.
+
+> 🔴 **A claim I wrote twice and had to withdraw both times.** After the first run I wrote that
+> more workers "stopped helping and then made it worse", because 20 workers came out at half the
+> speed of 10. The next run had 20 workers **fastest**, at 15.7×. The ordering is simply **not
+> stable** on a contended local server. The prose no longer asserts any ordering: the cell
+> computes and prints the best configuration itself, and the text says the optimum is set by the
+> other side and must be measured — the same conclusion **14.1** reached when wall-clock timing
+> proved too noisy to teach from.
+
+> **Build note.** Two embedded test files carried docstrings, colliding at the third level of
+> triple-quoting (build script → notebook cell → generated file). Converted to comments, the
+> same fix used in **15.10** and **16.5**.
+
 ### Verification
 - Folder 18: **0 unexpected problems**, run **twice**, identical both times
-- **98 cells across 4 notebooks**; **40 code cells**, all compile, outputs cleared,
-  `nbformat` 4.4
-- **mtime snapshot of all 207 repository files: 0 touched, 0 created, 0 removed**, and still no
-  network — every API in this folder is a thread inside the notebook
-- **Remaining:** 18.5 testing API clients and I/O-bound concurrency
+- **125 cells across 5 notebooks** — 22/21/27/28/27; **50 code cells**, all compile, outputs
+  cleared, `nbformat` 4.4
+- Still **no `EXPECTED` entries** anywhere in the folder
+- **mtime snapshot of all 208 repository files: 0 touched, 0 created, 0 removed** — and **no
+  network was used by any notebook**, since every API in the folder is a thread inside the
+  notebook process
+- README updated: **00–18 complete, folder 19 remaining**
 
 ---
 
