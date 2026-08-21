@@ -2461,6 +2461,103 @@ to 17 folders and 93 notebooks.
 
 ---
 
+## 18 Working with APIs
+
+New folder, carrying **five explicit promises** from elsewhere in the curriculum: security from
+**2.5**, `pydantic` from **8.3**, "full treatment" of network reading from **8.4**, "REST
+conventions, authentication, pagination, rate limiting" from **11.5**, faking the dependency
+from **15.5**, runtime enforcement from **16.1**/**16.2**, and "where real tokens turn up" from
+**17.3**.
+
+### 🔴 The constraint that shaped the folder
+A tutorial that calls a real API breaks when that service changes, rate-limits you or goes
+down — and it needs credentials nobody should put in a notebook. So every notebook runs a
+**real HTTP server on localhost**, the pattern **11.5** established: real sockets, real status
+codes, real headers, **no network and no secrets**. The fake API genuinely enforces
+authentication, returns `429` with `Retry-After`, paginates three different ways and serves
+deliberately malformed JSON.
+
+### Tooling installed
+`pydantic` 2.13.4 and `httpx` 0.28.1 into `.venv`. `pydantic` is promised **by name three
+times** (8.3, 16.1, 16.2) and 18.4 cannot exist without it; `httpx` provides the async client
+for 18.5's concurrency section. `requests` 2.34.2 was already present.
+
+**Batch 1: protocol and credentials — 43 cells across 2 notebooks.**
+
+### `18.1 REST and JSON - Talking to an API.ipynb` — **NEW**, 22 cells
+Picks up where **11.5** left the transport, and covers the conversation.
+
+- **The five verbs against one resource**, executed: `POST` returning `201` **with a `Location`
+  header**, `DELETE` returning `204` **with an empty body**. With the safe/idempotent table that
+  **18.3** later depends on for retry decisions.
+- The **status-code taxonomy** organised by what your code should *do* — 4xx means fix the
+  request, 5xx means retry — and 🔴 `401` vs `403` as genuinely different problems.
+- 🔴 **Three ways to check a response, two of them wrong**, in one table: `status_code == 200`
+  **rejects the `201` and the `204`** as failures, `.ok` accepts 3xx redirects as success, and
+  `raise_for_status()` gets both right.
+- **`json=` vs `data=`** with the `Content-Type` the server actually received: `json=` sets
+  `application/json`; `data=json.dumps(...)` sends **no** `Content-Type` and only worked by
+  luck; `data=dict` sends a form encoding and **failed with `400`**, because a form body is not
+  JSON.
+- 🔴 **The response is not always JSON**, shown twice: a `204` with nothing to parse, and an
+  **HTML `502` page from a proxy** — the case that breaks careful error-object parsing in
+  production. Both raise `JSONDecodeError`.
+- 🔴 **Why you must not build query strings by hand**: `params=` encodes `build & deploy` to
+  `build+%26+deploy`, while the f-string version silently loses everything after the `&` —
+  `{'q': 'build '}` instead of the intended value.
+- Headers on a `Session`, and the **`requests` exception taxonomy** with all three raised for
+  real, ending on the distinction 18.3 needs: `ConnectionError`/`Timeout` mean the request may
+  not have been processed, `HTTPError` means it was.
+
+> **Correction from reading the output.** I wrote that "this server is lenient; many APIs reject
+> the last two" about `data=`. My own server rejected the **form-encoded** case with `400`,
+> because the body is not JSON at all. The table now records the actual result of each of the
+> three forms.
+
+### `18.2 Authentication and Handling Secrets.ipynb` — **NEW**, 21 cells
+- **Four schemes enforced for real** by the fake API: Bearer, Basic, an API key in the query
+  string (kept specifically to demonstrate why it is wrong), and **HMAC signing**.
+- 🔴 **`401` vs `403` demonstrated with the same token**: valid credentials get `200` on
+  `/v1/jobs` and `403 insufficient scope` on `/v1/admin`. Retrying fixes one and can never fix
+  the other. Plus the `WWW-Authenticate` header, which almost nobody reads.
+- A reusable `AuthBase` subclass whose `__repr__` masks the token, and **HTTP Basic decoded live**
+  — `Basic YWRpdHlhOmNvcnJlY3QtaG9yc2U=` reversed back to `aditya:correct-horse` in one line, to
+  make the point that base64 is *encoding*, not encryption.
+- A **`RefreshingClient`** that exchanges a long-lived `client_secret` for a 1-second token,
+  hits a genuine `401` after expiry, refreshes and retries — **once**, with the note that a
+  refresh loop against a revoked secret is a denial-of-service attack on your own credentials.
+- 🔴 **Why a key in the URL is worse than the same key in a header**, shown by printing
+  `response.url` and the server's own access log for both: the token is in the first and absent
+  from the second.
+- Secret loading: a 12-line `.env` parser, `os.environ[...]` failing loudly at startup against
+  `os.getenv()` returning `None` that "travels onward silently", and the ladder from environment
+  variables up to **workload identity — the safest secret is one that does not exist** (the same
+  idea as trusted publishing in **17.3**).
+- A **`RedactingFormatter`** (**15.10**) masking a key in a URL, a `Bearer` header and a
+  `token=` parameter — with the closing point that redaction is a **safety net, not a strategy**,
+  because it only catches patterns you predicted.
+
+> 🔴 **The case study is this repository.** The notebook uses the curriculum's own incident:
+> commit `b0537f6` held a real Gmail password and an OpenWeatherMap key, `27ef473` removed them
+> from the working tree, and **they stayed fully readable in history**. What resolved it was the
+> author rotating the password and deleting the key — *rotation, not deletion*. The "what does
+> not help" list (deleting the file, force-pushing, going private, hoping) is drawn directly
+> from that. The incident sat undiscovered from 2019 until an audit six years later.
+
+> The final cell notes what the notebook deliberately never did: **print a real secret into an
+> output cell**, since notebook outputs are saved into the file and committed with it.
+
+### Verification
+- Folder 18: **0 unexpected problems**, run **twice**, identical both times
+- **43 cells across 2 notebooks**; **17 code cells**, all compile, outputs cleared,
+  `nbformat` 4.4
+- **mtime snapshot of all 205 repository files: 0 touched, 0 created, 0 removed** — and no
+  network was used, since the API is a thread inside the notebook
+- **Remaining:** 18.3 pagination and retries, 18.4 pydantic validation, 18.5 testing and
+  concurrency
+
+---
+
 ## Housekeeping: repository writes and orphaned fixtures
 
 The "ten unreferenced fixture files awaiting a delete decision" turned out to be a
