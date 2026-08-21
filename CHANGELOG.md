@@ -1806,6 +1806,127 @@ The closing notebook: layout, coverage, property-based testing, doctest, flakine
 
 ---
 
+## 15 Testing and Debugging — the debugging half
+
+**Batch 3: debugging — 68 cells across 3 notebooks.** Folder total: **252 cells, 9 notebooks**.
+
+The folder was renamed from `15 Testing` (commit `31ec917`) on the author's suggestion, because
+testing and debugging are one loop: a failing test is the start of a debugging session. The
+rename cost 2 notebook references, a README row, a CHANGELOG heading and HANDOFF.
+
+### The gap this closed
+A scan for debugging coverage across all 78 existing notebooks found **`pdb`, `breakpoint()`,
+`set_trace`, `post_mortem` and `faulthandler` in exactly zero of them.** For a curriculum that
+reaches bitmask DP and asyncio, the interactive debugger being entirely absent was the largest
+remaining hole after type hints.
+
+What *did* exist was respected rather than repeated: `6.1` already teaches reading a traceback
+bottom-up, `6.2` covers `raise ... from`, and `12.2` covers exceptions vanishing in threads.
+15.7 builds on all three.
+
+> **The constraint that shaped 15.8.** `pdb` is interactive and the smoke harness skips blocking
+> calls, so a debugging notebook could easily have become unrunnable transcripts. It did not:
+> every session runs a real script through `subprocess` with commands fed on stdin, so all
+> output is genuine `pdb` output. Verified before writing a line.
+
+### `15.7 Reading Failures - Tracebacks, Exceptions and Logging.ipynb` — **NEW**, 23 cells
+- 🔴 **Fine-grained error locations (3.11+)** on `order["items"]["count"] * order["price"]["net"]`
+  — the `~~~~~~~~~~~~~~^^^^^^^` lands under the `["net"]` subscript, naming the sub-expression
+  that raised rather than the line.
+- **Chained exceptions, both forms, run side by side**: *"The above exception was the direct
+  cause"* (`__cause__`) vs *"During handling of the above exception"* (`__context__`) — with the
+  point that the second often means **the `except` block itself is broken**, so the *top*
+  traceback is the real failure.
+- The **`traceback` module** as structured data: `format_exception_only`, `extract_tb`, and
+  `TracebackException` walked frame by frame down to the deepest one. Version note for
+  `exc_type` → `exc_type_str` (3.13).
+- **`sys.excepthook`** as a crash reporter, and the table of what each hook does *not* catch —
+  `threading.excepthook`, the asyncio handler, `sys.unraisablehook`.
+- **print vs logging vs debugger**, with `logging.exception()` attaching a full traceback, and
+  why `log.debug("...%s", x)` beats an f-string when the level is off.
+- **`python -X dev`** surfacing a `ResourceWarning: unclosed file` that the default run hides
+  entirely.
+- **`faulthandler.dump_traceback_later`** producing a diagnosis from a **hung** process —
+  naming both stuck threads and the exact line each sits on. There is no traceback for a hang,
+  which is the whole point.
+
+### `15.8 The Interactive Debugger - pdb and breakpoint.ipynb` — **NEW**, 25 cells
+Every transcript real, produced by feeding commands to a subprocess.
+
+- `breakpoint()` and **`PYTHONBREAKPOINT=0`**, demonstrated skipping the breakpoint entirely —
+  which is also the CI safety net against a stray `breakpoint()` hanging a build.
+- The command tables (moving / looking / stack / breakpoints), then a live session using
+  `ll`, `where`, `n`, `s`, `args`, `u` and `c`.
+- 🔴 **`!n = 4` changes a variable mid-session** and the program prints `4.0` instead of
+  `5.333…` — the debugger edits a running program, it does not merely watch one.
+- **Conditional breakpoints**: `break batch.py:8, attempt > 4` runs straight past two
+  iterations and stops on the third, showing `512.0` capped to `30.0`.
+- **Post-mortem** via `python -m pdb -c continue`, inspecting `raw` and evaluating
+  `raw.split(",")` on a crash, with the program unmodified.
+- pytest integration: `--showlocals` printing the locals table under the failing assertion, and
+  `--pdb` dropping into post-mortem.
+
+> 🔴 **Three of my own claims were wrong and the output caught all three.**
+> **(1)** I wrote that `s` steps into the call — it does not, when you are standing *on* the
+> `breakpoint()` line, which has not run yet. The transcript showed `s` behaving exactly like
+> `n`. Fixed by adding an `n` first, and the notebook now teaches this explicitly as the reason
+> "`s` doesn't work" is such a common first impression.
+> **(2)** The post-mortem cell never entered post-mortem, because I omitted `-c continue`; it
+> stopped at line 1 and every `p` raised `NameError`.
+> **(3)** Worst of the three: I claimed `d` (down) reaches the failing frame under
+> `pytest --pdb`. It cannot. `apply_cap` **returned successfully** — the `assert` in the *test*
+> raised — so that frame is not on the traceback and no navigation can reach it. The notebook
+> now teaches the correct rule (**post-mortem gives you the frames on the traceback, not every
+> frame that ran**) and the practical move: call the function again from the prompt,
+> `p apply_cap(delay, 30.0)` → `30.0`.
+
+### `15.9 Debugging in Practice - Strategy, Bisection and Hard Bugs.ipynb` — **NEW**, 20 cells
+- The loop — reproduce → isolate → hypothesise → test → fix → write the test — with the point
+  that the step people skip is **hypothesise**, and the tell is changing two things at once.
+- 🔴 **`PYTHONHASHSEED`**: three runs of the same set-iteration bug give three different answers;
+  three pinned runs give one. Reproduce *first*, or everything after is guessing.
+- **Bisection as binary search (14.11) applied to history**: 1,000 commits, **10 tests**, a
+  **100x** speed-up — and cross-checked against brute force, the folder-14 habit.
+- **Delta debugging**: 401 rows shrunk to **the single malformed row in 19 checks**, with the
+  `shrink(input, predicate)` helper generalised — the manual form of what `hypothesis` did
+  automatically in **15.6**.
+- **`tracemalloc`** comparing two snapshots: the never-evicted cache shows as ~6 MB of growth on
+  one line, while a function that allocated just as much transiently does **not appear** —
+  which is exactly the distinction a leak hunt needs.
+- A stuck-checklist, and **11 interview questions** indexed to the notebook that answers each.
+
+> 🔴 **The race-condition demo had to be rebuilt twice, and is better for it.** The first
+> version claimed a `print` would *hide* lost updates. It did the opposite: on CPython 3.14 the
+> plain version lost **nothing at all**, three runs in a row, while adding `print` introduced
+> losses. Rebuilt as four modes of the same buggy counter:
+>
+> | Mode | Result | Lesson |
+> |---|---|---|
+> | `plain` | lost 0 every run | **absence of symptom is not absence of bug** |
+> | `busy` | usually 0, **sometimes not** | this is what a flaky test actually *is* |
+> | `sleep0` | loses ~75% every run | how to reproduce a race **on purpose** |
+> | `print` | large, varying loss | observation changes the outcome |
+>
+> A second correction followed: the table first recorded `busy` as always losing 0, matching a
+> probe run. A later run lost 60,000 on one of three. The row now reads *"usually 0, but not
+> always"* — and that intermittency is now the most valuable row in the table, since it is a
+> genuine heisenbug reproduced in eight lines.
+
+### Housekeeping
+`15.6` was no longer the last notebook in the folder — its index table gained rows for 15.7–15.9
+and a **Where next — the debugging half** section.
+
+### Verification
+- Folder 15: **0 unexpected problems**, run **twice**, identical both times
+- **252 cells across 9 notebooks** — 34/36/36/29/22/27/23/25/20; **93 code cells**, all compile,
+  all outputs cleared, `nbformat` 4.4
+- Still **no `EXPECTED` entries**: every deliberate failure and every debugger session runs in a
+  subprocess, so no notebook cell raises
+- **mtime snapshot of all 191 repository files before and after a folder run: 0 touched, 0
+  created, 0 removed** — the debugger and pdb sessions write only into temp directories
+
+---
+
 ## Housekeeping: repository writes and orphaned fixtures
 
 The "ten unreferenced fixture files awaiting a delete decision" turned out to be a
