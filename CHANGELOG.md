@@ -3124,3 +3124,101 @@ past `session.close()`, keeping a server thread alive until GC.
   every time; all 65 code cells execute; repository untouched by every run
 - README updated: **all folders 00–19 complete and verified — the curriculum is
   finished**
+
+---
+
+## Example-alignment pass (2026-08-22)
+
+The author's bar, sharpened after the capstones landed: **every example, from 1.0 to 19.4,
+should be something a working developer will meet again at a workplace** — the four
+capstone domains as the anchor palette (so early concepts visibly thread into the
+projects), any genuinely professional scenario beyond them equally welcome, and nothing
+bookish surviving: no students/marks records, no fruit-list filler, no "WAP" drill
+headings, no 2019 coaching-institute fossils.
+
+A marker scan (students/marks, WAP, fruit filler, "Ducat") found ~16 notebooks still
+carrying the old register. All were converted in place — teaching purpose, structure and
+coverage untouched; example data, drill scenarios and narration swapped and re-verified
+by execution.
+
+### Folders 01–02
+- **1.2/1.3** — PEP 8 demos now name services and error rates; the three "Ducat" `sep`/
+  `end` demos became service names; the invoice demo is a **19.3** stock-valuation report
+  with real totals; the CSV-input drill became 19.1's task quick-add.
+- **2.2 Numeric** — Decimal money on a stock movement with GST; compound interest became
+  **exponential retry backoff**; area/perimeter became average latency and request rate.
+- **2.3 Tuple** (largest swap, ~20 cells) — the student record became an access-log
+  record `('GET', '/api/orders', 200, 187.5)` through every access/slice/immutability
+  cell; `namedtuple` now builds `ServiceStatus`. The broken no-op `sorted(..., key=...)`
+  demo became a genuine key-sort of endpoint latencies.
+- **2.5 Dictionary** — the whole `data1/data2/data3` teaching chain re-based on a 19.1
+  task record; Counter/defaultdict now tally status codes and group requests by service;
+  the three WAP headings became scenario exercises.
+- **2.7** — the mutable-default trap is now `add_task_buggy`; the nested-aliasing trap is
+  a fleet snapshot built from a shared template.
+
+### Folder 03 — the WAP band (30+ drills, zero "WAP" headings survive)
+Conditions classify status codes and route request ids to workers; while-loops poll flaky
+services, drain queues and build backoff schedules; digit-peeling drills are framed as
+checksum validation; `enumerate` numbers tasks "exactly how 19.1's list command does";
+`zip` pairs services with latencies for 19.4's fleet report; `continue` is named as
+"19.2's warn-and-skip policy is one `continue`"; comprehensions filter errors, extract
+endpoints and build status→count dicts. Kept with modern framing: the genuinely
+algorithmic cores (primes, Armstrong, HCF — re-dressed as batch sizes and packing).
+Latent bugs fixed in passing: an off-by-one in the range-split drill and two NameErrors
+in the old rock-paper-scissors game (now a capacity-planning simulator). 25 forward-
+pointers. `3.2.4`'s star patterns stay (the genre), with its one WAP heading modernised.
+
+### Folders 04, 07–09, 11
+- **4.3** — WAP drills became SKU restock generators, with "19.2 builds its entire
+  pipeline from exactly these chained stages."
+- **4.5** — marks/basket/fruit typed examples became latencies, picklists and a
+  `ServiceRecord`; the live mypy run still passes.
+- **7.1** — all three "Ducat" fossils removed (one more than the audit had counted);
+  `namedtuple('Student', ...)` became `Product(sku, name, stock)`; the module examples
+  close with "**19.1** starts life exactly like this."
+- **8.1** — the three text-file drills now form one access-log arc inside the temp-dir
+  discipline: append log lines → count them ("the first question 19.2 asks") → flag
+  non-ASCII characters with code points.
+- **9.1** — the deep `Name:/Age:/Roll No.` regex fixtures (three examples, five cells)
+  became a service-registry record with identical structural properties — the empty
+  value, the negative value, and the mid-line occurrence that makes the `^`-anchor
+  lesson work are all preserved and re-verified by execution.
+- Confirmed false positives left alone: `await ... marks the points` (11.4), pytest
+  marks (15.x), microbenchmarks (17.5), "Koko eating bananas" (the canonical interview
+  problem, 14.11), `Rollback` (10.4).
+
+### Folder 10 — the SQL schema re-base (the biggest single mismatch)
+`10.1` and `10.2` taught on a 2019 **student database**; capstone 19.3 builds an
+inventory service. Both notebooks now run on a shared `products` / `stock_movements`
+schema that rhymes with 19.3's vocabulary — every concept demo re-based and re-verified:
+constraint rejections (including the UNIQUE-SKU violation that backs 19.3's
+`DuplicateProductError`), aggregates, GROUP BY/HAVING, and the JOIN section whose
+`SUM(quantity)` on-hand and COALESCE+HAVING low-stock queries **literally become 19.3's
+`stock_report()` and `low_stock()`**. 10.1 closes with "10.3 moves this schema into
+Python, and 19.3 builds a real service on it." The 10.2 transcript values were verified
+against live MySQL 8.4 and PostgreSQL 16 containers (58 → rollback keeps 58 → commit
+lands 73, both engines).
+
+> **Found by running:** modern SQLite *permits* a SELECT alias in `WHERE`, so 10.1's old
+> "raises OperationalError" demo was narrating an error that no longer occurs. The cell
+> now teaches the standard-vs-SQLite leniency honestly.
+
+### 🔴 One flake introduced, caught by the sweep, root-caused
+The realigned 7.1 `importlib` demo wrote `reload_demo.py` next to the notebook and
+failed **intermittently** — passing or failing on alternate runs. Root cause: Python's
+importer caches directory listings, so a file created in an already-scanned `sys.path`
+directory is invisible to `import` until `importlib.invalidate_caches()` — whether the
+demo worked depended on whether a stale file from the previous failed run happened to
+exist when the cache was built. Fixed by moving the demo into a `tempfile` scratch
+directory (restoring the no-repo-writes rule) with `invalidate_caches()` called and the
+gotcha now taught as a ⚠️ in the cell. Folder 07 verified clean on three consecutive
+runs.
+
+### Verification
+- Full-repo sweep after the pass: **all 18 folders, 0 unexpected problems**, all
+  intentional failures confirmed (folder 07 re-verified 3× after the reload fix)
+- Marker re-scan: only false positives remain (documented above); zero WAP headings,
+  zero Ducat, zero student/marks teaching data anywhere in the curriculum
+- Every changed cell executed; narration aligned with real output; ~50 forward-pointers
+  now thread folders 01–10 into the four capstones
