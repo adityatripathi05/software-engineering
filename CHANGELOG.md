@@ -2967,3 +2967,95 @@ Unicode exercise.
   4.2 seven → 0, 2.1 two → 0, 2.4 four → 0, 2.6 one → 0
 - All edits via `nbformat` scripts; outputs remain cleared; kernel metadata untouched;
   `.tools/smoke.py`'s EXPECTED registry unchanged (cell indices held stable)
+
+---
+
+## Refinement pass (2026-08-22)
+
+The fix pass made the notes *trustworthy*; this pass makes the weakest large notebooks
+*good*. Four tiers, ordered by value, each verified by a fresh-eyes auditor who executed
+every code cell and compared narration against real output — the historical failure mode
+(prose contradicting execution) recurred **zero times across the 174 cells checked**.
+
+### Tier 1 — `5.1 Python OOPs` rebuilt: 176 → 122 cells
+
+The flagship OOP notebook, restructured from an accreted 2019 sequence into a coherent
+17-section arc: why OOP → classes/objects (a `Job` task-queue running example) →
+`__init__`/`self` → methods → `__repr__`/`__str__` → encapsulation (the plain →
+getter/setter-breaks-compatibility → `property()` → `@property` story) → class variables
+(with a live mutable-class-var leak demo) → classmethod/staticmethod (alternative
+constructors, `cls`-preserves-subclass proof) → inheritance (a notifier domain:
+Email/Slack/Sms/Digest, single → hierarchical → multilevel → multiple → **MRO/C3**) →
+composition/aggregation (`HttpClient` owns `RetryPolicy`; shared `ConnectionPool`) →
+ABCs (`StorageBackend` with the silent-failure motivation) → polymorphism → operator
+overloading (GridPoint kept as the framed classic, plus a real `Duration` with
+`sum()`/`__radd__`) → custom iterators (`RetrySchedule` backoff) → lifecycle
+(`__new__`/`__del__`) → `__slots__` → dunder table → underscore appendix.
+
+- Replaced toys: Employee-name/salary, Polygon/Triangle, Circle+Circle, Person/Student,
+  A/B/C, PowTwo, Shape. Preserved verbatim: every strong modern section (HttpResponse
+  repr/str, CacheKey eq/hash, Version total_ordering, slots, ConnectionPool/Port,
+  Repository dunder table). Watermarked operator-table screenshots f/g replaced with
+  native markdown tables.
+- New version notes, all verified live: 3.13 docstring dedent, 3.14 PEP 649 lazy
+  annotations, 3.11 `Self`, PEP 695 pointer to 16.3.
+- The deliberate GridPoint `TypeError` teaching beat is kept; its harness registration
+  moved 94 → 89 in `.tools/smoke.py`.
+- **Verification:** independent auditor executed all 58 code cells top-to-bottom in one
+  namespace — zero NameErrors, zero narration mismatches, all cross-references and
+  images resolve, all prior topic coverage confirmed present. Verdict: PASS.
+
+### Tier 2 — `4.1` (100 → 95) and `4.2` (86 → 78)
+
+- **4.1** — the thin legacy band rewritten to the quality bar in place (the registered
+  `del display` demo held byte-stable at cell 57): defaults as config knobs
+  (`connect(host, port=8080, timeout=5.0)`), keyword args on an `alert()` API with the
+  silent wrong-order trap, `*args`/`**kwargs` on device registration, returning-multiple-
+  values on a latency summary. The old WAF drill band became a worked-examples band where
+  each classic (primes, HCF, factorial, fibonacci) keeps its drill but gains a real
+  bridge — bucket sizing, aspect ratios, permutation counts, retry backoff. Recursion
+  section rebuilt around a folder-size analogy with a base/recursive-case table.
+- **4.2** — reshaped from a builtin-by-builtin wall into six concept groups
+  (introspection, iteration tools, aggregation & truth, conversion, functional tools,
+  OOP pointers), each opened with why/when and closed with a "group in action" scenario
+  (getattr-driven dispatch, ranked latency report, SLA health gate, log pipeline).
+  A grouped quick-reference table carries the long tail; the honest
+  map/filter/reduce-vs-comprehension section and `key=` treatment preserved. Coverage
+  grew by three builtins (`round`, `format`, `dict`).
+
+### Tier 3 — `2.1` (98 → 89) and `2.4` (96 → 86)
+
+Method walls reshaped concept-first, beginner-appropriate (no type hints, no OOP):
+
+- **2.1 Strings** — case & cleaning / searching & testing / splitting & joining /
+  formatting, each opened with a real scenario: signup-email cleanup (with `repr()`
+  exposing hidden whitespace), a disk-alert log line driving `find`/`count`/
+  `startswith`, form-field validation for the `is*()` family, path/slug building for
+  `join()`. The bytes/str section, `removeprefix` trap, join-vs-`+=` benchmark and
+  method reference table preserved intact.
+- **2.4 Lists** — a build-server task queue (add/remove), deployment checklist
+  (membership/aggregation, and the alias-vs-copy demos re-shot on it), sensor readings
+  (slicing), server-rack grid (nesting). The trap trio, sorted-vs-sort, corrected copy
+  taxonomy and array-module sections preserved intact.
+
+### Tier 4 — narrative polish: `9.1` and `10.3`
+
+- **9.1** — 42 full-cell prose rewrites unify the 2019/modern register; heading hierarchy
+  repaired into one coherent outline; why/when lead-ins added to bare "Example N"
+  headings; the orphan re.UNICODE seam turned into a real transition (with the
+  Devanagari `\w+` behaviour verified by execution). Two more narration-vs-reality
+  errors found and fixed: both look-behind sections described the assertion as checking
+  the *following* text — look-behind checks the *preceding* text.
+- **10.3** — early connection/cursor sections brought up to the register of the
+  injection/transactions half; lifecycle stakes (locks, uncommitted buffers) now
+  explained rather than asserted.
+
+### Verification
+- Full-repo sweep after all four tiers: **all 17 folders, 0 unexpected problems**,
+  all 7 intentional failures confirmed
+- Two independent fresh-eyes audits (5.1; and 2.1/2.4/4.2) executed **174 code cells**
+  against narration: zero contradictions. The five markdown nits they flagged (a false
+  `strip(".csv")` letter-eating claim in 2.1, a wrong banker's-rounding cross-reference
+  and `round` signature in 4.2, two phrasings in 5.1) are fixed, and the corrected
+  claims were themselves verified by execution before writing
+- All edits via `nbformat` scripts; outputs cleared; kernel metadata untouched
