@@ -3059,3 +3059,68 @@ Method walls reshaped concept-first, beginner-appropriate (no type hints, no OOP
   and `round` signature in 4.2, two phrasings in 5.1) are fixed, and the corrected
   claims were themselves verified by execution before writing
 - All edits via `nbformat` scripts; outputs cleared; kernel metadata untouched
+
+---
+
+## 19 Capstone Projects — the curriculum is complete (2026-08-22)
+
+New folder, four notebooks, 140 cells. Each capstone is an end-to-end build that ties
+multiple folders together: problem statement → design decisions *with the reasons* →
+incremental build → a real test run (pytest via subprocess, output shown) → Common
+Mistakes / Best Practices / extension exercises. Everything runs offline and
+deterministically, writes only to temp directories, and follows the folder-18 rule:
+narration is aligned against executed output, not written from intention.
+
+### `19.1 CLI Task Tracker` — 30 cells
+Folders 01–08 + 15 in one build: `@dataclass Task` + `StrEnum` priorities (**5.3**), JSON
+persistence handling **8.3**'s lossy conversions (`default=`/`object_hook` for dates), a
+`TaskrError` hierarchy carrying data (**6.2**), a `match`/`case` command dispatcher on
+scripted argv lists (**3.4**) with an argparse variant, and an 8-test pytest suite with
+**zero mocks** — the dependency-injected store is the payoff of **5.4**. The session
+transcript in the intro matches the executed session byte-for-byte.
+
+### `19.2 Log Analysis Pipeline` — 36 cells
+Folders 03–04, 07–09, 15.10: a seeded 2,012-line access log (with an engineered 11:00
+error burst and 12 malformed lines), named-group VERBOSE regex after `split()` is shown
+silently mis-parsing (**9.1**), a generator pipeline with an `islice` early-stop demo
+(**4.3**), warn-and-count tolerance for dirty data (**15.10**), `Counter`/`defaultdict` +
+`statistics.quantiles` aggregation, the `groupby` sort-first trap live (1,666 fragments
+vs 8 endpoints), CSV + JSON Lines artifacts, and a `tracemalloc` list-vs-stream
+measurement narrated qualitatively. The p95-dwarfs-p50 incident table is the payoff.
+12 tests pass.
+
+### `19.3 Inventory Service on SQLite` — 37 cells
+Folders 05–06, 10, 15–16: a movements-ledger schema (source-of-truth trade-off argued,
+drifted-cache reconciliation shown), CHECK/FK/STRICT constraints rejecting bad data live,
+an injection-proof `InventoryRepo` with injected connection, **atomicity demonstrated
+both ways** — a commit-per-line `ship_order_unsafe` leaves a half-shipped order; `with
+conn:` leaves zero damage after the same induced failure — an idempotent receive via
+client token (**18.3**'s lesson in SQL), a `StockStore` Protocol satisfied by a 5-line
+fake and verified by `mypy --strict` (real output), and a 6-test suite including the
+rollback invariant. The pytest/mypy project is **extracted from the notebook's own tagged
+cells** — the tested source cannot drift from the taught source.
+
+### `19.4 Concurrent API Aggregator` — 36 cells
+Folders 11–12, 16, 18: a 12-service fake fleet on localhost (one `ThreadingHTTPServer`,
+deterministic quirks: fixed latencies, a 503-then-recover service, malformed JSON, schema
+drift), a client built in layers — Session + timeout always, `urllib3.Retry` absorbing
+the flaky service (caller sees 1 call, server logs 2), pydantic at the trust boundary
+turning bad payloads into structured UNREACHABLE/INVALID rows instead of crashes — then
+sequential vs `ThreadPoolExecutor` vs asyncio+httpx, **measured and narrated as ranges**
+per 18.5's unstable-ordering lesson. 9 tests (7 fake-session unit + 2 real-server
+integration). The teardown proves no leftover threads — and getting that clean surfaced
+a real find, written up as a trap: a retained `Response` object holds its socket open
+past `session.close()`, keeping a server thread alive until GC.
+
+### Verification
+- Fresh-eyes auditor executed all four notebooks and spot-verified claims (including
+  empirically confirming the 19.4 socket-retention claim): 19.2 PASS, the other three
+  PASS WITH NITS — all nits fixed: 19.1's embedded module now carries the same `case []`
+  usage arm as the notebook dispatcher (plus a new extension exercise on friendly
+  errors), 19.3's transaction pitfall now states the legacy-autocommit BEGIN-deferral
+  nuance honestly (`BEGIN IMMEDIATE` / 3.12+ `autocommit=False`), two miscites and one
+  stray cell corrected, headings normalised
+- Smoke harness: folder 19 run three times across the process — **0 unexpected problems**
+  every time; all 65 code cells execute; repository untouched by every run
+- README updated: **all folders 00–19 complete and verified — the curriculum is
+  finished**

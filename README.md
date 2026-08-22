@@ -59,10 +59,10 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 16 | Type Hints and Static Typing | `mypy`, narrowing, `Literal`, `TypedDict`, generics and variance, protocols, adoption |
 | 17 | Tooling, Packaging and Environments | venv and pip, `pyproject.toml`, building and publishing, `ruff`, profiling |
 | 18 | Working with APIs | REST semantics, auth and secrets, pagination and retries, `pydantic` validation, testing and concurrency |
-| 19 | Capstone Projects | End-to-end builds tying it together |
+| 19 | Capstone Projects | Four end-to-end builds: CLI task tracker, log-analysis pipeline, SQLite inventory service, concurrent API aggregator |
 
-Folders 00–18 are complete and verified. Folder 19 is still to be written. See
-[CHANGELOG.md](CHANGELOG.md) for what has been done so far.
+All folders 00–19 are complete and verified — the curriculum is finished. See
+[CHANGELOG.md](CHANGELOG.md) for the full modernisation record.
 
 > **Numbering note.** `13 GUI` and the old `14 Project` were removed, and `15 Data Structure
 > and Algorithm` became **14**. A planned *Modern Python Features* folder was dropped, because
