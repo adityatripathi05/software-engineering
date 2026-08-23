@@ -50,6 +50,44 @@ tracks.
 
 ---
 
+## 13 How Python Works Under the Hood
+
+**Added** — a new folder of 5 notebooks, filling the gap left at **13** when `13 GUI` was
+removed. Sits deliberately between **12 Concurrency** (how Python *executes*) and **14 DSA**
+(what algorithms *cost*), and supplies the interpreter-level causes behind effects the
+curriculum already taught without explaining: `RecursionError`, "frames stack up", suspended
+generators, and tracebacks.
+
+- `13.1 Objects, Names and the Heap` — no value types; every object is heap-allocated. `id`/`is`/`==`,
+  the small-int cache measured (**-5..256**), compile-time constant folding as the reason the classic
+  `257 is not 257` demo fails in one cell, string interning, and 🔴 **PEP 683 immortal objects**
+  (3.12+), which invalidate every pre-2023 refcount tutorial. Closes with namespaces and PEP 667.
+- `13.2 The Call Stack and Frames` — 🔴 **measured proof that Python frames are not on the C stack**:
+  threads with 256 KiB to 8 MiB stacks all reach the same recursion depth, which would require each
+  frame to fit in ~2.6 bytes. Generator frames outliving their call, why `RecursionError` fires before
+  the limit (self-measuring, since the shortfall depends on the runner), and the `setrecursionlimit`
+  footgun re-tested on 3.14.
+- `13.3 Reference Counting and Garbage Collection` — deterministic release, the cycle refcounting cannot
+  free, generations (thresholds measured, **not** the `(700, 10, 10)` older material quotes), why
+  `__del__` is not a destructor, and `weakref`/`WeakValueDictionary` fixing an unbounded registry.
+- `13.4 Where the Memory Actually Goes` — 🔴 `getsizeof` is shallow; one task record measured **seven
+  ways** at 100,000 rows, and exactly what `__slots__` costs (no `__dict__`, no new attributes, not
+  weak-referenceable without `"__weakref__"`).
+- `13.5 Attribute Lookup and Class Creation` — methods, `@property` and `__slots__` as one mechanism;
+  data vs non-data precedence; a reusable validating descriptor with `__set_name__`; `__getattr__` vs
+  `__getattribute__`; 🔴 `__init_subclass__` as the modern answer to most metaclass problems, with
+  metaclasses last and an honest "you do not need one".
+
+**Notes**
+- Every printed claim was verified by executing the cells; three hard-coded figures were caught this
+  way and replaced with self-measuring output.
+- The folder is labelled **CPython-specific** throughout — PyPy has no reference counting.
+- ⚠️ *heap* the memory region is explicitly disambiguated from `heapq` (**14.8** uses that word 114 times).
+- Respects the altitude rule: `tracemalloc`/`timeit`/`cProfile` stay in **17.5**, complexity stays in
+  **14.1**/**14.2**, and `__slots__` is *measured* here but introduced in **5.1**.
+
+---
+
 ## 01 Basic
 
 All 5 notebooks retargeted from Python 3.7 to **3.12+**, stale 2019 outputs cleared,

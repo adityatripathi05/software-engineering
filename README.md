@@ -1,10 +1,10 @@
 # Software Engineering
 
-Self-paced engineering notes, built as Jupyter notebooks and organised into tracks.
+Self-paced engineering notes that are organised into tracks.
 
 | Track | Status | Covers |
 |---|---|---|
-| [`modern-python/`](modern-python/) | **Complete** — 102 notebooks | The language and its ecosystem, from first principles to four end-to-end builds |
+| [`modern-python/`](modern-python/) | **Complete** — 107 notebooks | The language and its ecosystem, from first principles to four end-to-end builds |
 | [`backend-development/`](backend-development/) | **Outline only** — no notebooks yet | Building one service correctly: HTTP, FastAPI, PostgreSQL, auth, caching, Docker, CI/CD |
 
 Two further tracks — **system design** and cross-track **projects** — are part of the plan
@@ -65,6 +65,7 @@ All paths below are under [`modern-python/`](modern-python/).
 | 10 | Database | SQL, `sqlite3`, MySQL/PostgreSQL, SQLAlchemy ORM, key-value and document stores, graph data |
 | 11 | Socket Programming | Networking fundamentals, TCP framing, UDP, concurrent servers, HTTP and `requests` |
 | 12 | Concurrency | The GIL, threading, multiprocessing, `concurrent.futures`, `asyncio` |
+| 13 | How Python Works Under the Hood | Objects on the heap, names and identity, the call stack and frames, reference counting and the cyclic collector, `weakref`, object sizes and `__slots__`, descriptors and class creation |
 | 14 | Data Structure and Algorithm | Complexity, Python's real costs, arrays and two pointers, linked lists, trees, graphs, sorting, DP, interview patterns |
 | 15 | Testing and Debugging | `assert`, `unittest`, `pytest`, fixtures, mocking, coverage, property-based testing; tracebacks, `pdb`, debugging strategy, logging |
 | 16 | Type Hints and Static Typing | `mypy`, narrowing, `Literal`, `TypedDict`, generics and variance, protocols, adoption |
