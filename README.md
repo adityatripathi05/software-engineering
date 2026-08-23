@@ -5,7 +5,7 @@ Self-paced engineering notes that are organised into tracks.
 | Track | Status | Covers |
 |---|---|---|
 | [`modern-python/`](modern-python/) | **Complete** — 107 notebooks | The language and its ecosystem, from first principles to four end-to-end builds |
-| [`backend-development/`](backend-development/) | **Outline only** — no notebooks yet | Building one service correctly: HTTP, FastAPI, PostgreSQL, auth, caching, Docker, CI/CD |
+| [`backend-development/`](backend-development/) | **Curriculum approved** — 0/261 notebooks | Building one service correctly: HTTP, FastAPI, PostgreSQL, auth, caching, Docker, CI/CD |
 
 Two further tracks — **system design** and cross-track **projects** — are part of the plan
 and will appear here when work on them starts.
@@ -88,30 +88,34 @@ Every folder is complete and verified — the track is finished. See
 
 # backend-development
 
-Scaffolded as an outline. No notebooks yet — each folder currently holds only a
-`.gitkeep`.
+Curriculum approved (2026-08-24); notebooks are being written module by module.
 
-| # | Folder | Planned coverage |
-|---|--------|------------------|
-| 01 | backend-fundamentals | What a backend is, request lifecycle, processes and ports, the shape of a service |
-| 02 | http-and-web | HTTP semantics, headers, status codes, cookies, CORS, content negotiation |
-| 03 | rest-api-design | Resources, verbs, versioning, error contracts, idempotency |
-| 04 | fastapi | Routing, dependency injection, async endpoints, OpenAPI |
-| 05 | pydantic | Models, validators, settings, serialisation boundaries |
-| 06 | postgresql | Schema design, indexing, query plans, transactions, connection pooling |
-| 07 | sqlalchemy | Core vs ORM, sessions, relationships, unit of work |
-| 08 | alembic | Migrations, autogenerate, branching, rollback strategy |
-| 09 | authentication-and-authorization | Sessions, JWT, OAuth2, password handling, RBAC |
-| 10 | redis-and-caching | Cache patterns, invalidation, TTLs, rate limiting |
-| 11 | background-processing | Queues, workers, retries, idempotent jobs, scheduling |
-| 12 | api-patterns | Pagination, filtering, bulk operations, webhooks, streaming |
-| 13 | backend-testing | Test databases, fixtures, contract tests, integration vs unit |
-| 14 | security | OWASP basics, injection, secrets, TLS, input trust boundaries |
-| 15 | docker | Images, layers, compose, dev vs prod builds |
-| 16 | observability | Structured logging, metrics, tracing, health checks |
-| 17 | cicd | Pipelines, test gates, build artefacts, deployment strategies |
-| 18 | performance | Profiling a service, N+1 queries, connection limits, load testing |
-| 19 | reliability | Timeouts, retries, circuit breakers, graceful degradation, SLOs |
+- [CURRICULUM.md](backend-development/CURRICULUM.md) - all 20 modules, 261 notebooks, prerequisites, dependencies, difficulty and **live progress**
+- [AUTHORING-GUIDE.md](backend-development/AUTHORING-GUIDE.md) - the standard every notebook is written to (template, depth rules, real-dev example rules, production-scenario rules)
+- [CURRICULUM-REVIEW.md](backend-development/CURRICULUM-REVIEW.md) - design rationale and boundary with `system-design`
+
+| # | Folder | Covers |
+|---|--------|--------|
+| 01 | http-web-fundamentals | Lifecycle, methods, status codes, HTTP caching, cookies, connections, TLS, CORS, proxies |
+| 02 | api-design-patterns | Resources, REST/RPC/GraphQL/gRPC, versioning, pagination, idempotency, RFC 9457, webhooks, rate-limit contract |
+| 03 | fastapi | ASGI, routing, Pydantic v2, DI, sync vs async endpoints, middleware, lifespan, streaming, deployment |
+| 04 | async-concurrency | Event loop in a server, blocking I/O, contextvars, races, lost updates, timeouts, cancellation, shutdown |
+| 05 | postgresql-data-modeling | Modelling, constraints, multi-tenancy, indexing, EXPLAIN, pooling, MVCC, locks, JSONB, partitioning, PITR |
+| 06 | sqlalchemy-data-access | Engine/session lifecycle, loading strategies, N+1, async, pool config, repository/UoW, Alembic, zero-downtime migrations |
+| 07 | backend-design-patterns | Layers, service/repository/UoW, DTO vs domain vs persistence, DI, configuration, when abstraction hurts |
+| 08 | authentication-authorization | Sessions, cookies, JWT, refresh rotation, OAuth2/PKCE/OIDC, API keys, RBAC/ABAC, hashing, account flows, attacks |
+| 09 | file-handling-object-storage | Presigned vs proxy uploads, S3 + metadata, resumable uploads, file authz, CDN, scanning |
+| 10 | caching-redis | Cache patterns, Redis client hygiene, TTL/eviction, invalidation, stampede/hot keys, locks, rate limiting, Streams, HA |
+| 11 | background-processing-messaging | Queues, ARQ vs Celery, retries, idempotent tasks, schedulers, RabbitMQ vs Kafka vs NATS, delivery semantics, DLQ, backpressure, outbox |
+| 12 | real-time-communication | WebSockets, SSE, polling, auth, scaling across replicas, fan-out, reconnection, backpressure |
+| 13 | testing-backend-systems | Unit/integration/API/contract/DB tests, factories, Testcontainers, async/WS/worker tests, load and failure tests |
+| 14 | docker-ci-cd-deployment | Images, Python in a container, Compose, secrets, health checks, Swarm, GitHub Actions, deployment strategies, rollback |
+| 15 | observability-reliability | Logs, request IDs, metrics, Prometheus, tracing/OTel, health/readiness, SLOs, alerting, timeouts/retries/breakers/bulkheads, incidents |
+| 16 | security | OWASP API Top 10, injection, XSS/CSRF/SSRF, BOLA/BFLA, abuse/DoS, secrets, supply chain, headers, PII, deletion |
+| 17 | performance-scalability | Percentiles, profiling a live service, slow-endpoint method, server tuning, scaling, load balancing, replicas, capacity |
+| 18 | backend-architecture | Monolith vs modular vs microservices, ports and adapters, DDD, service communication, gateway/BFF, multi-tenancy, EDA, CQRS |
+| 19 | distributed-systems | Partial failure, clocks and IDs, CAP, consistency, idempotency end-to-end, 2PC, sagas, event sourcing, replication overview |
+| 20 | production-projects | Rate-limited API · Auth service · Event-driven orders · Real-time notifications · NMS-style monitoring backend · reliability lab |
 
 > **Altitude rule.** Some topics appear in more than one track on purpose.
 > `modern-python` teaches the *language and its libraries* (DB-API, `sqlite3`,
