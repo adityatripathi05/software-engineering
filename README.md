@@ -2,8 +2,7 @@
 
 A complete, self-paced Python curriculum built as Jupyter notebooks.
 
-Originally written in 2019 against Python 3.7, now being modernised to **Python 3.12+**
-with version notes for 3.13 / 3.14.
+Written for **Python 3.12+**, with version notes wherever 3.13 / 3.14 behave differently.
 
 ---
 
@@ -30,7 +29,7 @@ jupyter lab
 ```
 
 Code cells are shipped **unexecuted** so the notebook shows you what *should* happen
-rather than what happened on someone else's machine in 2019. Run them yourself.
+rather than what happened on someone else's machine. Run them yourself.
 
 > Some notebooks need extras (a database server, a GUI display, network access).
 > Those state their requirements in the header cell.
@@ -61,15 +60,8 @@ rather than what happened on someone else's machine in 2019. Run them yourself.
 | 18 | Working with APIs | REST semantics, auth and secrets, pagination and retries, `pydantic` validation, testing and concurrency |
 | 19 | Capstone Projects | Four end-to-end builds: CLI task tracker, log-analysis pipeline, SQLite inventory service, concurrent API aggregator |
 
-All folders 00–19 are complete and verified — the curriculum is finished. See
-[CHANGELOG.md](CHANGELOG.md) for the full modernisation record.
-
-> **Numbering note.** `13 GUI` and the old `14 Project` were removed, and `15 Data Structure
-> and Algorithm` became **14**. A planned *Modern Python Features* folder was dropped, because
-> it was already delivered elsewhere — dataclasses and enums in **5.3**, the walrus operator in
-> **1.4**, **3.2.1** and **3.3** — and its one remaining topic, logging, belongs with debugging
-> and is now **15.10**. The curriculum runs **00–19** with no gaps. Earlier CHANGELOG entries
-> use the older numbering.
+Every folder is complete and verified — the curriculum is finished. See
+[CHANGELOG.md](CHANGELOG.md) for the detailed build record.
 
 ---
 

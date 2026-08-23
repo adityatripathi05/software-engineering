@@ -1,7 +1,7 @@
 # Changelog
 
-Modernisation of the 2019 Python notes to Python 3.12+.
-Baseline: commit `b0537f6` (original 2019 content, unmodified).
+Build record for the Python 3.12+ curriculum.
+Baseline: commit `b0537f6` (original content, unmodified).
 
 Format: one section per folder, listing what was **updated**, **added**, and **fixed**.
 
