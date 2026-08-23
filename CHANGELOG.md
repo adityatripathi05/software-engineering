@@ -1,9 +1,43 @@
 # Changelog
 
-Build record for the Python 3.12+ curriculum.
+Build record for this repository. Entries below the restructure note cover the
+**`modern-python/`** track (Python 3.12+ curriculum).
 Baseline: commit `b0537f6` (original content, unmodified).
 
 Format: one section per folder, listing what was **updated**, **added**, and **fixed**.
+
+---
+
+## Repository restructure
+
+The repository was renamed **Python-Notes -> software-engineering** and reorganised into
+tracks.
+
+**Moved**
+- All 19 curriculum folders (`00 Books and References` through `19 Capstone Projects`)
+  moved unchanged into **`modern-python/`** via `git mv`, so history follows them.
+  No notebook content was edited: folder names, numbering and cross-references
+  (`see 17.4`) are untouched, and every asset directory (`Image/`, `File2Save/`) moved
+  with its own folder. Verified: 18 folders, 0 unexpected problems.
+
+**Added**
+- **`backend-development/`** — outline only, 19 numbered folders each holding a
+  `.gitkeep`. No notebooks yet.
+- An **altitude rule** in the README: `modern-python` teaches the language and its
+  libraries, `backend-development` teaches building one service, and a future
+  system-design track teaches how many services behave together. Topics that appear in
+  more than one track (databases, caching, testing, APIs) must stay at their track's
+  altitude.
+
+**Removed**
+- `python_roadmap.pdf` — third-party roadmap.sh poster, referenced by nothing. Every node
+  on it was covered except the web-framework branch, which `backend-development/` now owns.
+
+**Notes**
+- `README.md` and `CHANGELOG.md` stay at the repository root and now describe the repo as
+  a whole, with the Python curriculum as its first completed track.
+- Two further tracks — system design, and cross-track projects — are planned but not
+  scaffolded.
 
 ---
 

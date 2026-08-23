@@ -1,10 +1,22 @@
-# Python — From Basics to Professional
+# Software Engineering
 
-A complete, self-paced Python curriculum built as Jupyter notebooks.
+Self-paced engineering notes, built as Jupyter notebooks and organised into tracks.
 
-Written for **Python 3.12+**, with version notes wherever 3.13 / 3.14 behave differently.
+| Track | Status | Covers |
+|---|---|---|
+| [`modern-python/`](modern-python/) | **Complete** — 102 notebooks | The language and its ecosystem, from first principles to four end-to-end builds |
+| [`backend-development/`](backend-development/) | **Outline only** — no notebooks yet | Building one service correctly: HTTP, FastAPI, PostgreSQL, auth, caching, Docker, CI/CD |
+
+Two further tracks — **system design** and cross-track **projects** — are part of the plan
+and will appear here when work on them starts.
 
 ---
+
+# modern-python
+
+A complete, self-paced Python curriculum.
+
+Written for **Python 3.12+**, with version notes wherever 3.13 / 3.14 behave differently.
 
 ## How to use these notes
 
@@ -34,9 +46,9 @@ rather than what happened on someone else's machine. Run them yourself.
 > Some notebooks need extras (a database server, a GUI display, network access).
 > Those state their requirements in the header cell.
 
----
-
 ## Curriculum map
+
+All paths below are under [`modern-python/`](modern-python/).
 
 | # | Folder | Covers |
 |---|--------|--------|
@@ -60,10 +72,8 @@ rather than what happened on someone else's machine. Run them yourself.
 | 18 | Working with APIs | REST semantics, auth and secrets, pagination and retries, `pydantic` validation, testing and concurrency |
 | 19 | Capstone Projects | Four end-to-end builds: CLI task tracker, log-analysis pipeline, SQLite inventory service, concurrent API aggregator |
 
-Every folder is complete and verified — the curriculum is finished. See
+Every folder is complete and verified — the track is finished. See
 [CHANGELOG.md](CHANGELOG.md) for the detailed build record.
-
----
 
 ## Conventions used in these notes
 
@@ -72,3 +82,39 @@ Every folder is complete and verified — the curriculum is finished. See
 - **Type hints** are introduced gradually and used in later folders.
 - ⚠️ marks a genuine trap — something that runs but does the wrong thing.
 - **Version note** callouts flag behaviour that differs across 3.12 / 3.13 / 3.14.
+
+---
+
+# backend-development
+
+Scaffolded as an outline. No notebooks yet — each folder currently holds only a
+`.gitkeep`.
+
+| # | Folder | Planned coverage |
+|---|--------|------------------|
+| 01 | backend-fundamentals | What a backend is, request lifecycle, processes and ports, the shape of a service |
+| 02 | http-and-web | HTTP semantics, headers, status codes, cookies, CORS, content negotiation |
+| 03 | rest-api-design | Resources, verbs, versioning, error contracts, idempotency |
+| 04 | fastapi | Routing, dependency injection, async endpoints, OpenAPI |
+| 05 | pydantic | Models, validators, settings, serialisation boundaries |
+| 06 | postgresql | Schema design, indexing, query plans, transactions, connection pooling |
+| 07 | sqlalchemy | Core vs ORM, sessions, relationships, unit of work |
+| 08 | alembic | Migrations, autogenerate, branching, rollback strategy |
+| 09 | authentication-and-authorization | Sessions, JWT, OAuth2, password handling, RBAC |
+| 10 | redis-and-caching | Cache patterns, invalidation, TTLs, rate limiting |
+| 11 | background-processing | Queues, workers, retries, idempotent jobs, scheduling |
+| 12 | api-patterns | Pagination, filtering, bulk operations, webhooks, streaming |
+| 13 | backend-testing | Test databases, fixtures, contract tests, integration vs unit |
+| 14 | security | OWASP basics, injection, secrets, TLS, input trust boundaries |
+| 15 | docker | Images, layers, compose, dev vs prod builds |
+| 16 | observability | Structured logging, metrics, tracing, health checks |
+| 17 | cicd | Pipelines, test gates, build artefacts, deployment strategies |
+| 18 | performance | Profiling a service, N+1 queries, connection limits, load testing |
+| 19 | reliability | Timeouts, retries, circuit breakers, graceful degradation, SLOs |
+
+> **Altitude rule.** Some topics appear in more than one track on purpose.
+> `modern-python` teaches the *language and its libraries* (DB-API, `sqlite3`,
+> SQLAlchemy mechanics). `backend-development` teaches *building one service*
+> (schema design, migrations, pooling). A future system-design track teaches
+> *how many services behave together* (sharding, replication, consistency).
+> Keep new material at the altitude of its track.
