@@ -57,6 +57,11 @@ def main() -> None:
             rlines.append(f"| {nid(m, i)} | [{title}]({f}) | {DIFF[d]} | {st} |")
         d = ROOT / folder
         d.mkdir(exist_ok=True)
+        # A hand-written _recap.md (added when a module is finished) is preserved
+        # across regenerations by appending it below the generated table.
+        recap = d / "_recap.md"
+        if recap.exists():
+            rlines += ["", "---", "", recap.read_text(encoding="utf-8").rstrip()]
         (d / "README.md").write_text("\n".join(rlines) + "\n", encoding="utf-8")
 
     out.append(f"**Progress: {done}/{total} notebooks done.**\n")

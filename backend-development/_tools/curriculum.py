@@ -353,4 +353,15 @@ MODULES = [
 ]
 
 # Progress: "NN.M" -> status.  Anything not listed is "todo".
-STATUS: dict[str, str] = {}
+STATUS: dict[str, str] = {
+    "01.1": "review",
+    "01.2": "review",
+    "01.3": "review",
+    "01.4": "review",
+    "01.5": "review",
+    "01.6": "review",
+    "01.7": "review",
+    "01.8": "review",
+    "01.9": "review",
+    "01.10": "review",
+}

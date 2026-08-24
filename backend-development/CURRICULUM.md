@@ -34,16 +34,16 @@ Authoring rules for every notebook: [AUTHORING-GUIDE.md](AUTHORING-GUIDE.md). De
 
 Folder `01-http-web-fundamentals/` · Prereq: modern-python 11.1-11.5 · Depends on: -
 
-- [ ] **01.1** [Request/response lifecycle - socket to ASGI to handler](01-http-web-fundamentals/01.1-request-response-lifecycle.md) - Beginner
-- [ ] **01.2** [HTTP methods, safety and idempotency](01-http-web-fundamentals/01.2-methods-safety-idempotency.md) - Beginner
-- [ ] **01.3** [Status codes and headers](01-http-web-fundamentals/01.3-status-codes-and-headers.md) - Beginner
-- [ ] **01.4** [Content negotiation, compression and HTTP caching - ETag, Cache-Control, conditional requests](01-http-web-fundamentals/01.4-content-negotiation-and-http-caching.md) - Intermediate
-- [ ] **01.5** [Cookies and sessions](01-http-web-fundamentals/01.5-cookies-and-sessions.md) - Beginner
-- [ ] **01.6** [Stateless vs stateful services](01-http-web-fundamentals/01.6-stateless-vs-stateful.md) - Beginner
-- [ ] **01.7** [Connection lifecycle - keep-alive, HTTP/1.1 vs 2 vs 3](01-http-web-fundamentals/01.7-connection-lifecycle.md) - Intermediate
-- [ ] **01.8** [TLS fundamentals](01-http-web-fundamentals/01.8-tls-fundamentals.md) - Intermediate
-- [ ] **01.9** [CORS - preflight, browser security model, misconfiguration](01-http-web-fundamentals/01.9-cors.md) - Intermediate
-- [ ] **01.10** [Reverse proxies and load balancers - X-Forwarded-*, trusting proxy headers](01-http-web-fundamentals/01.10-reverse-proxies-and-forwarded-headers.md) - Intermediate
+- [r] **01.1** [Request/response lifecycle - socket to ASGI to handler](01-http-web-fundamentals/01.1-request-response-lifecycle.md) - Beginner
+- [r] **01.2** [HTTP methods, safety and idempotency](01-http-web-fundamentals/01.2-methods-safety-idempotency.md) - Beginner
+- [r] **01.3** [Status codes and headers](01-http-web-fundamentals/01.3-status-codes-and-headers.md) - Beginner
+- [r] **01.4** [Content negotiation, compression and HTTP caching - ETag, Cache-Control, conditional requests](01-http-web-fundamentals/01.4-content-negotiation-and-http-caching.md) - Intermediate
+- [r] **01.5** [Cookies and sessions](01-http-web-fundamentals/01.5-cookies-and-sessions.md) - Beginner
+- [r] **01.6** [Stateless vs stateful services](01-http-web-fundamentals/01.6-stateless-vs-stateful.md) - Beginner
+- [r] **01.7** [Connection lifecycle - keep-alive, HTTP/1.1 vs 2 vs 3](01-http-web-fundamentals/01.7-connection-lifecycle.md) - Intermediate
+- [r] **01.8** [TLS fundamentals](01-http-web-fundamentals/01.8-tls-fundamentals.md) - Intermediate
+- [r] **01.9** [CORS - preflight, browser security model, misconfiguration](01-http-web-fundamentals/01.9-cors.md) - Intermediate
+- [r] **01.10** [Reverse proxies and load balancers - X-Forwarded-*, trusting proxy headers](01-http-web-fundamentals/01.10-reverse-proxies-and-forwarded-headers.md) - Intermediate
 
 ## 02 API Design & Patterns
 

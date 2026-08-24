@@ -34,7 +34,11 @@ The reader's central question is always:
 4. Decide the **one running system** the examples will live in (see §4). Prefer the module's
    running example; do not invent a new domain per notebook.
 5. Write the notebook to the template in §2. Then run the checklist in §9.
-6. Update `_tools/curriculum.py` → `STATUS["05.9"] = "draft"` and run
+6. Run `python backend-development/_tools/check.py 05.9`. It verifies the mechanical rules —
+   required headings, header block, prose length for the level, banned/deprecated APIs inside
+   code, block length, stacked listings — so review attention goes to what only a human can
+   judge: is the incident realistic, and is the example real-dev rather than bookish?
+7. Update `_tools/curriculum.py` → `STATUS["05.9"] = "draft"` and run
    `python backend-development/_tools/build.py`.
 
 Write **one notebook per response**. Never batch a module into one response.
@@ -295,8 +299,13 @@ For each: what people do · why it breaks (mechanism) · what to do instead.
 - [ ] Reliability / idempotency / observability principles used, not name-dropped.
 - [ ] Prereqs referenced, not re-taught; Related section has backward and forward links.
 - [ ] Interview questions include at least one "debug this" and one "design this".
-- [ ] Length: Beginner 900-1500 words · Intermediate 1500-2500 · Advanced 2000-3500
-      (excluding code). Longer is not better; denser is.
+- [ ] Length (prose only, excluding code blocks and tables): Beginner 1600-3000 ·
+      Intermediate 2000-3200 · Advanced 2400-3800. Calibrated against module 01 — the template
+      has ~17 required headings, and below the lower bound a section becomes a stub rather than
+      teaching. Longer is not better; denser is.
+- [ ] No code block over 55 lines; no 3 consecutive blocks without prose between them
+      (a shell command plus its output counts as one unit).
+- [ ] `python backend-development/_tools/check.py <ID>` passes.
 - [ ] `STATUS` updated in `_tools/curriculum.py`; `build.py` run.
 
 ---
@@ -318,13 +327,21 @@ Constraints:
 - The Production Scenario must be a specific incident diagnosed via Alert → Metrics → Logs →
   Trace → Dependency health → Root cause, with mitigation and permanent fix.
 - Do not re-teach anything in the "never re-taught" list (§6); reference it.
-- One notebook only. Then set STATUS["<ID>"] = "draft" in _tools/curriculum.py and run
+- One notebook only. Then run python backend-development/_tools/check.py <ID> and fix anything
+  it reports; set STATUS["<ID>"] = "draft" in _tools/curriculum.py; run
   python backend-development/_tools/build.py.
 ```
 
 ## 11. Per-module generation loop
 For a module: generate notebooks in order, one per response, each reading the previous one
-first. After the last notebook, write a short "Module recap" section at the bottom of the module
-README (what was built, the incidents encountered, what the next module assumes) and set all
-statuses to `review`. A reviewer then reads the module end-to-end for continuity of the running
-system and promotes to `done`.
+first. After the last notebook, write a `_recap.md` in the module folder — what was built, a
+table of the incidents with the general lesson each carries, any configuration invariants
+established, and what the next module assumes. `build.py` appends it below the generated table
+in the module README and preserves it across regenerations. Then set all statuses to `review`
+and run `python backend-development/_tools/check.py <NN>` for the whole module. A reviewer reads
+the module end-to-end for continuity of the running system and promotes to `done`.
+
+**Worked example:** module 01 is complete and conforms. Use
+[01.3](01-http-web-fundamentals/01.3-status-codes-and-headers.md) as the reference for the
+template and the production-scenario depth, and
+[01-http-web-fundamentals/_recap.md](01-http-web-fundamentals/_recap.md) as the reference recap.

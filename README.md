@@ -5,7 +5,7 @@ Self-paced engineering notes that are organised into tracks.
 | Track | Status | Covers |
 |---|---|---|
 | [`modern-python/`](modern-python/) | **Complete** — 107 notebooks | The language and its ecosystem, from first principles to four end-to-end builds |
-| [`backend-development/`](backend-development/) | **Curriculum approved** — 0/261 notebooks | Building one service correctly: HTTP, FastAPI, PostgreSQL, auth, caching, Docker, CI/CD |
+| [`backend-development/`](backend-development/) | **In progress** — module 01 written, 10/261 notebooks | Building one service correctly: HTTP, FastAPI, PostgreSQL, auth, caching, Docker, CI/CD |
 
 Two further tracks — **system design** and cross-track **projects** — are part of the plan
 and will appear here when work on them starts.
@@ -88,7 +88,7 @@ Every folder is complete and verified — the track is finished. See
 
 # backend-development
 
-Curriculum approved (2026-08-24); notebooks are being written module by module.
+Curriculum approved (2026-08-24). Module 01 is written; the rest follow module by module.
 
 - [CURRICULUM.md](backend-development/CURRICULUM.md) - all 20 modules, 261 notebooks, prerequisites, dependencies, difficulty and **live progress**
 - [AUTHORING-GUIDE.md](backend-development/AUTHORING-GUIDE.md) - the standard every notebook is written to (template, depth rules, real-dev example rules, production-scenario rules)
