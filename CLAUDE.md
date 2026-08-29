@@ -13,6 +13,15 @@ Claude acts as personal tutor, technical mentor, and knowledge architect. Create
 
 ## NOTES STRUCTURE (every subtopic)
 
+0. **COLD OPEN — problem-first ordering (mandatory)**
+   - Open every subtopic with a 1-3 sentence real-world failure or need-to-know teaser
+     (the symptom + a terse hint at the cause, NEVER the mechanism) BEFORE "What is it?".
+   - Rationale: a "need to know" before the mechanism measurably improves retention; the
+     reader should hunt for the answer through the sections that follow, and the full
+     incident/case study lands later as the payoff.
+   - Apply the same rule at example level: start from the bug, then show the code that
+     prevents it.
+
 1. **WHAT IS IT?**
    - Core concept, intuitive explanation, real-world analogy
    - Historical context and evolution

@@ -119,6 +119,9 @@ Rules on the template:
 ## 3. The three depths - what each section must actually contain
 
 ### CONCEPT
+- Write it *toward the cold open*: the reader arrives holding an unanswered question
+  ("how does a rename stop invoice creation?") — let the explanation visibly close that
+  gap rather than defining terms in a vacuum (§7 problem-first ordering).
 - *Plain-English*: one short paragraph a non-engineer could follow; an analogy only if it is
   exact (a leaky analogy is worse than none).
 - *Technical*: what it is, why it exists, what problem it solves, how it works internally, the
@@ -277,6 +280,13 @@ t=3006ms                                handler ──rollback──▶ PG      
 ## 7. Cross-cutting principles - must be visible, not just mentioned
 Every notebook where they apply must *use* these, in the examples and the scenario:
 
+- **Problem-first ordering**: the need-to-know precedes the mechanism at every scale. At
+  chapter level, the cold open (§2) plants the incident's question before Concept answers
+  it; at example level, start from the bug, then show the code that prevents it (§4). Write
+  the middle sections *toward* the incident — the Production Scenario should land as the
+  payoff of the mechanism just taught, never as a detached appendix. (The template's
+  concept→code→scenario order stands: the scenario's diagnosis needs the vocabulary the
+  earlier sections define, and reading it after the mechanism doubles as retrieval practice.)
 - **Reliability ladder**: timeout → retry → backoff + jitter → circuit breaker → bulkhead →
   graceful degradation. Retries without a budget make outages worse; say so where relevant.
 - **Idempotency**: HTTP, payments/orders, jobs, consumers, webhooks, distributed systems.
