@@ -80,7 +80,7 @@ Folder `03-fastapi/` · Prereq: modern-python 5.4, 12.5, 18.4 · Depends on: 01,
 - [~] **03.11** [File uploads and streaming responses](03-fastapi/03.11-file-uploads-and-streaming.md) - Intermediate
 - [~] **03.12** [WebSockets basics](03-fastapi/03.12-websockets-basics.md) - Intermediate
 - [~] **03.13** [OpenAPI customisation](03-fastapi/03.13-openapi-customisation.md) - Beginner
-- [ ] **03.14** [Production deployment - uvicorn/gunicorn workers, signals, behind a proxy](03-fastapi/03.14-production-deployment.md) - Advanced
+- [~] **03.14** [Production deployment - uvicorn/gunicorn workers, signals, behind a proxy](03-fastapi/03.14-production-deployment.md) - Advanced
 
 ## 04 Async & Concurrency for Backend
 

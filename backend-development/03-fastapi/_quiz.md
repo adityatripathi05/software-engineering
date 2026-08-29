@@ -3,7 +3,7 @@
 Retrieval practice for [FastAPI](README.md). Attempt every question — aloud or on paper —
 **before** opening the Answers at the bottom. Most of this module's incidents came from the
 framework doing *exactly what it was told*; the questions test whether you know what it was
-told. (03.14 questions will be added when that notebook lands.)
+told.
 
 **How to use these notes:** state your own Mental Model before reading the given one · answer
 Interview Questions aloud before the answer shape · type and run one code block per notebook ·
@@ -58,7 +58,14 @@ reattempt this quiz a week later.
 17. *Mini coding challenge.* Write the route-table test asserting every schema-visible route
     has a deliberate camelCase operation id. Why can't "the author passed `name=`" be tested
     directly?
-18. *Design prompt.* Assemble `main.py` for a brand-new FastAPI service: settings, middleware
+18. The close-code telemetry shows zero 1001s across 41 deploys, while clients report 1006
+    spikes on every deploy day. What has been happening to every deploy, and where in the
+    stack is the bug — the app, uvicorn, or neither?
+19. State the deployment deadline ladder as an inequality, name what fits in each gap, and
+    say what happens when the middle value exceeds the last.
+20. Why must you pick exactly ONE supervisor (uvicorn `--workers` vs orchestrator replicas),
+    and what breaks when a replicated container also runs 4 workers?
+21. *Design prompt.* Assemble `main.py` for a brand-new FastAPI service: settings, middleware
     order, exception handlers, routers, operation ids, docs/schema gating, lifespan. Justify
     each line's *position* by naming the module-03 incident that punished getting it wrong.
 
@@ -135,7 +142,19 @@ reattempt this quiz a week later.
     grandfathered set). You can't test "explicit" directly because the default *is*
     `route.name` — a defaulted name and an explicit one are the same attribute; house style
     (snake vs camel) is the only mechanical tell (03.13).
-18. Strong shape, in order: pure `get_settings()` (03.1); `FastAPI(lifespan=...)` creating
+18. Every deploy has been a SIGKILL: a graceful shutdown *produces* evidence (1001 closes,
+    drain and teardown logs), and its total absence means the path never ran. Neither the
+    app nor uvicorn — the shell-form `CMD` made `sh` PID 1, which neither dies to nor
+    forwards SIGTERM; fix is exec-form under `tini`, proven by a drain test (03.14).
+19. `slowest legitimate request < --timeout-graceful-shutdown < stop_grace_period`
+    (Ledgerly: 20 s < 25 s < 30 s). Gap one lets drains finish; gap two is where lifespan
+    teardown and exit fit. If graceful ≥ grace, SIGKILL lands mid-teardown — the guillotine
+    beats the drain (03.14).
+20. Both are process supervisors: each restarts the dead and fans out signals. Stacked, you
+    get doubled lifespans (engines and pools ×workers×replicas, 03.6 arithmetic),
+    group-fate OOM kills against the shared limit, and twice-fanned signals — pick the
+    orchestrator in containers, uvicorn's parent on VMs (03.14).
+21. Strong shape, in order: pure `get_settings()` (03.1); `FastAPI(lifespan=...)` creating
     resources post-fork, construct-only (03.9); `add_middleware` reading *backwards* so
     RequestContext lands outermost (03.7); `register_error_handlers` on Starlette's
     HTTPException + IntegrityError-by-constraint (03.8); routers with explicit `name=` on
