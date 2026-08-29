@@ -67,20 +67,20 @@ Folder `02-api-design-patterns/` · Prereq: modern-python 18.1, 18.3 · Depends 
 
 Folder `03-fastapi/` · Prereq: modern-python 5.4, 12.5, 18.4 · Depends on: 01, 02
 
-- [~] **03.1** [Application structure and ASGI - what uvicorn actually does](03-fastapi/03.1-application-structure-and-asgi.md) - Beginner
-- [~] **03.2** [Routing and parameters](03-fastapi/03.2-routing-and-parameters.md) - Beginner
-- [~] **03.3** [Request/response models](03-fastapi/03.3-request-response-models.md) - Beginner
-- [~] **03.4** [Pydantic v2 in depth - validation modes, serialisation, settings](03-fastapi/03.4-pydantic-v2-in-depth.md) - Intermediate
-- [~] **03.5** [Dependency injection](03-fastapi/03.5-dependency-injection.md) - Intermediate
-- [~] **03.6** [Sync vs async endpoints - the threadpool](03-fastapi/03.6-sync-vs-async-endpoints.md) - Intermediate
-- [~] **03.7** [Middleware](03-fastapi/03.7-middleware.md) - Intermediate
-- [~] **03.8** [Exception handling and error mapping](03-fastapi/03.8-exception-handling.md) - Intermediate
-- [~] **03.9** [Lifespan and application lifecycle](03-fastapi/03.9-lifespan.md) - Intermediate
-- [~] **03.10** [BackgroundTasks vs real workers](03-fastapi/03.10-backgroundtasks-vs-workers.md) - Intermediate
-- [~] **03.11** [File uploads and streaming responses](03-fastapi/03.11-file-uploads-and-streaming.md) - Intermediate
-- [~] **03.12** [WebSockets basics](03-fastapi/03.12-websockets-basics.md) - Intermediate
-- [~] **03.13** [OpenAPI customisation](03-fastapi/03.13-openapi-customisation.md) - Beginner
-- [~] **03.14** [Production deployment - uvicorn/gunicorn workers, signals, behind a proxy](03-fastapi/03.14-production-deployment.md) - Advanced
+- [r] **03.1** [Application structure and ASGI - what uvicorn actually does](03-fastapi/03.1-application-structure-and-asgi.md) - Beginner
+- [r] **03.2** [Routing and parameters](03-fastapi/03.2-routing-and-parameters.md) - Beginner
+- [r] **03.3** [Request/response models](03-fastapi/03.3-request-response-models.md) - Beginner
+- [r] **03.4** [Pydantic v2 in depth - validation modes, serialisation, settings](03-fastapi/03.4-pydantic-v2-in-depth.md) - Intermediate
+- [r] **03.5** [Dependency injection](03-fastapi/03.5-dependency-injection.md) - Intermediate
+- [r] **03.6** [Sync vs async endpoints - the threadpool](03-fastapi/03.6-sync-vs-async-endpoints.md) - Intermediate
+- [r] **03.7** [Middleware](03-fastapi/03.7-middleware.md) - Intermediate
+- [r] **03.8** [Exception handling and error mapping](03-fastapi/03.8-exception-handling.md) - Intermediate
+- [r] **03.9** [Lifespan and application lifecycle](03-fastapi/03.9-lifespan.md) - Intermediate
+- [r] **03.10** [BackgroundTasks vs real workers](03-fastapi/03.10-backgroundtasks-vs-workers.md) - Intermediate
+- [r] **03.11** [File uploads and streaming responses](03-fastapi/03.11-file-uploads-and-streaming.md) - Intermediate
+- [r] **03.12** [WebSockets basics](03-fastapi/03.12-websockets-basics.md) - Intermediate
+- [r] **03.13** [OpenAPI customisation](03-fastapi/03.13-openapi-customisation.md) - Beginner
+- [r] **03.14** [Production deployment - uvicorn/gunicorn workers, signals, behind a proxy](03-fastapi/03.14-production-deployment.md) - Advanced
 
 ## 04 Async & Concurrency for Backend
 
