@@ -75,7 +75,7 @@ Folder `03-fastapi/` · Prereq: modern-python 5.4, 12.5, 18.4 · Depends on: 01,
 - [~] **03.6** [Sync vs async endpoints - the threadpool](03-fastapi/03.6-sync-vs-async-endpoints.md) - Intermediate
 - [~] **03.7** [Middleware](03-fastapi/03.7-middleware.md) - Intermediate
 - [~] **03.8** [Exception handling and error mapping](03-fastapi/03.8-exception-handling.md) - Intermediate
-- [ ] **03.9** [Lifespan and application lifecycle](03-fastapi/03.9-lifespan.md) - Intermediate
+- [~] **03.9** [Lifespan and application lifecycle](03-fastapi/03.9-lifespan.md) - Intermediate
 - [ ] **03.10** [BackgroundTasks vs real workers](03-fastapi/03.10-backgroundtasks-vs-workers.md) - Intermediate
 - [ ] **03.11** [File uploads and streaming responses](03-fastapi/03.11-file-uploads-and-streaming.md) - Intermediate
 - [ ] **03.12** [WebSockets basics](03-fastapi/03.12-websockets-basics.md) - Intermediate
