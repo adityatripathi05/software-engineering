@@ -105,7 +105,7 @@ Rules on the template:
   template; they are mandatory because they encode the cross-cutting principles.
 - Use `⚠️` for a genuine trap - something that runs but does the wrong thing (repo convention).
 - Use a `> **Version note**` callout when behaviour differs across Python 3.12/3.13/3.14,
-  SQLAlchemy 2.0/2.1, Pydantic 2.x minors, PostgreSQL 15/16/17, FastAPI minors. Only when true.
+  SQLAlchemy 2.0/2.1, Pydantic 2.x minors, PostgreSQL 16/17/18, FastAPI minors. Only when true.
 
 ---
 

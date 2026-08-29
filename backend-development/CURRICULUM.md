@@ -49,30 +49,30 @@ Folder `01-http-web-fundamentals/` · Prereq: modern-python 11.1-11.5 · Depends
 
 Folder `02-api-design-patterns/` · Prereq: modern-python 18.1, 18.3 · Depends on: 01
 
-- [ ] **02.1** [Resource modelling and URI design](02-api-design-patterns/02.1-resource-modelling-and-uri-design.md) - Beginner
-- [ ] **02.2** [REST vs RPC vs GraphQL vs gRPC](02-api-design-patterns/02.2-rest-vs-rpc-vs-graphql-vs-grpc.md) - Intermediate
-- [ ] **02.3** [API versioning](02-api-design-patterns/02.3-api-versioning.md) - Intermediate
-- [ ] **02.4** [Contract-first design and OpenAPI](02-api-design-patterns/02.4-contract-first-and-openapi.md) - Intermediate
-- [ ] **02.5** [Pagination - offset, cursor, keyset](02-api-design-patterns/02.5-pagination.md) - Intermediate
-- [ ] **02.6** [Filtering, sorting and searching](02-api-design-patterns/02.6-filtering-sorting-searching.md) - Beginner
-- [ ] **02.7** [Bulk operations and partial updates (PATCH)](02-api-design-patterns/02.7-bulk-operations-and-partial-updates.md) - Intermediate
-- [ ] **02.8** [Idempotency and idempotency keys](02-api-design-patterns/02.8-idempotency-keys.md) - Intermediate
-- [ ] **02.9** [Standardised error responses - RFC 9457 Problem Details](02-api-design-patterns/02.9-error-responses-rfc-9457.md) - Beginner
-- [ ] **02.10** [Long-running operations - 202 + polling vs webhooks vs SSE](02-api-design-patterns/02.10-long-running-operations.md) - Intermediate
-- [ ] **02.11** [Webhook design - signatures, replay protection, retries, delivery guarantees](02-api-design-patterns/02.11-webhook-design.md) - Advanced
-- [ ] **02.12** [Rate limiting as an API contract - 429, Retry-After, RateLimit headers](02-api-design-patterns/02.12-rate-limiting-as-api-contract.md) - Intermediate
-- [ ] **02.13** [API deprecation, compatibility and sunset](02-api-design-patterns/02.13-deprecation-and-sunset.md) - Intermediate
+- [r] **02.1** [Resource modelling and URI design](02-api-design-patterns/02.1-resource-modelling-and-uri-design.md) - Beginner
+- [r] **02.2** [REST vs RPC vs GraphQL vs gRPC](02-api-design-patterns/02.2-rest-vs-rpc-vs-graphql-vs-grpc.md) - Intermediate
+- [r] **02.3** [API versioning](02-api-design-patterns/02.3-api-versioning.md) - Intermediate
+- [r] **02.4** [Contract-first design and OpenAPI](02-api-design-patterns/02.4-contract-first-and-openapi.md) - Intermediate
+- [r] **02.5** [Pagination - offset, cursor, keyset](02-api-design-patterns/02.5-pagination.md) - Intermediate
+- [r] **02.6** [Filtering, sorting and searching](02-api-design-patterns/02.6-filtering-sorting-searching.md) - Beginner
+- [r] **02.7** [Bulk operations and partial updates (PATCH)](02-api-design-patterns/02.7-bulk-operations-and-partial-updates.md) - Intermediate
+- [r] **02.8** [Idempotency and idempotency keys](02-api-design-patterns/02.8-idempotency-keys.md) - Intermediate
+- [r] **02.9** [Standardised error responses - RFC 9457 Problem Details](02-api-design-patterns/02.9-error-responses-rfc-9457.md) - Beginner
+- [r] **02.10** [Long-running operations - 202 + polling vs webhooks vs SSE](02-api-design-patterns/02.10-long-running-operations.md) - Intermediate
+- [r] **02.11** [Webhook design - signatures, replay protection, retries, delivery guarantees](02-api-design-patterns/02.11-webhook-design.md) - Advanced
+- [r] **02.12** [Rate limiting as an API contract - 429, Retry-After, RateLimit headers](02-api-design-patterns/02.12-rate-limiting-as-api-contract.md) - Intermediate
+- [r] **02.13** [API deprecation, compatibility and sunset](02-api-design-patterns/02.13-deprecation-and-sunset.md) - Intermediate
 
 ## 03 FastAPI
 
 Folder `03-fastapi/` · Prereq: modern-python 5.4, 12.5, 18.4 · Depends on: 01, 02
 
-- [ ] **03.1** [Application structure and ASGI - what uvicorn actually does](03-fastapi/03.1-application-structure-and-asgi.md) - Beginner
-- [ ] **03.2** [Routing and parameters](03-fastapi/03.2-routing-and-parameters.md) - Beginner
-- [ ] **03.3** [Request/response models](03-fastapi/03.3-request-response-models.md) - Beginner
-- [ ] **03.4** [Pydantic v2 in depth - validation modes, serialisation, settings](03-fastapi/03.4-pydantic-v2-in-depth.md) - Intermediate
-- [ ] **03.5** [Dependency injection](03-fastapi/03.5-dependency-injection.md) - Intermediate
-- [ ] **03.6** [Sync vs async endpoints - the threadpool](03-fastapi/03.6-sync-vs-async-endpoints.md) - Intermediate
+- [~] **03.1** [Application structure and ASGI - what uvicorn actually does](03-fastapi/03.1-application-structure-and-asgi.md) - Beginner
+- [~] **03.2** [Routing and parameters](03-fastapi/03.2-routing-and-parameters.md) - Beginner
+- [~] **03.3** [Request/response models](03-fastapi/03.3-request-response-models.md) - Beginner
+- [~] **03.4** [Pydantic v2 in depth - validation modes, serialisation, settings](03-fastapi/03.4-pydantic-v2-in-depth.md) - Intermediate
+- [~] **03.5** [Dependency injection](03-fastapi/03.5-dependency-injection.md) - Intermediate
+- [~] **03.6** [Sync vs async endpoints - the threadpool](03-fastapi/03.6-sync-vs-async-endpoints.md) - Intermediate
 - [ ] **03.7** [Middleware](03-fastapi/03.7-middleware.md) - Intermediate
 - [ ] **03.8** [Exception handling and error mapping](03-fastapi/03.8-exception-handling.md) - Intermediate
 - [ ] **03.9** [Lifespan and application lifecycle](03-fastapi/03.9-lifespan.md) - Intermediate
@@ -108,7 +108,7 @@ Folder `05-postgresql-data-modeling/` · Prereq: modern-python 10.1, 10.2, 10.5 
 - [ ] **05.5** [Indexing](05-postgresql-data-modeling/05.5-indexing.md) - Intermediate
 - [ ] **05.6** [EXPLAIN and EXPLAIN ANALYZE](05-postgresql-data-modeling/05.6-explain-analyze.md) - Intermediate
 - [ ] **05.7** [Query optimisation and pg_stat_statements](05-postgresql-data-modeling/05.7-query-optimisation.md) - Advanced
-- [ ] **05.8** [Full-text search basics](05-postgresql-data-modeling/05.8-full-text-search.md) - Intermediate
+- [ ] **05.8** [Search in Postgres - full-text and pgvector basics](05-postgresql-data-modeling/05.8-full-text-search-and-pgvector.md) - Intermediate
 - [ ] **05.9** [Connection pooling and PgBouncer](05-postgresql-data-modeling/05.9-connection-pooling-and-pgbouncer.md) - Intermediate
 - [ ] **05.10** [Transactions and ACID](05-postgresql-data-modeling/05.10-transactions-and-acid.md) - Intermediate
 - [ ] **05.11** [Isolation levels, MVCC, bloat and vacuum](05-postgresql-data-modeling/05.11-isolation-mvcc-vacuum.md) - Advanced
