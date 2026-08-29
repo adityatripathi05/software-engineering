@@ -88,7 +88,7 @@ Folder `04-async-concurrency/` · Prereq: modern-python 12.1-12.5 · Depends on:
 
 - [~] **04.1** [The event loop inside a server process](04-async-concurrency/04.1-event-loop-in-a-server.md) - Intermediate
 - [~] **04.2** [Blocking vs non-blocking I/O - finding the blocking call](04-async-concurrency/04.2-blocking-vs-non-blocking-io.md) - Intermediate
-- [ ] **04.3** [Async database and HTTP clients - pools and limits](04-async-concurrency/04.3-async-db-and-http-clients.md) - Intermediate
+- [~] **04.3** [Async database and HTTP clients - pools and limits](04-async-concurrency/04.3-async-db-and-http-clients.md) - Intermediate
 - [ ] **04.4** [Request-scoped state - contextvars](04-async-concurrency/04.4-request-scoped-state-contextvars.md) - Intermediate
 - [ ] **04.5** [Race conditions in concurrent requests - asyncio.Lock and Queue](04-async-concurrency/04.5-race-conditions-in-concurrent-requests.md) - Advanced
 - [ ] **04.6** [Lost updates and double writes](04-async-concurrency/04.6-lost-updates-and-double-writes.md) - Advanced
