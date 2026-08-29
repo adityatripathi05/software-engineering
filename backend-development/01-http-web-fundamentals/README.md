@@ -45,7 +45,9 @@ and how it fails. By the end you can describe any HTTP interaction in terms of *
 | 01.9 | `allow_origin_regex=".*"` with credentials lets any website read logged-in users' data | CORS is a *relaxation* of the Same-Origin Policy, not a protection |
 | 01.10 | `--forwarded-allow-ips="*"` lets an attacker spoof their IP; 2.1 M login attempts, 3 rejections | Trust is a property of the connection, not the header |
 
-**The pattern across all ten.** Eight of these incidents produced **no errors and no alerts**. The
+**The pattern across all ten.** Six of these incidents produced **no errors and no alerts**, and in
+most of the others the alert that fired pointed at the wrong layer (a proxy SLO, a flapping `5xx`
+threshold, a fraud rule). The
 service reported itself healthy while leaking data, duplicating records, or being evaded. The
 recurring diagnostic move is comparing two vantage points — edge vs origin, LB count vs app count,
 browser vs clean trust store, one replica vs many — and treating the *discrepancy* as the signal.
