@@ -62,6 +62,11 @@ def main() -> None:
         if (d / "_quiz.md").exists():
             rlines += ["", "Self-test: [_quiz.md](_quiz.md) - attempt every question "
                            "before opening the answers at the bottom."]
+        # A _lab/ folder (AUTHORING-GUIDE section 4.4) holds the runnable scripts
+        # that reproduce the notebooks' captured transcripts.
+        if (d / "_lab").is_dir():
+            rlines += ["", "Lab: [_lab/](_lab/) - runnable scripts that reproduce the "
+                           "notebooks' captured transcripts."]
         # A hand-written _recap.md (added when a module is finished) is preserved
         # across regenerations by appending it below the generated table.
         recap = d / "_recap.md"

@@ -33,12 +33,18 @@ The reader's central question is always:
    taught there is *referenced*, never re-taught (see §6).
 4. Decide the **one running system** the examples will live in (see §4). Prefer the module's
    running example; do not invent a new domain per notebook.
-5. Write the notebook to the template in §2. Then run the checklist in §9.
-6. Run `python backend-development/_tools/check.py 05.9`. It verifies the mechanical rules —
+5. **Run the experiments first.** Build scratch scripts that produce every transcript, log
+   excerpt and number the notebook will show (TestClient in-process where possible; a real
+   `uvicorn` plus client processes for anything transport- or process-level; the module's
+   `compose.yaml` for anything needing infra). Capture the output, THEN write the notebook
+   around the captured evidence — never the reverse. Commit the scripts to the module's
+   `_lab/` (§4.4).
+6. Write the notebook to the template in §2. Then run the checklist in §9.
+7. Run `python backend-development/_tools/check.py 05.9`. It verifies the mechanical rules —
    required headings, header block, prose length for the level, banned/deprecated APIs inside
    code, block length, stacked listings — so review attention goes to what only a human can
    judge: is the incident realistic, and is the example real-dev rather than bookish?
-7. Update `_tools/curriculum.py` → `STATUS["05.9"] = "draft"` and run
+8. Update `_tools/curriculum.py` → `STATUS["05.9"] = "draft"` and run
    `python backend-development/_tools/build.py`.
 
 Write **one notebook per response**. Never batch a module into one response.
@@ -231,8 +237,9 @@ Heuristics that produce real-dev examples:
   atomic multi-key ops when needed.
 - Tests: pytest, `pytest-asyncio` (or `anyio`), `httpx.AsyncClient(transport=ASGITransport(...))`,
   Testcontainers for Postgres/Redis/RabbitMQ; `respx` for HTTP doubles.
-- Every snippet is **complete enough to run** given the module's compose file, or is explicitly
-  marked `# sketch - not runnable` with the reason. No `...` bodies inside functions that matter.
+- Every snippet is **complete enough to run** given the module's `compose.yaml` (§4.4), or is
+  explicitly marked `# sketch - not runnable` with the reason. No `...` bodies inside functions
+  that matter.
 - Keep listings short: 10-40 lines, and *every* listing is followed by prose that says what to
   look at and why. A 120-line listing with no commentary is a defect.
 - Show the shell where it matters: `EXPLAIN (ANALYZE, BUFFERS)`, `redis-cli --hotkeys`,
@@ -243,6 +250,27 @@ Heuristics that produce real-dev examples:
   defaults are exactly where memory fabricates plausible-but-false output, and one fake transcript
   poisons the notebook's credibility. If an output cannot be produced locally (needs Postgres,
   a proxy, load), derive it carefully and mark the listing `# illustrative - not captured output`.
+
+### 4.4 Labs - the runnable companion (`_lab/`)
+
+The notebooks are `.md` deliberately — this course's subject is processes, sockets, signals and
+services, which a notebook kernel cannot host. The runnable half lives in a per-module `_lab/`:
+
+- The experiment scripts that produced a notebook's captured transcripts are **committed**, not
+  discarded, as `_lab/lab_<id>_<slug>.py` (e.g. `lab_03_14_signals.py`). The module docstring
+  names the notebook and which listings it reproduces. They are the proof behind §4.3's
+  transcript rule and the reader's tinker bench: run, break, rerun, compare.
+- Scripts are standalone on the pinned stack; more than one file per notebook is fine when the
+  experiments genuinely differ (an app module plus a driver, say).
+- From module 05 onward, a **`compose.yaml` in the module root** provides the infrastructure the
+  module's snippets and labs assume (Postgres, Redis, ...). This is the file §4.3's
+  "complete enough to run" rule refers to; it is authored with the module's first notebook that
+  needs it.
+- `_lab/README.md`: one page — what each script shows, in notebook order, and how to run it.
+- Labs are additive: `check.py` does not gate on them (the §9 checklist carries the manual
+  check), and `build.py` links `_lab/` from the module README when present.
+- History: the convention starts at 03.13. Harnesses for earlier notebooks were run but not
+  preserved; recreate one only when there is a concrete reason.
 
 ---
 
@@ -319,7 +347,10 @@ For each: what people do · why it breaks (mechanism) · what to do instead.
 - [ ] Every shown transcript/number was produced by running the code, or is marked
       `# illustrative - not captured output` (§4.3). Version-sensitive behaviour
       (stdlib changes, FastAPI/Pydantic minors) carries a `> **Version note**`.
-- [ ] Every listing ≤ 40 lines and followed by explanation; modern syntax per §4.3; no deprecated APIs.
+- [ ] Every listing targets ≤ 40 lines (hard cap 55, enforced by check.py) and is followed by
+      explanation; modern syntax per §4.3; no deprecated APIs.
+- [ ] The scripts that produced this notebook's captured transcripts are committed to the
+      module's `_lab/` (§4.4).
 - [ ] Tradeoffs section compares ≥ 2 genuine alternatives with when/when-not.
 - [ ] Production Scenario: specific incident · symptoms as seen on-call · diagnosis via the
       telemetry ladder · mechanistic root cause · mitigation + permanent fix · prevention.
@@ -351,6 +382,8 @@ Write notebook <ID> "<TITLE>" to backend-development/<MODULE>/<FILENAME>.md.
 Constraints:
 - Level: <B/I/A>. Running system: <from §4.1>. Previous notebook in module: <ID-1> (keep its
   terminology and examples continuous).
+- Run scratch experiments FIRST and capture every transcript by execution (§4.3); commit the
+  scripts as _lab/lab_<ID>_<slug>.py (§4.4).
 - Follow the template in AUTHORING-GUIDE §2 exactly. Apply §3 depth rules, §4 example rules,
   §7 principles, §8 anti-patterns. Run the §9 checklist before finishing.
 - The Production Scenario must be a specific incident diagnosed via Alert → Metrics → Logs →
@@ -381,6 +414,9 @@ first. After the last notebook, write TWO files in the module folder:
    reading the given one; answer interview questions aloud before the answer shape; type
    and run at least one code block per notebook; reattempt the quiz a week later).
    `build.py` links it from the module README.
+
+If a notebook is added after `_quiz.md` already exists, extend the quiz with 2-3 questions
+(and answers) for it in the same response that writes the notebook.
 
 Then set all statuses to `review` and run `python backend-development/_tools/check.py <NN>`
 for the whole module. A reviewer reads the module end-to-end for continuity of the running

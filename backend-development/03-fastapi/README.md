@@ -23,6 +23,8 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 
 Self-test: [_quiz.md](_quiz.md) - attempt every question before opening the answers at the bottom.
 
+Lab: [_lab/](_lab/) - runnable scripts that reproduce the notebooks' captured transcripts.
+
 ---
 
 ## Module recap
