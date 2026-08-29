@@ -18,5 +18,5 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 | 03.10 | [BackgroundTasks vs real workers](03.10-backgroundtasks-vs-workers.md) | Intermediate | draft |
 | 03.11 | [File uploads and streaming responses](03.11-file-uploads-and-streaming.md) | Intermediate | draft |
 | 03.12 | [WebSockets basics](03.12-websockets-basics.md) | Intermediate | draft |
-| 03.13 | [OpenAPI customisation](03.13-openapi-customisation.md) | Beginner | todo |
+| 03.13 | [OpenAPI customisation](03.13-openapi-customisation.md) | Beginner | draft |
 | 03.14 | [Production deployment - uvicorn/gunicorn workers, signals, behind a proxy](03.14-production-deployment.md) | Advanced | todo |

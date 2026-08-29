@@ -40,9 +40,12 @@ REQUIRED_HEADINGS = [
     "## Related",
 ]
 
-# Prose-only word budgets, measured against module 01. The full template has ~17
-# required headings; below these ranges a section is a stub rather than teaching.
-WORD_RANGE = {"B": (1600, 3000), "I": (2000, 3200), "A": (2400, 3800)}
+# Prose-only word FLOORS, measured against module 01. The full template has ~17
+# required headings; below these floors a section is a stub rather than teaching.
+# There is deliberately NO upper bound: length is depth-driven — as long as needed
+# for complete, non-padded coverage (CLAUDE.md). Density is a review judgement,
+# not a mechanical check.
+WORD_FLOOR = {"B": 1600, "I": 2000, "A": 2400}
 
 # Deprecated APIs that must not appear in examples (AUTHORING-GUIDE section 4.3).
 BANNED = {
@@ -80,9 +83,9 @@ def check(path: Path, difficulty: str) -> list[str]:
         problems.append("no 'What you'll learn' in the header block")
 
     words = prose_words(text)
-    low, high = WORD_RANGE[difficulty]
-    if not low <= words <= high:
-        problems.append(f"prose length {words} outside {low}-{high} for level {difficulty}")
+    low = WORD_FLOOR[difficulty]
+    if words < low:
+        problems.append(f"prose length {words} below floor {low} for level {difficulty}")
 
     # Banned APIs are checked inside code only: prose legitimately *names* them
     # in order to warn against them.

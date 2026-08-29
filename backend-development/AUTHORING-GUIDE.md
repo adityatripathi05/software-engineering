@@ -308,10 +308,11 @@ For each: what people do · why it breaks (mechanism) · what to do instead.
 - [ ] Reliability / idempotency / observability principles used, not name-dropped.
 - [ ] Prereqs referenced, not re-taught; Related section has backward and forward links.
 - [ ] Interview questions include at least one "debug this" and one "design this".
-- [ ] Length (prose only, excluding code blocks and tables): Beginner 1600-3000 ·
-      Intermediate 2000-3200 · Advanced 2400-3800. Calibrated against module 01 — the template
-      has ~17 required headings, and below the lower bound a section becomes a stub rather than
-      teaching. Longer is not better; denser is.
+- [ ] Length (prose only, excluding code blocks and tables) is DEPTH-DRIVEN — as long as
+      needed for complete, non-padded coverage; never trim substance to hit a target. Floors
+      only, calibrated against module 01 (the template has ~17 required headings; below them
+      a section becomes a stub): Beginner ≥ 1600 · Intermediate ≥ 2000 · Advanced ≥ 2400.
+      No upper bound — but longer is not better; denser is. Cut padding, keep depth.
 - [ ] No code block over 55 lines; no 3 consecutive blocks without prose between them
       (a shell command plus its output counts as one unit).
 - [ ] `python backend-development/_tools/check.py <ID>` passes.
