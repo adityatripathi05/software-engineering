@@ -383,4 +383,5 @@ STATUS: dict[str, str] = {
     "03.4": "draft",
     "03.5": "draft",
     "03.6": "draft",
+    "03.7": "draft",
 }

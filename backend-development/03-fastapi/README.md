@@ -12,7 +12,7 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 | 03.4 | [Pydantic v2 in depth - validation modes, serialisation, settings](03.4-pydantic-v2-in-depth.md) | Intermediate | draft |
 | 03.5 | [Dependency injection](03.5-dependency-injection.md) | Intermediate | draft |
 | 03.6 | [Sync vs async endpoints - the threadpool](03.6-sync-vs-async-endpoints.md) | Intermediate | draft |
-| 03.7 | [Middleware](03.7-middleware.md) | Intermediate | todo |
+| 03.7 | [Middleware](03.7-middleware.md) | Intermediate | draft |
 | 03.8 | [Exception handling and error mapping](03.8-exception-handling.md) | Intermediate | todo |
 | 03.9 | [Lifespan and application lifecycle](03.9-lifespan.md) | Intermediate | todo |
 | 03.10 | [BackgroundTasks vs real workers](03.10-backgroundtasks-vs-workers.md) | Intermediate | todo |
