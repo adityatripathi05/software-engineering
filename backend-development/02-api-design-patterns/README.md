@@ -20,6 +20,8 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 | 02.12 | [Rate limiting as an API contract - 429, Retry-After, RateLimit headers](02.12-rate-limiting-as-api-contract.md) | Intermediate | review |
 | 02.13 | [API deprecation, compatibility and sunset](02.13-deprecation-and-sunset.md) | Intermediate | review |
 
+Self-test: [_quiz.md](_quiz.md) - attempt every question before opening the answers at the bottom.
+
 ---
 
 ## Module recap

@@ -57,6 +57,11 @@ def main() -> None:
             rlines.append(f"| {nid(m, i)} | [{title}]({f}) | {DIFF[d]} | {st} |")
         d = ROOT / folder
         d.mkdir(exist_ok=True)
+        # A hand-written _quiz.md (retrieval practice; AUTHORING-GUIDE section 11)
+        # is linked below the table so readers hit it before the recap.
+        if (d / "_quiz.md").exists():
+            rlines += ["", "Self-test: [_quiz.md](_quiz.md) - attempt every question "
+                           "before opening the answers at the bottom."]
         # A hand-written _recap.md (added when a module is finished) is preserved
         # across regenerations by appending it below the generated table.
         recap = d / "_recap.md"

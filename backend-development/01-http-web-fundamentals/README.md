@@ -17,6 +17,8 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 | 01.9 | [CORS - preflight, browser security model, misconfiguration](01.9-cors.md) | Intermediate | review |
 | 01.10 | [Reverse proxies and load balancers - X-Forwarded-*, trusting proxy headers](01.10-reverse-proxies-and-forwarded-headers.md) | Intermediate | review |
 
+Self-test: [_quiz.md](_quiz.md) - attempt every question before opening the answers at the bottom.
+
 ---
 
 ## Module recap

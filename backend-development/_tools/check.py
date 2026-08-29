@@ -82,6 +82,12 @@ def check(path: Path, difficulty: str) -> list[str]:
     if "> **What you'll learn:**" not in text:
         problems.append("no 'What you'll learn' in the header block")
 
+    # Problem-first ordering: a one-line teaser of the Production Scenario must
+    # appear before ## Concept (curiosity gap; AUTHORING-GUIDE section 2).
+    zap, concept = text.find("> ⚡"), text.find("## Concept")
+    if zap == -1 or (concept != -1 and zap > concept):
+        problems.append("no cold-open line ('> ⚡ ...') before ## Concept")
+
     words = prose_words(text)
     low = WORD_FLOOR[difficulty]
     if words < low:

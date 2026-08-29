@@ -55,6 +55,9 @@ Write **one notebook per response**. Never batch a module into one response.
 > not a topic ("pool sizing").
 > **Level:** Intermediate
 
+> ⚡ **Tuesday 09:40** — one sentence of symptom from THIS notebook's Production Scenario,
+> then "The cause: ..." in a terse phrase that names the culprit but not the mechanism.
+
 ## Concept
 ### Plain-English Explanation
 ### Technical Explanation
@@ -99,6 +102,10 @@ Write **one notebook per response**. Never batch a module into one response.
 
 Rules on the template:
 - Headings are exact. Tools and readers depend on them.
+- The **cold open** (`> ⚡`, between the header block and `## Concept`) is mandatory:
+  problem-first ordering measurably improves retention, so the incident's need-to-know
+  arrives before the Concept section explains. One or two sentences, symptom + terse cause,
+  never the mechanism — the mechanism is the notebook's payoff, not its epigraph.
 - Omit **Code Example** only for purely conceptual notebooks (e.g. 19.5 CAP, 18.2 when-not-
   microservices) and say why in one line under the heading. Never omit **Production Scenario**.
 - **Failure-First Checklist** and **How to Test This** are additions to the original brief's
@@ -295,6 +302,8 @@ For each: what people do · why it breaks (mechanism) · what to do instead.
 
 ## 9. Pre-submit checklist (run it; do not skip)
 - [ ] All template headings present, exact, in order; header block filled.
+- [ ] Cold-open line (`> ⚡`) present between the header block and `## Concept`, teasing
+      this notebook's own Production Scenario (symptom + terse cause, no mechanism).
 - [ ] Examples live in the module's running system (§4.1); no foo/bar/Item.
 - [ ] At least one snippet shows *real output* (SQL, logs, metrics, EXPLAIN, headers).
 - [ ] Every shown transcript/number was produced by running the code, or is marked
@@ -344,12 +353,28 @@ Constraints:
 
 ## 11. Per-module generation loop
 For a module: generate notebooks in order, one per response, each reading the previous one
-first. After the last notebook, write a `_recap.md` in the module folder — what was built, a
-table of the incidents with the general lesson each carries, any configuration invariants
-established, and what the next module assumes. `build.py` appends it below the generated table
-in the module README and preserves it across regenerations. Then set all statuses to `review`
-and run `python backend-development/_tools/check.py <NN>` for the whole module. A reviewer reads
-the module end-to-end for continuity of the running system and promotes to `done`.
+first. After the last notebook, write TWO files in the module folder:
+
+1. `_recap.md` — what was built, a table of the incidents with the general lesson each
+   carries, any configuration invariants established, and what the next module assumes.
+   `build.py` appends it below the generated table in the module README and preserves it
+   across regenerations.
+2. `_quiz.md` — **retrieval practice** (the testing effect: one honest attempt to answer
+   beats three re-reads; notebooks alone are optimised for reading, which produces an
+   illusion of competence). Questions only, drawn from every notebook's incident,
+   Failure-First checklist and Key Takeaways — a mix of incident replays ("debug this"),
+   mechanism questions, decision questions, 1-2 mini coding challenges and one module-wide
+   design prompt. Answers live in a single `## Answers` section at the BOTTOM of the file
+   (never adjacent to the questions), one to three lines each, naming the source notebook.
+   Interleave: consecutive questions should come from different notebooks. The file opens
+   with the short "How to use these notes" protocol (state your own Mental Model before
+   reading the given one; answer interview questions aloud before the answer shape; type
+   and run at least one code block per notebook; reattempt the quiz a week later).
+   `build.py` links it from the module README.
+
+Then set all statuses to `review` and run `python backend-development/_tools/check.py <NN>`
+for the whole module. A reviewer reads the module end-to-end for continuity of the running
+system and promotes to `done`.
 
 **Worked example:** module 01 is complete and conforms. Use
 [01.3](01-http-web-fundamentals/01.3-status-codes-and-headers.md) as the reference for the
