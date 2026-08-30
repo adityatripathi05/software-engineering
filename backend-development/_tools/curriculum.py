@@ -403,4 +403,5 @@ STATUS: dict[str, str] = {
     "04.10": "done",
     "05.1": "draft",
     "05.2": "draft",
+    "05.3": "draft",
 }
