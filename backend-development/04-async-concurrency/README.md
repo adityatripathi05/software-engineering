@@ -6,16 +6,16 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 
 | # | Notebook | Level | Status |
 |---|---|---|---|
-| 04.1 | [The event loop inside a server process](04.1-event-loop-in-a-server.md) | Intermediate | review |
-| 04.2 | [Blocking vs non-blocking I/O - finding the blocking call](04.2-blocking-vs-non-blocking-io.md) | Intermediate | review |
-| 04.3 | [Async database and HTTP clients - pools and limits](04.3-async-db-and-http-clients.md) | Intermediate | review |
-| 04.4 | [Request-scoped state - contextvars](04.4-request-scoped-state-contextvars.md) | Intermediate | review |
-| 04.5 | [Race conditions in concurrent requests - asyncio.Lock and Queue](04.5-race-conditions-in-concurrent-requests.md) | Advanced | review |
-| 04.6 | [Lost updates and double writes](04.6-lost-updates-and-double-writes.md) | Advanced | review |
-| 04.7 | [CPU-bound work and event-loop blocking](04.7-cpu-bound-work.md) | Intermediate | review |
-| 04.8 | [Timeouts and cancellation](04.8-timeouts-and-cancellation.md) | Advanced | review |
-| 04.9 | [Graceful shutdown](04.9-graceful-shutdown.md) | Advanced | review |
-| 04.10 | [When async helps and when it does not](04.10-when-async-helps.md) | Intermediate | review |
+| 04.1 | [The event loop inside a server process](04.1-event-loop-in-a-server.md) | Intermediate | done |
+| 04.2 | [Blocking vs non-blocking I/O - finding the blocking call](04.2-blocking-vs-non-blocking-io.md) | Intermediate | done |
+| 04.3 | [Async database and HTTP clients - pools and limits](04.3-async-db-and-http-clients.md) | Intermediate | done |
+| 04.4 | [Request-scoped state - contextvars](04.4-request-scoped-state-contextvars.md) | Intermediate | done |
+| 04.5 | [Race conditions in concurrent requests - asyncio.Lock and Queue](04.5-race-conditions-in-concurrent-requests.md) | Advanced | done |
+| 04.6 | [Lost updates and double writes](04.6-lost-updates-and-double-writes.md) | Advanced | done |
+| 04.7 | [CPU-bound work and event-loop blocking](04.7-cpu-bound-work.md) | Intermediate | done |
+| 04.8 | [Timeouts and cancellation](04.8-timeouts-and-cancellation.md) | Advanced | done |
+| 04.9 | [Graceful shutdown](04.9-graceful-shutdown.md) | Advanced | done |
+| 04.10 | [When async helps and when it does not](04.10-when-async-helps.md) | Intermediate | done |
 
 Self-test: [_quiz.md](_quiz.md) - attempt every question before opening the answers at the bottom.
 
@@ -90,7 +90,7 @@ every gather/TaskGroup names its resource budget in the PR                    (0
 since module 01. *The absence-detector family grows*: the zombie ratio (04.8), the audit
 completeness invariant (04.9), `token_refreshes_total` (04.5) — all descendants of 03.13's
 lesson that silence needs its own metrics. *The boundary ladder*: 04.5's primitives coordinate
-one process, 04.6's database coordinates replicas, 10.14's Redis locks wait beyond — each
+one process, 04.6's database coordinates replicas, 10.12's Redis locks wait beyond — each
 notebook naming where its tools stop. *Canon self-correction as method*: 04.8 amended 04.5's
 shipped code by measurement, as 02.5 and 03.12 were amended before.
 

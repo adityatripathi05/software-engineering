@@ -6,20 +6,20 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 
 | # | Notebook | Level | Status |
 |---|---|---|---|
-| 03.1 | [Application structure and ASGI - what uvicorn actually does](03.1-application-structure-and-asgi.md) | Beginner | review |
-| 03.2 | [Routing and parameters](03.2-routing-and-parameters.md) | Beginner | review |
-| 03.3 | [Request/response models](03.3-request-response-models.md) | Beginner | review |
-| 03.4 | [Pydantic v2 in depth - validation modes, serialisation, settings](03.4-pydantic-v2-in-depth.md) | Intermediate | review |
-| 03.5 | [Dependency injection](03.5-dependency-injection.md) | Intermediate | review |
-| 03.6 | [Sync vs async endpoints - the threadpool](03.6-sync-vs-async-endpoints.md) | Intermediate | review |
-| 03.7 | [Middleware](03.7-middleware.md) | Intermediate | review |
-| 03.8 | [Exception handling and error mapping](03.8-exception-handling.md) | Intermediate | review |
-| 03.9 | [Lifespan and application lifecycle](03.9-lifespan.md) | Intermediate | review |
-| 03.10 | [BackgroundTasks vs real workers](03.10-backgroundtasks-vs-workers.md) | Intermediate | review |
-| 03.11 | [File uploads and streaming responses](03.11-file-uploads-and-streaming.md) | Intermediate | review |
-| 03.12 | [WebSockets basics](03.12-websockets-basics.md) | Intermediate | review |
-| 03.13 | [OpenAPI customisation](03.13-openapi-customisation.md) | Beginner | review |
-| 03.14 | [Production deployment - uvicorn/gunicorn workers, signals, behind a proxy](03.14-production-deployment.md) | Advanced | review |
+| 03.1 | [Application structure and ASGI - what uvicorn actually does](03.1-application-structure-and-asgi.md) | Beginner | done |
+| 03.2 | [Routing and parameters](03.2-routing-and-parameters.md) | Beginner | done |
+| 03.3 | [Request/response models](03.3-request-response-models.md) | Beginner | done |
+| 03.4 | [Pydantic v2 in depth - validation modes, serialisation, settings](03.4-pydantic-v2-in-depth.md) | Intermediate | done |
+| 03.5 | [Dependency injection](03.5-dependency-injection.md) | Intermediate | done |
+| 03.6 | [Sync vs async endpoints - the threadpool](03.6-sync-vs-async-endpoints.md) | Intermediate | done |
+| 03.7 | [Middleware](03.7-middleware.md) | Intermediate | done |
+| 03.8 | [Exception handling and error mapping](03.8-exception-handling.md) | Intermediate | done |
+| 03.9 | [Lifespan and application lifecycle](03.9-lifespan.md) | Intermediate | done |
+| 03.10 | [BackgroundTasks vs real workers](03.10-backgroundtasks-vs-workers.md) | Intermediate | done |
+| 03.11 | [File uploads and streaming responses](03.11-file-uploads-and-streaming.md) | Intermediate | done |
+| 03.12 | [WebSockets basics](03.12-websockets-basics.md) | Intermediate | done |
+| 03.13 | [OpenAPI customisation](03.13-openapi-customisation.md) | Beginner | done |
+| 03.14 | [Production deployment - uvicorn/gunicorn workers, signals, behind a proxy](03.14-production-deployment.md) | Advanced | done |
 
 Self-test: [_quiz.md](_quiz.md) - attempt every question before opening the answers at the bottom.
 

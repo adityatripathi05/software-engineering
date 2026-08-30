@@ -123,10 +123,12 @@ reattempt this quiz a week later.
     (:cursor_ts, :cursor_id) ORDER BY created_at DESC, id DESC LIMIT :n`. Without `id`,
     equal timestamps make the ordering non-total: rows straddling a page boundary repeat or
     vanish.
-16. Insert the key row (scoped, with fingerprint and state `in_flight`) in the *same
-    transaction* as the business write, unique-constrained. (a) Return the stored response
-    replay with an idempotent-replay marker. (b) `422` problem — key reuse with different
-    payload. (c) `409`/retry-later, never a second execution (02.8).
+16. Claim the key row (scoped, with fingerprint and state `in_flight`) via
+    `INSERT … ON CONFLICT`, committed *first, on its own* — so concurrent duplicates can see
+    it; then the business write and the completion record (stored response, state
+    `completed`) commit together in *one* transaction. (a) Return the stored response replay
+    with an idempotent-replay marker. (b) `422` problem — key reuse with different payload.
+    (c) `409`/retry-later, never a second execution (02.8).
 17. 02.4 (undeclared response fields — the SDKs never knew nine fields existed) and 02.3
     (closed enums — SDKs crashed on a value the API considered additive). The committed,
     CI-diffed `openapi.json` is the artefact both fixes hang off.

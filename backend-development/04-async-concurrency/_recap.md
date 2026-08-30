@@ -65,7 +65,7 @@ every gather/TaskGroup names its resource budget in the PR                    (0
 since module 01. *The absence-detector family grows*: the zombie ratio (04.8), the audit
 completeness invariant (04.9), `token_refreshes_total` (04.5) — all descendants of 03.13's
 lesson that silence needs its own metrics. *The boundary ladder*: 04.5's primitives coordinate
-one process, 04.6's database coordinates replicas, 10.14's Redis locks wait beyond — each
+one process, 04.6's database coordinates replicas, 10.12's Redis locks wait beyond — each
 notebook naming where its tools stop. *Canon self-correction as method*: 04.8 amended 04.5's
 shipped code by measurement, as 02.5 and 03.12 were amended before.
 

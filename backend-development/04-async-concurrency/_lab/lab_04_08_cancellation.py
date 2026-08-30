@@ -24,6 +24,11 @@ from pathlib import Path
 
 from fastapi import FastAPI, Request
 
+# Windows: a redirected/piped stdout falls back to cp1252, which cannot encode
+# this script's ⚠️ marker and kills section D mid-print — force UTF-8 output
+if sys.stdout.encoding.lower() not in ("utf-8", "utf8"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 
 # ---------- A. anatomy --------------------------------------------------------
 async def section_a() -> None:

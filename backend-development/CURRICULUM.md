@@ -5,14 +5,14 @@ Legend: `[ ]` todo · `[~]` draft · `[r]` in review · `[x]` done.
 
 Authoring rules for every notebook: [AUTHORING-GUIDE.md](AUTHORING-GUIDE.md). Design rationale: [CURRICULUM-REVIEW.md](CURRICULUM-REVIEW.md).
 
-**Progress: 0/261 notebooks done.**
+**Progress: 47/261 notebooks done.**
 
 | # | Module | Notebooks | Done | Prereq (modern-python) | Depends on |
 |---|---|---|---|---|---|
-| 01 | [HTTP & Web Fundamentals](01-http-web-fundamentals/README.md) | 10 | 0 | modern-python 11.1-11.5 | - |
-| 02 | [API Design & Patterns](02-api-design-patterns/README.md) | 13 | 0 | modern-python 18.1, 18.3 | 01 |
-| 03 | [FastAPI](03-fastapi/README.md) | 14 | 0 | modern-python 5.4, 12.5, 18.4 | 01, 02 |
-| 04 | [Async & Concurrency for Backend](04-async-concurrency/README.md) | 10 | 0 | modern-python 12.1-12.5 | 03 |
+| 01 | [HTTP & Web Fundamentals](01-http-web-fundamentals/README.md) | 10 | 10 | modern-python 11.1-11.5 | - |
+| 02 | [API Design & Patterns](02-api-design-patterns/README.md) | 13 | 13 | modern-python 18.1, 18.3 | 01 |
+| 03 | [FastAPI](03-fastapi/README.md) | 14 | 14 | modern-python 5.4, 12.5, 18.4 | 01, 02 |
+| 04 | [Async & Concurrency for Backend](04-async-concurrency/README.md) | 10 | 10 | modern-python 12.1-12.5 | 03 |
 | 05 | [PostgreSQL & Data Modeling](05-postgresql-data-modeling/README.md) | 18 | 0 | modern-python 10.1, 10.2, 10.5 | 04 |
 | 06 | [SQLAlchemy & Data Access](06-sqlalchemy-data-access/README.md) | 13 | 0 | modern-python 10.4, 6.3 | 03, 04, 05 |
 | 07 | [Backend Design Patterns](07-backend-design-patterns/README.md) | 10 | 0 | modern-python 5.4, 16.4 | 03, 06 |
@@ -34,68 +34,68 @@ Authoring rules for every notebook: [AUTHORING-GUIDE.md](AUTHORING-GUIDE.md). De
 
 Folder `01-http-web-fundamentals/` · Prereq: modern-python 11.1-11.5 · Depends on: -
 
-- [r] **01.1** [Request/response lifecycle - socket to ASGI to handler](01-http-web-fundamentals/01.1-request-response-lifecycle.md) - Beginner
-- [r] **01.2** [HTTP methods, safety and idempotency](01-http-web-fundamentals/01.2-methods-safety-idempotency.md) - Beginner
-- [r] **01.3** [Status codes and headers](01-http-web-fundamentals/01.3-status-codes-and-headers.md) - Beginner
-- [r] **01.4** [Content negotiation, compression and HTTP caching - ETag, Cache-Control, conditional requests](01-http-web-fundamentals/01.4-content-negotiation-and-http-caching.md) - Intermediate
-- [r] **01.5** [Cookies and sessions](01-http-web-fundamentals/01.5-cookies-and-sessions.md) - Beginner
-- [r] **01.6** [Stateless vs stateful services](01-http-web-fundamentals/01.6-stateless-vs-stateful.md) - Beginner
-- [r] **01.7** [Connection lifecycle - keep-alive, HTTP/1.1 vs 2 vs 3](01-http-web-fundamentals/01.7-connection-lifecycle.md) - Intermediate
-- [r] **01.8** [TLS fundamentals](01-http-web-fundamentals/01.8-tls-fundamentals.md) - Intermediate
-- [r] **01.9** [CORS - preflight, browser security model, misconfiguration](01-http-web-fundamentals/01.9-cors.md) - Intermediate
-- [r] **01.10** [Reverse proxies and load balancers - X-Forwarded-*, trusting proxy headers](01-http-web-fundamentals/01.10-reverse-proxies-and-forwarded-headers.md) - Intermediate
+- [x] **01.1** [Request/response lifecycle - socket to ASGI to handler](01-http-web-fundamentals/01.1-request-response-lifecycle.md) - Beginner
+- [x] **01.2** [HTTP methods, safety and idempotency](01-http-web-fundamentals/01.2-methods-safety-idempotency.md) - Beginner
+- [x] **01.3** [Status codes and headers](01-http-web-fundamentals/01.3-status-codes-and-headers.md) - Beginner
+- [x] **01.4** [Content negotiation, compression and HTTP caching - ETag, Cache-Control, conditional requests](01-http-web-fundamentals/01.4-content-negotiation-and-http-caching.md) - Intermediate
+- [x] **01.5** [Cookies and sessions](01-http-web-fundamentals/01.5-cookies-and-sessions.md) - Beginner
+- [x] **01.6** [Stateless vs stateful services](01-http-web-fundamentals/01.6-stateless-vs-stateful.md) - Beginner
+- [x] **01.7** [Connection lifecycle - keep-alive, HTTP/1.1 vs 2 vs 3](01-http-web-fundamentals/01.7-connection-lifecycle.md) - Intermediate
+- [x] **01.8** [TLS fundamentals](01-http-web-fundamentals/01.8-tls-fundamentals.md) - Intermediate
+- [x] **01.9** [CORS - preflight, browser security model, misconfiguration](01-http-web-fundamentals/01.9-cors.md) - Intermediate
+- [x] **01.10** [Reverse proxies and load balancers - X-Forwarded-*, trusting proxy headers](01-http-web-fundamentals/01.10-reverse-proxies-and-forwarded-headers.md) - Intermediate
 
 ## 02 API Design & Patterns
 
 Folder `02-api-design-patterns/` · Prereq: modern-python 18.1, 18.3 · Depends on: 01
 
-- [r] **02.1** [Resource modelling and URI design](02-api-design-patterns/02.1-resource-modelling-and-uri-design.md) - Beginner
-- [r] **02.2** [REST vs RPC vs GraphQL vs gRPC](02-api-design-patterns/02.2-rest-vs-rpc-vs-graphql-vs-grpc.md) - Intermediate
-- [r] **02.3** [API versioning](02-api-design-patterns/02.3-api-versioning.md) - Intermediate
-- [r] **02.4** [Contract-first design and OpenAPI](02-api-design-patterns/02.4-contract-first-and-openapi.md) - Intermediate
-- [r] **02.5** [Pagination - offset, cursor, keyset](02-api-design-patterns/02.5-pagination.md) - Intermediate
-- [r] **02.6** [Filtering, sorting and searching](02-api-design-patterns/02.6-filtering-sorting-searching.md) - Beginner
-- [r] **02.7** [Bulk operations and partial updates (PATCH)](02-api-design-patterns/02.7-bulk-operations-and-partial-updates.md) - Intermediate
-- [r] **02.8** [Idempotency and idempotency keys](02-api-design-patterns/02.8-idempotency-keys.md) - Intermediate
-- [r] **02.9** [Standardised error responses - RFC 9457 Problem Details](02-api-design-patterns/02.9-error-responses-rfc-9457.md) - Beginner
-- [r] **02.10** [Long-running operations - 202 + polling vs webhooks vs SSE](02-api-design-patterns/02.10-long-running-operations.md) - Intermediate
-- [r] **02.11** [Webhook design - signatures, replay protection, retries, delivery guarantees](02-api-design-patterns/02.11-webhook-design.md) - Advanced
-- [r] **02.12** [Rate limiting as an API contract - 429, Retry-After, RateLimit headers](02-api-design-patterns/02.12-rate-limiting-as-api-contract.md) - Intermediate
-- [r] **02.13** [API deprecation, compatibility and sunset](02-api-design-patterns/02.13-deprecation-and-sunset.md) - Intermediate
+- [x] **02.1** [Resource modelling and URI design](02-api-design-patterns/02.1-resource-modelling-and-uri-design.md) - Beginner
+- [x] **02.2** [REST vs RPC vs GraphQL vs gRPC](02-api-design-patterns/02.2-rest-vs-rpc-vs-graphql-vs-grpc.md) - Intermediate
+- [x] **02.3** [API versioning](02-api-design-patterns/02.3-api-versioning.md) - Intermediate
+- [x] **02.4** [Contract-first design and OpenAPI](02-api-design-patterns/02.4-contract-first-and-openapi.md) - Intermediate
+- [x] **02.5** [Pagination - offset, cursor, keyset](02-api-design-patterns/02.5-pagination.md) - Intermediate
+- [x] **02.6** [Filtering, sorting and searching](02-api-design-patterns/02.6-filtering-sorting-searching.md) - Beginner
+- [x] **02.7** [Bulk operations and partial updates (PATCH)](02-api-design-patterns/02.7-bulk-operations-and-partial-updates.md) - Intermediate
+- [x] **02.8** [Idempotency and idempotency keys](02-api-design-patterns/02.8-idempotency-keys.md) - Intermediate
+- [x] **02.9** [Standardised error responses - RFC 9457 Problem Details](02-api-design-patterns/02.9-error-responses-rfc-9457.md) - Beginner
+- [x] **02.10** [Long-running operations - 202 + polling vs webhooks vs SSE](02-api-design-patterns/02.10-long-running-operations.md) - Intermediate
+- [x] **02.11** [Webhook design - signatures, replay protection, retries, delivery guarantees](02-api-design-patterns/02.11-webhook-design.md) - Advanced
+- [x] **02.12** [Rate limiting as an API contract - 429, Retry-After, RateLimit headers](02-api-design-patterns/02.12-rate-limiting-as-api-contract.md) - Intermediate
+- [x] **02.13** [API deprecation, compatibility and sunset](02-api-design-patterns/02.13-deprecation-and-sunset.md) - Intermediate
 
 ## 03 FastAPI
 
 Folder `03-fastapi/` · Prereq: modern-python 5.4, 12.5, 18.4 · Depends on: 01, 02
 
-- [r] **03.1** [Application structure and ASGI - what uvicorn actually does](03-fastapi/03.1-application-structure-and-asgi.md) - Beginner
-- [r] **03.2** [Routing and parameters](03-fastapi/03.2-routing-and-parameters.md) - Beginner
-- [r] **03.3** [Request/response models](03-fastapi/03.3-request-response-models.md) - Beginner
-- [r] **03.4** [Pydantic v2 in depth - validation modes, serialisation, settings](03-fastapi/03.4-pydantic-v2-in-depth.md) - Intermediate
-- [r] **03.5** [Dependency injection](03-fastapi/03.5-dependency-injection.md) - Intermediate
-- [r] **03.6** [Sync vs async endpoints - the threadpool](03-fastapi/03.6-sync-vs-async-endpoints.md) - Intermediate
-- [r] **03.7** [Middleware](03-fastapi/03.7-middleware.md) - Intermediate
-- [r] **03.8** [Exception handling and error mapping](03-fastapi/03.8-exception-handling.md) - Intermediate
-- [r] **03.9** [Lifespan and application lifecycle](03-fastapi/03.9-lifespan.md) - Intermediate
-- [r] **03.10** [BackgroundTasks vs real workers](03-fastapi/03.10-backgroundtasks-vs-workers.md) - Intermediate
-- [r] **03.11** [File uploads and streaming responses](03-fastapi/03.11-file-uploads-and-streaming.md) - Intermediate
-- [r] **03.12** [WebSockets basics](03-fastapi/03.12-websockets-basics.md) - Intermediate
-- [r] **03.13** [OpenAPI customisation](03-fastapi/03.13-openapi-customisation.md) - Beginner
-- [r] **03.14** [Production deployment - uvicorn/gunicorn workers, signals, behind a proxy](03-fastapi/03.14-production-deployment.md) - Advanced
+- [x] **03.1** [Application structure and ASGI - what uvicorn actually does](03-fastapi/03.1-application-structure-and-asgi.md) - Beginner
+- [x] **03.2** [Routing and parameters](03-fastapi/03.2-routing-and-parameters.md) - Beginner
+- [x] **03.3** [Request/response models](03-fastapi/03.3-request-response-models.md) - Beginner
+- [x] **03.4** [Pydantic v2 in depth - validation modes, serialisation, settings](03-fastapi/03.4-pydantic-v2-in-depth.md) - Intermediate
+- [x] **03.5** [Dependency injection](03-fastapi/03.5-dependency-injection.md) - Intermediate
+- [x] **03.6** [Sync vs async endpoints - the threadpool](03-fastapi/03.6-sync-vs-async-endpoints.md) - Intermediate
+- [x] **03.7** [Middleware](03-fastapi/03.7-middleware.md) - Intermediate
+- [x] **03.8** [Exception handling and error mapping](03-fastapi/03.8-exception-handling.md) - Intermediate
+- [x] **03.9** [Lifespan and application lifecycle](03-fastapi/03.9-lifespan.md) - Intermediate
+- [x] **03.10** [BackgroundTasks vs real workers](03-fastapi/03.10-backgroundtasks-vs-workers.md) - Intermediate
+- [x] **03.11** [File uploads and streaming responses](03-fastapi/03.11-file-uploads-and-streaming.md) - Intermediate
+- [x] **03.12** [WebSockets basics](03-fastapi/03.12-websockets-basics.md) - Intermediate
+- [x] **03.13** [OpenAPI customisation](03-fastapi/03.13-openapi-customisation.md) - Beginner
+- [x] **03.14** [Production deployment - uvicorn/gunicorn workers, signals, behind a proxy](03-fastapi/03.14-production-deployment.md) - Advanced
 
 ## 04 Async & Concurrency for Backend
 
 Folder `04-async-concurrency/` · Prereq: modern-python 12.1-12.5 · Depends on: 03
 
-- [r] **04.1** [The event loop inside a server process](04-async-concurrency/04.1-event-loop-in-a-server.md) - Intermediate
-- [r] **04.2** [Blocking vs non-blocking I/O - finding the blocking call](04-async-concurrency/04.2-blocking-vs-non-blocking-io.md) - Intermediate
-- [r] **04.3** [Async database and HTTP clients - pools and limits](04-async-concurrency/04.3-async-db-and-http-clients.md) - Intermediate
-- [r] **04.4** [Request-scoped state - contextvars](04-async-concurrency/04.4-request-scoped-state-contextvars.md) - Intermediate
-- [r] **04.5** [Race conditions in concurrent requests - asyncio.Lock and Queue](04-async-concurrency/04.5-race-conditions-in-concurrent-requests.md) - Advanced
-- [r] **04.6** [Lost updates and double writes](04-async-concurrency/04.6-lost-updates-and-double-writes.md) - Advanced
-- [r] **04.7** [CPU-bound work and event-loop blocking](04-async-concurrency/04.7-cpu-bound-work.md) - Intermediate
-- [r] **04.8** [Timeouts and cancellation](04-async-concurrency/04.8-timeouts-and-cancellation.md) - Advanced
-- [r] **04.9** [Graceful shutdown](04-async-concurrency/04.9-graceful-shutdown.md) - Advanced
-- [r] **04.10** [When async helps and when it does not](04-async-concurrency/04.10-when-async-helps.md) - Intermediate
+- [x] **04.1** [The event loop inside a server process](04-async-concurrency/04.1-event-loop-in-a-server.md) - Intermediate
+- [x] **04.2** [Blocking vs non-blocking I/O - finding the blocking call](04-async-concurrency/04.2-blocking-vs-non-blocking-io.md) - Intermediate
+- [x] **04.3** [Async database and HTTP clients - pools and limits](04-async-concurrency/04.3-async-db-and-http-clients.md) - Intermediate
+- [x] **04.4** [Request-scoped state - contextvars](04-async-concurrency/04.4-request-scoped-state-contextvars.md) - Intermediate
+- [x] **04.5** [Race conditions in concurrent requests - asyncio.Lock and Queue](04-async-concurrency/04.5-race-conditions-in-concurrent-requests.md) - Advanced
+- [x] **04.6** [Lost updates and double writes](04-async-concurrency/04.6-lost-updates-and-double-writes.md) - Advanced
+- [x] **04.7** [CPU-bound work and event-loop blocking](04-async-concurrency/04.7-cpu-bound-work.md) - Intermediate
+- [x] **04.8** [Timeouts and cancellation](04-async-concurrency/04.8-timeouts-and-cancellation.md) - Advanced
+- [x] **04.9** [Graceful shutdown](04-async-concurrency/04.9-graceful-shutdown.md) - Advanced
+- [x] **04.10** [When async helps and when it does not](04-async-concurrency/04.10-when-async-helps.md) - Intermediate
 
 ## 05 PostgreSQL & Data Modeling
 
