@@ -12,7 +12,7 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 | 04.4 | [Request-scoped state - contextvars](04.4-request-scoped-state-contextvars.md) | Intermediate | draft |
 | 04.5 | [Race conditions in concurrent requests - asyncio.Lock and Queue](04.5-race-conditions-in-concurrent-requests.md) | Advanced | draft |
 | 04.6 | [Lost updates and double writes](04.6-lost-updates-and-double-writes.md) | Advanced | draft |
-| 04.7 | [CPU-bound work and event-loop blocking](04.7-cpu-bound-work.md) | Intermediate | todo |
+| 04.7 | [CPU-bound work and event-loop blocking](04.7-cpu-bound-work.md) | Intermediate | draft |
 | 04.8 | [Timeouts and cancellation](04.8-timeouts-and-cancellation.md) | Advanced | todo |
 | 04.9 | [Graceful shutdown](04.9-graceful-shutdown.md) | Advanced | todo |
 | 04.10 | [When async helps and when it does not](04.10-when-async-helps.md) | Intermediate | todo |

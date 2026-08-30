@@ -92,7 +92,7 @@ Folder `04-async-concurrency/` · Prereq: modern-python 12.1-12.5 · Depends on:
 - [~] **04.4** [Request-scoped state - contextvars](04-async-concurrency/04.4-request-scoped-state-contextvars.md) - Intermediate
 - [~] **04.5** [Race conditions in concurrent requests - asyncio.Lock and Queue](04-async-concurrency/04.5-race-conditions-in-concurrent-requests.md) - Advanced
 - [~] **04.6** [Lost updates and double writes](04-async-concurrency/04.6-lost-updates-and-double-writes.md) - Advanced
-- [ ] **04.7** [CPU-bound work and event-loop blocking](04-async-concurrency/04.7-cpu-bound-work.md) - Intermediate
+- [~] **04.7** [CPU-bound work and event-loop blocking](04-async-concurrency/04.7-cpu-bound-work.md) - Intermediate
 - [ ] **04.8** [Timeouts and cancellation](04-async-concurrency/04.8-timeouts-and-cancellation.md) - Advanced
 - [ ] **04.9** [Graceful shutdown](04-async-concurrency/04.9-graceful-shutdown.md) - Advanced
 - [ ] **04.10** [When async helps and when it does not](04-async-concurrency/04.10-when-async-helps.md) - Intermediate
