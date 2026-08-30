@@ -15,6 +15,6 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 | 04.7 | [CPU-bound work and event-loop blocking](04.7-cpu-bound-work.md) | Intermediate | draft |
 | 04.8 | [Timeouts and cancellation](04.8-timeouts-and-cancellation.md) | Advanced | draft |
 | 04.9 | [Graceful shutdown](04.9-graceful-shutdown.md) | Advanced | draft |
-| 04.10 | [When async helps and when it does not](04.10-when-async-helps.md) | Intermediate | todo |
+| 04.10 | [When async helps and when it does not](04.10-when-async-helps.md) | Intermediate | draft |
 
 Lab: [_lab/](_lab/) - runnable scripts that reproduce the notebooks' captured transcripts.
