@@ -10,7 +10,7 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 | 05.2 | [Normalisation and denormalisation tradeoffs](05.2-normalisation-tradeoffs.md) | Intermediate | draft |
 | 05.3 | [Constraints, data integrity and upsert](05.3-constraints-integrity-upsert.md) | Intermediate | draft |
 | 05.4 | [Multi-tenant data modelling](05.4-multi-tenant-data-modelling.md) | Intermediate | draft |
-| 05.5 | [Indexing](05.5-indexing.md) | Intermediate | todo |
+| 05.5 | [Indexing](05.5-indexing.md) | Intermediate | draft |
 | 05.6 | [EXPLAIN and EXPLAIN ANALYZE](05.6-explain-analyze.md) | Intermediate | todo |
 | 05.7 | [Query optimisation and pg_stat_statements](05.7-query-optimisation.md) | Advanced | todo |
 | 05.8 | [Search in Postgres - full-text and pgvector basics](05.8-full-text-search-and-pgvector.md) | Intermediate | todo |

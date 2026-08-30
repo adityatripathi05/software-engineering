@@ -405,4 +405,5 @@ STATUS: dict[str, str] = {
     "05.2": "draft",
     "05.3": "draft",
     "05.4": "draft",
+    "05.5": "draft",
 }
