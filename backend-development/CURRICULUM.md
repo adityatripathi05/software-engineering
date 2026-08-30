@@ -101,7 +101,7 @@ Folder `04-async-concurrency/` · Prereq: modern-python 12.1-12.5 · Depends on:
 
 Folder `05-postgresql-data-modeling/` · Prereq: modern-python 10.1, 10.2, 10.5 · Depends on: 04
 
-- [ ] **05.1** [Relational modelling and key choice - serial, UUIDv4, UUIDv7](05-postgresql-data-modeling/05.1-relational-modelling-and-keys.md) - Beginner
+- [~] **05.1** [Relational modelling and key choice - serial, UUIDv4, UUIDv7](05-postgresql-data-modeling/05.1-relational-modelling-and-keys.md) - Beginner
 - [ ] **05.2** [Normalisation and denormalisation tradeoffs](05-postgresql-data-modeling/05.2-normalisation-tradeoffs.md) - Intermediate
 - [ ] **05.3** [Constraints, data integrity and upsert](05-postgresql-data-modeling/05.3-constraints-integrity-upsert.md) - Intermediate
 - [ ] **05.4** [Multi-tenant data modelling](05-postgresql-data-modeling/05.4-multi-tenant-data-modelling.md) - Intermediate

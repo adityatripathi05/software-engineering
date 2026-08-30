@@ -1,0 +1,27 @@
+# Module 05 infrastructure (AUTHORING-GUIDE §4.4).
+#
+# Every snippet and _lab/ script in modules 05-07 assumes this stack is up:
+#
+#     docker compose up -d --wait          (from this directory)
+#
+# PostgreSQL 18 is pinned deliberately: 05.1 uses the native uuidv7() and
+# uuid_extract_timestamp() functions (new in 18). On 17 or earlier, generate
+# UUIDv7 in the application instead (uuid_utils / uuid6 packages) - 05.1 notes
+# where that changes the story.
+name: deskhub-db
+services:
+  postgres:
+    image: postgres:18
+    environment:
+      POSTGRES_USER: deskhub
+      POSTGRES_PASSWORD: deskhub_dev   # lab-only credential, never reused anywhere real
+      POSTGRES_DB: deskhub
+    ports:
+      - "55432:5432"   # non-default host port so a locally installed Postgres never collides
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U deskhub -d deskhub"]
+      interval: 2s
+      timeout: 2s
+      retries: 15
+    # No volume, on purpose: the labs assume a disposable, reproducible database.
+    # `docker compose down` resets the world; nothing in here is worth keeping.

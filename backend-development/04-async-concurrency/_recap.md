@@ -2,7 +2,9 @@
 
 **Running system:** Ledgerly, continued — the invoicing API from modules 01–03, now examined
 from inside its event loop: the same replicas, dependencies (tax provider, PDF renderer) and
-deploys, instrumented down to the slice. Module 05 keeps the system and descends into PostgreSQL.
+deploys, instrumented down to the slice. This module is Ledgerly's last as the spine: per the
+guide's §4.1 table, modules 05–07 run on a new product (Deskhub, a multi-tenant helpdesk), and
+Ledgerly's lessons ride along as references.
 
 **What this module built up.** Module 03 taught that the framework's defaults are decisions;
 module 04 taught that **concurrency's hazards have addresses**. Between awaits, async code is

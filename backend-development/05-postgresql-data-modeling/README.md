@@ -6,7 +6,7 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 
 | # | Notebook | Level | Status |
 |---|---|---|---|
-| 05.1 | [Relational modelling and key choice - serial, UUIDv4, UUIDv7](05.1-relational-modelling-and-keys.md) | Beginner | todo |
+| 05.1 | [Relational modelling and key choice - serial, UUIDv4, UUIDv7](05.1-relational-modelling-and-keys.md) | Beginner | draft |
 | 05.2 | [Normalisation and denormalisation tradeoffs](05.2-normalisation-tradeoffs.md) | Intermediate | todo |
 | 05.3 | [Constraints, data integrity and upsert](05.3-constraints-integrity-upsert.md) | Intermediate | todo |
 | 05.4 | [Multi-tenant data modelling](05.4-multi-tenant-data-modelling.md) | Intermediate | todo |
@@ -24,3 +24,5 @@ Read top to bottom. Every notebook follows [AUTHORING-GUIDE.md](../AUTHORING-GUI
 | 05.16 | [CTEs and window functions](05.16-ctes-and-window-functions.md) | Intermediate | todo |
 | 05.17 | [Partitioning](05.17-partitioning.md) | Advanced | todo |
 | 05.18 | [Backup, restore, PITR, RTO and RPO](05.18-backup-restore-pitr.md) | Intermediate | todo |
+
+Lab: [_lab/](_lab/) - runnable scripts that reproduce the notebooks' captured transcripts.
