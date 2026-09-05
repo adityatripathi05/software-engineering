@@ -106,7 +106,7 @@ Folder `05-postgresql-data-modeling/` · Prereq: modern-python 10.1, 10.2, 10.5 
 - [~] **05.3** [Constraints, data integrity and upsert](05-postgresql-data-modeling/05.3-constraints-integrity-upsert.md) - Intermediate
 - [~] **05.4** [Multi-tenant data modelling](05-postgresql-data-modeling/05.4-multi-tenant-data-modelling.md) - Intermediate
 - [~] **05.5** [Indexing](05-postgresql-data-modeling/05.5-indexing.md) - Intermediate
-- [ ] **05.6** [EXPLAIN and EXPLAIN ANALYZE](05-postgresql-data-modeling/05.6-explain-analyze.md) - Intermediate
+- [~] **05.6** [EXPLAIN and EXPLAIN ANALYZE](05-postgresql-data-modeling/05.6-explain-analyze.md) - Intermediate
 - [ ] **05.7** [Query optimisation and pg_stat_statements](05-postgresql-data-modeling/05.7-query-optimisation.md) - Advanced
 - [ ] **05.8** [Search in Postgres - full-text and pgvector basics](05-postgresql-data-modeling/05.8-full-text-search-and-pgvector.md) - Intermediate
 - [ ] **05.9** [Connection pooling and PgBouncer](05-postgresql-data-modeling/05.9-connection-pooling-and-pgbouncer.md) - Intermediate
